@@ -405,6 +405,11 @@
 
 import { useState } from "react";
 import toast from "react-hot-toast";
+import { LuBrain, LuZap } from "react-icons/lu";
+const NORMAL_CONDITIONS = [
+  { value: "reduced_consciousness", label: "کاهش سطح هوشیاری", icon: LuBrain },
+  { value: "seizure", label: "تشنج", icon: LuZap },
+];
 
 function HomePage() {
   const [weight, setWeight] = useState("");
@@ -420,6 +425,14 @@ function HomePage() {
     e.preventDefault();
     if (!weight || !age) {
       toast.error("لطفا همه‌ی فیلدها را تکمیل کنید.");
+      return;
+    }
+    if (Number(weight) <= 0) {
+      toast.error("وزن وارد شده معتبر نیست.");
+      return;
+    }
+    if (!lungInvolvement) {
+      toast.error("لطفا نوع درگیری ریوی را انتخاب کنید.");
       return;
     }
   };
@@ -490,24 +503,33 @@ function HomePage() {
               </select>
               {/* فیلد شرایط ریه نرمال  */}
               {lungInvolvement === "normal" && (
-                <div className="mt-4">
-                  <label
-                    className="block text-gray-700 text-sm font-bold mb-2"
-                    htmlFor="normalLungCondition"
-                  >
-                    شرایط بیمار با ریه نرمال
-                  </label>
-                  <select
-                    id="normalLungCondition"
-                    value={normalLungCondition}
-                    onChange={(e) => setNormalLungCondition(e.target.value)}
-                  >
-                    <option value="">لطفا شرایط بیمار را انتخاب کنید</option>
-                    <option value="reduced_consciousness">
-                      کاهش سطح هوشیاری
-                    </option>
-                    <option value="seizure">تشنج</option>
-                  </select>
+                <div>
+                  <div className="flex items-center gap-2 mb-3">
+                    <span className="text-sm font-semibold text-slate-200">
+                      شرایط بیمار با ریه نرمال
+                    </span>
+                  </div>
+                  <div className="grid grid-cols-2 gap-2">
+                    {NORMAL_CONDITIONS.map((cond) => {
+                      const Icon = cond.icon;
+                      const active = normalLungCondition === cond.value;
+                      return (
+                        <button
+                          key={cond.value}
+                          type="button"
+                          onClick={() => setNormalLungCondition(cond.value)}
+                          className={`flex flex-col items-center gap-2 px-3 py-3 rounded-xl border text-sm transition-all ${
+                            active
+                              ? "bg-blue-500/15 border-blue-500 "
+                              : "bg-white/3 border-white/10 text-slate-400 hover:border-white/20"
+                          }`}
+                        >
+                          <Icon className="w-4 h-4" />
+                          {cond.label}
+                        </button>
+                      );
+                    })}
+                  </div>
                 </div>
               )}
 

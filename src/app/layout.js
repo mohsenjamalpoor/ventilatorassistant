@@ -27,7 +27,7 @@ export default function RootLayout({ children }) {
       <body className="min-h-full flex flex-col">
         {children}
 
-        <Toaster position="top-center" toastOptions={{ duration: 2000 }} />
+        <Toaster position="top-center" toastOptions={{ duration: 3000 }} />
       </body>
     </html>
   );
