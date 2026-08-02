@@ -403,13 +403,9 @@
 
 "use client";
 
+import { NORMAL_CONDITIONS } from "@/utils/lungInvolvement";
 import { useState } from "react";
 import toast from "react-hot-toast";
-import { LuBrain, LuZap } from "react-icons/lu";
-const NORMAL_CONDITIONS = [
-  { value: "reduced_consciousness", label: "کاهش سطح هوشیاری", icon: LuBrain },
-  { value: "seizure", label: "تشنج", icon: LuZap },
-];
 
 function HomePage() {
   const [weight, setWeight] = useState("");
