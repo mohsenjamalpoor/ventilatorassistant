@@ -35,16 +35,6 @@ function HomePage() {
       return;
     }
 
-    // اگر نوع درگیری ریوی، ساب‌تایپ لازم دارد ولی انتخاب نشده
-    if (lungInvolvement === "obstructive" && !obstructiveDisease) {
-      toast.error("لطفا بیماری انسدادی را انتخاب کنید.");
-      return;
-    }
-    if (lungInvolvement === "restrictive" && !restrictiveDisease) {
-      toast.error("لطفا بیماری Restrictive را انتخاب کنید.");
-      return;
-    }
-
     const params = new URLSearchParams({
       weight,
       age,
