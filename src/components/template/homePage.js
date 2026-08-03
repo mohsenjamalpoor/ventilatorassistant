@@ -403,7 +403,10 @@
 
 "use client";
 
-import { NORMAL_CONDITIONS } from "@/utils/lungInvolvement";
+import {
+  NORMAL_CONDITIONS,
+  OBSTRUCTIVE_DISEASES,
+} from "@/utils/lungInvolvement";
 import { useState } from "react";
 import toast from "react-hot-toast";
 
@@ -419,7 +422,7 @@ function HomePage() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    if (!weight || !age) {
+    if (!weight || !age || !lungInvolvement) {
       toast.error("لطفا همه‌ی فیلدها را تکمیل کنید.");
       return;
     }
@@ -486,6 +489,7 @@ function HomePage() {
                   setObstructiveDisease("");
                   setRestrictiveDisease("");
                 }}
+                className="w-full px-4 py-3 border rounded-lg text-right focus:outline-none focus:ring-2 border-gray-300 focus:ring-blue-200"
               >
                 <option value="">لطفا نوع درگیری ریوی را انتخاب کنید</option>
                 <option value="normal">ریه نرمال</option>
@@ -539,18 +543,13 @@ function HomePage() {
                     id="obstructiveDisease"
                     value={obstructiveDisease}
                     onChange={(e) => setObstructiveDisease(e.target.value)}
+                    className="w-full px-4 py-3 border rounded-lg text-right focus:outline-none focus:ring-2 border-gray-300 focus:ring-blue-200"
                   >
-                    <option value="">لطفا بیماری انسدادی را انتخاب کنید</option>
-                    <option value="bronchiolitis">برونشیولیت</option>
-                    <option value="asthma">آسم</option>
-                    <option value="copd">
-                      بیماری انسدادی مزمن ریوی (COPD)
-                    </option>
-                    <option value="bronchiectasis">برونشکتازی</option>
-                    <option value="cystic_fibrosis">فیبروز سیستیک</option>
-                    <option value="foreign_body_aspiration">
-                      آسپیراسیون جسم خارجی
-                    </option>
+                    {OBSTRUCTIVE_DISEASES.map((item, index) => (
+                      <option key={index} value={item.value}>
+                        {item.label}
+                      </option>
+                    ))}
                   </select>
                 </div>
               )}
@@ -568,6 +567,7 @@ function HomePage() {
                     id="restrictiveDisease"
                     value={restrictiveDisease}
                     onChange={(e) => setRestrictiveDisease(e.target.value)}
+                    className="w-full px-4 py-3 border rounded-lg text-right focus:outline-none focus:ring-2 border-gray-300 focus:ring-blue-200"
                   >
                     <option value="">
                       لطفا بیماری Restrictive را انتخاب کنید
