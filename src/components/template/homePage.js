@@ -109,32 +109,27 @@ function HomePage() {
 
               {lungInvolvement === "normal" && (
                 <div className="mt-4">
-                  <div className="flex items-center gap-2 mb-3">
-                    <span className="text-sm font-semibold text-gray-700">
-                      شرایط بیمار با ریه نرمال
-                    </span>
-                  </div>
-                  <div className="grid grid-cols-2 gap-2">
-                    {NORMAL_CONDITIONS.map((cond) => {
-                      const Icon = cond.icon;
-                      const active = normalLungCondition === cond.value;
-                      return (
-                        <button
-                          key={cond.value}
-                          type="button"
-                          onClick={() => setNormalLungCondition(cond.value)}
-                          className={`flex flex-col items-center gap-2 px-3 py-3 rounded-xl border text-sm transition-all ${
-                            active
-                              ? "bg-blue-500/15 border-blue-500"
-                              : "bg-gray-50 border-gray-200 text-gray-500 hover:border-gray-300"
-                          }`}
-                        >
-                          <Icon className="w-4 h-4" />
-                          {cond.label}
-                        </button>
-                      );
-                    })}
-                  </div>
+                  <label
+                    className="block text-gray-700 text-sm font-bold mb-2"
+                    htmlFor="obstructiveDisease"
+                  >
+                    بیماری ریه نرمال
+                  </label>
+                  <select
+                    id="obstructiveDisease"
+                    value={obstructiveDisease}
+                    onChange={(e) => setObstructiveDisease(e.target.value)}
+                    className="w-full px-4 py-3 border rounded-lg text-right focus:outline-none focus:ring-2 border-gray-300 focus:ring-blue-200"
+                  >
+                    <option value="">
+                      لطفا بیماری ریه نرمال را انتخاب کنید
+                    </option>
+                    {NORMAL_CONDITIONS.map((item, index) => (
+                      <option key={index} value={item.value}>
+                        {item.label}
+                      </option>
+                    ))}
+                  </select>
                 </div>
               )}
 
