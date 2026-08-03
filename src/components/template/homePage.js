@@ -455,11 +455,7 @@ function HomePage() {
                 type="number"
                 value={weight}
                 onChange={(e) => setWeight(e.target.value)}
-                className="w-full px-4 py-3 border rounded-lg text-left focus:outline-none focus:ring-2 
-                
-                 
-                  border-gray-300 focus:ring-blue-200
-             "
+                className="w-full px-4 py-3 border rounded-lg text-left focus:outline-none focus:ring-2 border-gray-300 focus:ring-blue-200"
               />
             </div>
             <div className="mb-6">
@@ -470,6 +466,7 @@ function HomePage() {
                 type="number"
                 value={age}
                 onChange={(e) => setAge(e.target.value)}
+                className="w-full px-4 py-3 border rounded-lg text-left focus:outline-none focus:ring-2 border-gray-300 focus:ring-blue-200"
               />
             </div>
 
