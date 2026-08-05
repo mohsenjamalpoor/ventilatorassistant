@@ -21,7 +21,7 @@ function SetupPage() {
               <h1 className="text-2xl font-bold text-blue-800 mb-2">
                 تنظیمات اولیه ونتیلاتور
               </h1>
-              <p className="text-blue-600">
+              <p className="text-blue-500">
                 بیماری:{" "}
                 {lungInvolvement === "normal"
                   ? "ریه نرمال"
