@@ -1,13 +1,10 @@
 "use client";
 
-import { useRouter, useSearchParams } from "next/navigation";
+import { useRouter } from "next/navigation";
 
 function SetupPage() {
   const router = useRouter();
-  const searchParams = useSearchParams();
-  const weight = searchParams.get("weight");
-  const age = searchParams.get("age");
-  const lungInvolvement = searchParams.get("lungInvolvement");
+
   const backHandler = () => {
     router.back();
   };
