@@ -339,9 +339,9 @@ function HomePage() {
       weight,
       age,
       lungInvolvement,
-      ...(normalLungCondition && { normalLungCondition }),
-      ...(obstructiveDisease && { obstructiveDisease }),
-      ...(restrictiveDisease && { restrictiveDisease }),
+      // ...(normalLungCondition && { normalLungCondition }),
+      // ...(obstructiveDisease && { obstructiveDisease }),
+      // ...(restrictiveDisease && { restrictiveDisease }),
     });
 
     router.push(`/ventilatortraining/setup?${params.toString()}`);

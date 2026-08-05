@@ -2,9 +2,12 @@
 
 import { useRouter } from "next/navigation";
 
-function SetupPage({ age, weight, lungInvolvement }) {
+function SetupPage({ searchParams }) {
   const router = useRouter();
-  console.log(router.qurey, "kjkkj");
+
+  const age = searchParams.age;
+  const weight = searchParams.weight;
+  const lungInvolvement = searchParams.lungInvolvement;
   const backHandler = () => {
     router.back();
   };
