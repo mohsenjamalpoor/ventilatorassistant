@@ -604,21 +604,6 @@ function HomePage() {
                       </div>
                     </div>
                   </div>
-
-                  {/* جعبه‌ی فرمول برای مرور آموزشی */}
-                  <div className="rounded-xl bg-slate-50 border border-slate-200 p-4 text-[13px] text-gray-600 leading-7">
-                    <div className="font-bold text-gray-700 mb-1">
-                      فرمول محاسبه:
-                    </div>
-                    <div>
-                      سایز بدون کاف = (سن ÷ ۴) + ۴ &nbsp;→&nbsp; گرد به پایین با
-                      گام ۰.۵ &nbsp;(حداکثر ۸)
-                    </div>
-                    <div>
-                      سایز کاف‌دار = سایز بدون کاف − ۰.۵ &nbsp;(حداکثر ۷.۵)
-                    </div>
-                    <div>عمق هر لوله = سایز همان لوله × ۳</div>
-                  </div>
                 </div>
               )}
             </div>
