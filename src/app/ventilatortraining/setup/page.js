@@ -1,10 +1,17 @@
 "use client";
 
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 
-function SetupPage({ age, weight, lungInvolvement }) {
+function SetupPage() {
   const router = useRouter();
-  console.log(router.qurey || [], "kjkkj");
+  const searchParams = useSearchParams();
+
+  const weight = searchParams.get("weight");
+  const age = searchParams.get("age");
+  const lungInvolvement = searchParams.get("lungInvolvement");
+  const normalLungCondition = searchParams.get("normalLungCondition");
+  const obstructiveDisease = searchParams.get("obstructiveDisease");
+  const restrictiveDisease = searchParams.get("restrictiveDisease");
   const backHandler = () => {
     router.back();
   };
