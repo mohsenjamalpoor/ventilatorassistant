@@ -1,6 +1,13 @@
 "use client";
 
+import { useRouter } from "next/navigation";
+
 function SetupPage({ age, weight, lungInvolvement }) {
+  const router = useRouter();
+  console.log(router, "kjkkj");
+  const backHandler = () => {
+    router.back();
+  };
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-cyan-100 py-8 px-4">
       <div className="max-w-7xl mx-auto">
@@ -17,7 +24,10 @@ function SetupPage({ age, weight, lungInvolvement }) {
               <button className="px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors">
                 بازنشانی تنظیمات
               </button>
-              <button className="px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors">
+              <button
+                onClick={backHandler}
+                className="px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors"
+              >
                 بازگشت
               </button>
             </div>
