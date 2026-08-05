@@ -2,9 +2,9 @@
 
 import { useRouter } from "next/navigation";
 
-function SetupPage() {
+function SetupPage({ age, weight, lungInvolvement }) {
   const router = useRouter();
-
+  console.log(router.qurey || [], "kjkkj");
   const backHandler = () => {
     router.back();
   };
@@ -18,14 +18,7 @@ function SetupPage() {
               <h1 className="text-2xl font-bold text-blue-800 mb-2">
                 تنظیمات اولیه ونتیلاتور
               </h1>
-              <p className="text-blue-500">
-                بیماری:{" "}
-                {lungInvolvement === "normal"
-                  ? "ریه نرمال"
-                  : lungInvolvement === "obstructive"
-                    ? "Obstructive"
-                    : "Restrictive"}{" "}
-              </p>
+              <p className="text-blue-600">بیماری: </p>
             </div>
             <div className="flex gap-2">
               <button className="px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors">
@@ -51,7 +44,7 @@ function SetupPage() {
             </div>
             <div className="bg-cyan-50 rounded-lg p-4 text-center">
               <p className="text-cyan-600 text-sm">سن بیمار</p>
-              <p className="text-xl font-bold text-cyan-800">{age} سال</p>
+              <p className="text-xl font-bold text-cyan-800">{age}</p>
             </div>
             <div className="bg-green-50 rounded-lg p-4 text-center">
               <p className="text-green-600 text-sm">گروه سنی</p>
