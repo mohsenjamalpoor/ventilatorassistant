@@ -334,6 +334,17 @@ function HomePage() {
       toast.error("سن وارد شده معتبر نیست.");
       return;
     }
+
+    const params = new URLSearchParams({
+      weight,
+      age,
+      lungInvolvement,
+      ...(normalLungCondition && { normalLungCondition }),
+      ...(obstructiveDisease && { obstructiveDisease }),
+      ...(restrictiveDisease && { restrictiveDisease }),
+    });
+
+    router.push(`/ventilatortraining/setup?${params.toString()}`);
   };
 
   const ageNumber = Number(age);
