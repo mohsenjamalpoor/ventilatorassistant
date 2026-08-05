@@ -331,7 +331,7 @@ function HomePage() {
       return;
     }
     if (Number(age) <= 0) {
-      toast.error("شن وارد شده معتبر نیست.");
+      toast.error("سن وارد شده معتبر نیست.");
       return;
     }
   };
