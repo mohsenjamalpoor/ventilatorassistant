@@ -1,16 +1,12 @@
-"use client";
+import BackButton from "@/components/module/BackButton";
 
-import { useRouter } from "next/navigation";
+async function SetupPage({ searchParams }) {
+  const params = await searchParams;
 
-function SetupPage({ searchParams }) {
-  const router = useRouter();
+  const age = params.age;
+  const weight = params.weight;
+  const lungInvolvement = params.lungInvolvement;
 
-  const age = searchParams.age;
-  const weight = searchParams.weight;
-  const lungInvolvement = searchParams.lungInvolvement;
-  const backHandler = () => {
-    router.back();
-  };
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-cyan-100 py-8 px-4">
       <div className="max-w-7xl mx-auto">
@@ -30,12 +26,7 @@ function SetupPage({ searchParams }) {
               <button className="px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors">
                 بازنشانی تنظیمات
               </button>
-              <button
-                onClick={backHandler}
-                className="px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors"
-              >
-                بازگشت
-              </button>
+              <BackButton />
             </div>
           </div>
 
