@@ -1,10 +1,13 @@
 "use client";
 
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 
-function SetupPage({ age, weight, lungInvolvement }) {
+function SetupPage() {
   const router = useRouter();
-  console.log(router, "kjkkj");
+  const searchParams = useSearchParams();
+  const weight = searchParams.get("weight");
+  const age = searchParams.get("age");
+  const lungInvolvement = searchParams.get("lungInvolvement");
   const backHandler = () => {
     router.back();
   };
@@ -18,9 +21,19 @@ function SetupPage({ age, weight, lungInvolvement }) {
               <h1 className="text-2xl font-bold text-blue-800 mb-2">
                 تنظیمات اولیه ونتیلاتور
               </h1>
-              <p className="text-blue-600">بیماری: </p>
+              <p className="text-blue-600">
+                بیماری:{" "}
+                {lungInvolvement === "normal"
+                  ? "ریه نرمال"
+                  : lungInvolvement === "obstructive"
+                    ? "Obstructive"
+                    : "Restrictive"}{" "}
+              </p>
             </div>
             <div className="flex gap-2">
+              <button className="px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors">
+                تنظیمات پیشرفته
+              </button>
               <button className="px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors">
                 بازنشانی تنظیمات
               </button>
@@ -41,7 +54,7 @@ function SetupPage({ age, weight, lungInvolvement }) {
             </div>
             <div className="bg-cyan-50 rounded-lg p-4 text-center">
               <p className="text-cyan-600 text-sm">سن بیمار</p>
-              <p className="text-xl font-bold text-cyan-800">{age}</p>
+              <p className="text-xl font-bold text-cyan-800">{age} سال</p>
             </div>
             <div className="bg-green-50 rounded-lg p-4 text-center">
               <p className="text-green-600 text-sm">گروه سنی</p>
