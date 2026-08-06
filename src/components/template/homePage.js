@@ -329,9 +329,8 @@ function HomePage() {
                     <ul className="space-y-3 text-sm text-gray-700 leading-7">
                       <li className="flex gap-2">
                         <span>
-                          همیشه یک سایز <b>۰٫۵ میلی‌متر بزرگ‌تر</b> و
-                          <b>۰٫۵ میلی‌متر کوچک‌تر</b> از سایز محاسبه‌شده آماده
-                          باشد.
+                          همیشه یک سایز <b> بزرگ‌تر</b> و<b> کوچک‌تر</b> از سایز
+                          محاسبه‌شده آماده باشد(۰/5mm).
                         </span>
                       </li>
                       <li className="flex gap-2">
