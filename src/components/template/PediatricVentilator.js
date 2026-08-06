@@ -4,9 +4,10 @@ import { useSearchParams } from "next/navigation";
 import BackButton from "../module/BackButton";
 import { PiBellLight } from "react-icons/pi";
 import { useState } from "react";
+import ModalContainer from "../partials/container/ModalContainer";
 
 function PediatricVentilator() {
-  const [advanced, setAdvanced] = useState(false);
+  const [isOpen, setIsOpen] = useState(false);
   const searchParams = useSearchParams();
 
   const weight = searchParams.get("weight");
@@ -27,11 +28,20 @@ function PediatricVentilator() {
             </div>
             <div className="flex gap-2">
               <button
-                onClick={() => setAdvanced()}
+                onClick={() => setIsOpen(true)}
                 className="px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors"
               >
                 تنظیمات پیشرفته
               </button>
+              <ModalContainer setIsOpen={setIsOpen} isOpen={isOpen}>
+                <div>
+                  <div className="bg-green-50 rounded-lg p-4 text-center">
+                    <p className="text-xl font-bold text-green-800">
+                      علت افت O₂
+                    </p>
+                  </div>
+                </div>
+              </ModalContainer>
               <button className="px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors">
                 بازنشانی تنظیمات
               </button>
