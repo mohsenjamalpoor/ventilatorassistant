@@ -20,6 +20,7 @@ function HomePage() {
   const [normalLungCondition, setNormalLungCondition] = useState("");
   const [obstructiveDisease, setObstructiveDisease] = useState("");
   const [restrictiveDisease, setRestrictiveDisease] = useState("");
+  const [note, setNote] = useState(false);
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -61,7 +62,10 @@ function HomePage() {
     <div className="min-h-screen bg-linear-to-br from-slate-50 to-blue-100 py-8 px-4">
       <div className="max-w-md mx-auto bg-white rounded-2xl shadow-2xl overflow-hidden">
         <div className="bg-linear-to-r from-blue-700 to-cyan-600 p-6 text-white text-center">
-          <h1 className="text-2xl font-bold mb-2">دستیار آموزشی ونتیلاتور</h1>
+          <h1 className="text-2xl font-bold mb-2">
+            {" "}
+            دستیار ونتیلاتور در کودکان
+          </h1>
           <p className="text-blue-100 text-sm">
             لطفا اطلاعات بیمار را وارد کنید
           </p>
@@ -305,6 +309,39 @@ function HomePage() {
                         </span>
                       </div>
                     </div>
+                  </div>
+                </div>
+              )}
+              <button
+                type="button"
+                onClick={() => setNote((prev) => !prev)}
+                className="w-full mt-4 rounded-xl bg-blue-600 text-white py-3"
+              >
+                {note ? "مخفی کردن نکات" : "نمایش نکات"}
+              </button>
+              {note && (
+                <div>
+                  <div className="mt-6 rounded-2xl border border-amber-200 bg-amber-50 p-5">
+                    <h3 className="font-bold text-amber-800 mb-3">
+                      نکات مهم بالینی
+                    </h3>
+
+                    <ul className="space-y-3 text-sm text-gray-700 leading-7">
+                      <li className="flex gap-2">
+                        <span>
+                          همیشه یک سایز <b>۰٫۵ میلی‌متر بزرگ‌تر</b> و
+                          <b>۰٫۵ میلی‌متر کوچک‌تر</b> از سایز محاسبه‌شده آماده
+                          باشد.
+                        </span>
+                      </li>
+                      <li className="flex gap-2">
+                        <span>
+                          محل صحیح لوله با
+                          <b>Capnography</b>، سمع دوطرفه ریه، بالا آمدن قفسه
+                          سینه و در صورت نیاز CXR تأیید شود.
+                        </span>
+                      </li>
+                    </ul>
                   </div>
                 </div>
               )}
