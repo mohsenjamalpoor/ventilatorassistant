@@ -310,38 +310,38 @@ function HomePage() {
                       </div>
                     </div>
                   </div>
-                </div>
-              )}
-              <button
-                type="button"
-                onClick={() => setNote((prev) => !prev)}
-                className="w-full mt-4 rounded-xl bg-blue-600 text-white py-3"
-              >
-                {note ? "مخفی کردن نکات" : "نمایش نکات"}
-              </button>
-              {note && (
-                <div>
-                  <div className="mt-6 rounded-2xl border border-amber-200 bg-amber-50 p-5">
-                    <h3 className="font-bold text-amber-800 mb-3">
-                      نکات مهم بالینی
-                    </h3>
+                  <button
+                    type="button"
+                    onClick={() => setNote((prev) => !prev)}
+                    className="w-full mt-4 rounded-xl bg-blue-600 text-white py-3"
+                  >
+                    {note ? "مخفی کردن نکات" : "نمایش نکات"}
+                  </button>
+                  {note && (
+                    <div>
+                      <div className="mt-6 rounded-2xl border border-amber-200 bg-amber-50 p-5">
+                        <h3 className="font-bold text-amber-800 mb-3">
+                          نکات مهم بالینی
+                        </h3>
 
-                    <ul className="space-y-3 text-sm text-gray-700 leading-7">
-                      <li className="flex gap-2">
-                        <span>
-                          همیشه یک سایز <b> بزرگ‌تر</b> و<b> کوچک‌تر</b> از سایز
-                          محاسبه‌شده آماده باشد(۰/5mm).
-                        </span>
-                      </li>
-                      <li className="flex gap-2">
-                        <span>
-                          محل صحیح لوله با
-                          <b>Capnography</b>، سمع دوطرفه ریه، بالا آمدن قفسه
-                          سینه و در صورت نیاز CXR تأیید شود.
-                        </span>
-                      </li>
-                    </ul>
-                  </div>
+                        <ul className="space-y-3 text-sm text-gray-700 leading-7">
+                          <li className="flex gap-2">
+                            <span>
+                              همیشه یک سایز <b> بزرگ‌تر</b> و<b> کوچک‌تر</b> از
+                              سایز محاسبه‌شده آماده باشد(۰/5mm).
+                            </span>
+                          </li>
+                          <li className="flex gap-2">
+                            <span>
+                              محل صحیح لوله با
+                              <b>Capnography</b>، سمع دوطرفه ریه، بالا آمدن قفسه
+                              سینه و در صورت نیاز CXR تأیید شود.
+                            </span>
+                          </li>
+                        </ul>
+                      </div>
+                    </div>
+                  )}
                 </div>
               )}
             </div>
