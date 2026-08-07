@@ -15,7 +15,7 @@ function PediatricVentilator() {
   const lungInvolvement = searchParams.get("lungInvolvement");
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-cyan-100 py-8 px-4">
+    <div className="min-h-screen bg-linear-to-br from-blue-50 to-cyan-100 py-8 px-4">
       <div className="max-w-7xl mx-auto">
         {/* هدر */}
         <div className="bg-white rounded-2xl shadow-lg p-6 mb-6">
@@ -29,7 +29,7 @@ function PediatricVentilator() {
             <div className="flex gap-2">
               <button
                 onClick={() => setIsOpen(true)}
-                className="px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors"
+                className="px-3 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors"
               >
                 تنظیمات پیشرفته
               </button>
@@ -42,7 +42,7 @@ function PediatricVentilator() {
                   </div>
                 </div>
               </ModalContainer>
-              <button className="px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors">
+              <button className="px-3 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors">
                 بازنشانی تنظیمات
               </button>
               <BackButton />
