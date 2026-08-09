@@ -75,7 +75,7 @@ function PediatricVentilator() {
             <div className="mt-2 grid grid-cols-1 md:grid-cols-4 gap-4">
               <button
                 onClick={() => setIsO2ModalOpen(true)}
-                className="text-xl font-bold text-blue-800 bg-green-50 hover:bg-green-100 transition-colors rounded-lg py-2 px-0 text-center cursor-pointer"
+                className="text-xl font-bold text-blue-800 bg-green-50 hover:bg-green-100 transition-colors rounded-lg p-2 text-center cursor-pointer"
               >
                 علت افت O₂
               </button>
