@@ -6,7 +6,7 @@ import {
   getDiseaseName,
   ventilatorItemLabels,
   ventilatorItemOrder,
-} from "../../utils/Initialsettingsconfig "; // ⚠️ مسیر رو با محل واقعی فایل هماهنگ کن
+} from "../../utils/Initialsettingsconfig ";
 
 const MODES = [
   { id: "VC", name: "Volume Control (VC)", desc: "حجم جاری ثابت، فشار متغیر" },
