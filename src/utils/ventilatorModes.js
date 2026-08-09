@@ -1,4 +1,3 @@
-// utils/ventilatorModes.js
 export const pediatricVentilatorModes = {
   SIMV: {
     name: "SIMV",
