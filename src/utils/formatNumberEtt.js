@@ -12,8 +12,8 @@ export const formatNumber = (n) => {
 export const calculateEttSizes = (ageInYears) => {
   const raw = ageInYears / 4 + 4;
 
-  const uncuffedSize = Math.min(roundToHalf(raw), 8);
-  const cuffedSize = Math.min(roundToHalf(raw - 0.5), 7.5);
+  const uncuffedSize = Math.min(roundToHalf(raw), 7.5);
+  const cuffedSize = Math.min(roundToHalf(raw - 0.5), 7);
 
   const uncuffedDepth = roundToHalf(uncuffedSize * 3);
   const cuffedDepth = roundToHalf(cuffedSize * 3);
