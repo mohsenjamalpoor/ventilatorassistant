@@ -8,10 +8,13 @@ import ModalContainer from "../partials/container/ModalContainer";
 import { FaEdit } from "react-icons/fa";
 import AlarmModal from "../module/AlarmModal";
 import O2DropModal from "../module/O2DropModal";
+import { LuTrendingDown, LuTrendingUp } from "react-icons/lu";
+import HighPIPModal from "../module/HighPIPModal";
 
 function PediatricVentilator() {
   const [isOpen, setIsOpen] = useState(false);
   const [isO2ModalOpen, setIsO2ModalOpen] = useState(false);
+  const [isHighPIPModalOpen, setIsHighPIPModalOpen] = useState(false);
   const [advance, setAdvance] = useState(false);
   const searchParams = useSearchParams();
 
@@ -72,17 +75,51 @@ function PediatricVentilator() {
         {/* تنظیمات پیشرفته */}
         {advance && (
           <div className="bg-white rounded-2xl shadow-lg p-6 mb-6">
-            <div className="mt-2 grid grid-cols-1 md:grid-cols-4 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
               <button
                 onClick={() => setIsO2ModalOpen(true)}
-                className="text-xl font-bold text-blue-800 bg-green-50 hover:bg-green-100 transition-colors rounded-lg p-2 text-center cursor-pointer"
+                className="group relative flex flex-col items-start gap-2 p-4 rounded-xl border border-gray-200 bg-white hover:border-red-300 hover:shadow-md transition-all cursor-pointer text-right"
               >
-                علت افت O₂
+                <div className="flex items-center justify-center w-10 h-10 rounded-lg bg-red-50 group-hover:bg-red-100 transition-colors">
+                  <LuTrendingDown className="w-5 h-5 text-red-500" />
+                </div>
+                <div>
+                  <p className="font-bold text-gray-800 group-hover:text-red-700 transition-colors">
+                    علت افت O₂
+                  </p>
+                  <p className="text-xs text-gray-400 mt-0.5">
+                    علل و اقدام درمانی
+                  </p>
+                </div>
+              </button>
+
+              <button
+                onClick={() => setIsHighPIPModalOpen(true)}
+                className="group relative flex flex-col items-start gap-2 p-4 rounded-xl border border-gray-200 bg-white hover:border-orange-300 hover:shadow-md transition-all cursor-pointer text-right"
+              >
+                <div className="flex items-center justify-center w-10 h-10 rounded-lg bg-orange-50 group-hover:bg-orange-100 transition-colors">
+                  <LuTrendingUp className="w-5 h-5 text-orange-500" />
+                </div>
+                <div>
+                  <p className="font-bold text-gray-800 group-hover:text-orange-700 transition-colors">
+                    علت افزایش PIP
+                  </p>
+                  <p className="text-xs text-gray-400 mt-0.5">
+                    علل و اقدام درمانی
+                  </p>
+                </div>
               </button>
             </div>
 
             <ModalContainer setIsOpen={setIsO2ModalOpen} isOpen={isO2ModalOpen}>
               <O2DropModal onClose={() => setIsO2ModalOpen(false)} />
+            </ModalContainer>
+
+            <ModalContainer
+              setIsOpen={setIsHighPIPModalOpen}
+              isOpen={isHighPIPModalOpen}
+            >
+              <HighPIPModal onClose={() => setIsHighPIPModalOpen(false)} />
             </ModalContainer>
           </div>
         )}
