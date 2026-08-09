@@ -343,6 +343,12 @@ function PediatricVentilator() {
             onClose={() => setIsEditModalOpen(false)}
           />
         </ModalContainer>
+        <ModalContainer setIsOpen={setIsOpen} isOpen={isOpen}>
+          <AlarmModal
+            currentSettings={currentSettings}
+            onClose={() => setIsOpen(false)}
+          />
+        </ModalContainer>
 
         {/* مانیتور ونتیلاتور */}
         <div className="bg-gradient-to-br from-blue-50/95 to-cyan-50/95 backdrop-blur-sm rounded-2xl shadow-xl p-6 border border-blue-200">
@@ -387,13 +393,6 @@ function PediatricVentilator() {
                 <PiBellLight className="w-6 h-6 text-white" />
                 <span className="absolute -top-1 -right-1 w-3 h-3 bg-yellow-400 rounded-full border-2 border-white animate-pulse"></span>
               </button>
-
-              <ModalContainer setIsOpen={setIsOpen} isOpen={isOpen}>
-                <AlarmModal
-                  currentSettings={currentSettings}
-                  onClose={() => setIsOpen(false)}
-                />
-              </ModalContainer>
             </div>
           </div>
 
