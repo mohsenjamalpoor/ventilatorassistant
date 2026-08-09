@@ -372,7 +372,6 @@ function PediatricVentilator() {
                 title="انتخاب مود ونتیلاتور"
               >
                 <LuActivity className="w-6 h-6 text-white" />
-                <span className="absolute -top-1 -right-1 w-3 h-3 bg-green-400 rounded-full border-2 border-white"></span>
               </button>
 
               {/* ویرایش تنظیمات */}
@@ -391,7 +390,6 @@ function PediatricVentilator() {
                 title="تنظیمات آلارم"
               >
                 <PiBellLight className="w-6 h-6 text-white" />
-                <span className="absolute -top-1 -right-1 w-3 h-3 bg-yellow-400 rounded-full border-2 border-white animate-pulse"></span>
               </button>
             </div>
           </div>
