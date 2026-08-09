@@ -353,25 +353,20 @@ function PediatricVentilator() {
         {/* مانیتور ونتیلاتور */}
         <div className="bg-gradient-to-br from-blue-50/95 to-cyan-50/95 backdrop-blur-sm rounded-2xl shadow-xl p-6 border border-blue-200">
           <div className="flex items-center justify-between mb-6 flex-wrap gap-3">
-            <div className="flex items-center justify-center gap-2">
-              <h2 className="text-2xl font-bold bg-gradient-to-r from-blue-600 to-cyan-600 bg-clip-text text-transparent">
-                مانیتور ونتیلاتور
-              </h2>
-              <div className="bg-gradient-to-r from-blue-50 to-cyan-50 rounded-lg p-3 text-center border border-blue-200">
-                <p className="text-sm font-bold text-blue-800">
-                  {currentSettings.mode || "SIMV"}
-                </p>
-              </div>
-            </div>
+            <h2 className="text-2xl font-bold bg-gradient-to-r from-blue-600 to-cyan-600 bg-clip-text text-transparent">
+              مانیتور ونتیلاتور
+            </h2>
 
             <div className="flex items-center gap-2">
               {/* انتخاب مد */}
               <button
                 onClick={() => setIsModeModalOpen(true)}
-                className="group relative p-2 rounded-xl bg-blue-500 hover:bg-blue-600 transition-all shadow-md hover:shadow-lg"
+                className="group relative p-3 bg-gradient-to-r from-blue-50 to-cyan-50 rounded-lg hover:bg-blue-600 transition-all shadow-md hover:shadow-lg"
                 title="انتخاب مود ونتیلاتور"
               >
-                <LuActivity className="w-6 h-6 text-white" />
+                <p className="text-sm font-bold text-blue-800">
+                  {currentSettings.mode || "SIMV"}
+                </p>
               </button>
 
               {/* ویرایش تنظیمات */}
