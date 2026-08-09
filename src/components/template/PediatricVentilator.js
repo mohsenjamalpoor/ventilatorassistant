@@ -15,12 +15,15 @@ import {
   getInitialSettings,
   calculateMvent,
 } from "../../utils/Initialsettingsconfig ";
+import RespiratoryAcidosisModal from "../module/RespiratoryAcidosisModal";
 
 function PediatricVentilator() {
   const [isOpen, setIsOpen] = useState(false);
   const [isO2ModalOpen, setIsO2ModalOpen] = useState(false);
   const [isHighPIPModalOpen, setIsHighPIPModalOpen] = useState(false);
   const [isModeModalOpen, setIsModeModalOpen] = useState(false);
+  const [isRespiratoryAcidosis, setIsRespiratoryAcidosis] = useState(false);
+
   const [advance, setAdvance] = useState(false);
   const searchParams = useSearchParams();
 
@@ -154,6 +157,22 @@ function PediatricVentilator() {
                   </p>
                 </div>
               </button>
+              <button
+                onClick={() => setIsRespiratoryAcidosis(true)}
+                className="group relative flex flex-col items-start gap-2 p-4 rounded-xl border border-gray-200 bg-white hover:border-red-300 hover:shadow-md transition-all cursor-pointer text-right"
+              >
+                <div className="flex items-center justify-center w-10 h-10 rounded-lg bg-red-50 group-hover:bg-red-100 transition-colors">
+                  <LuTrendingDown className="w-5 h-5 text-red-500" />
+                </div>
+                <div>
+                  <p className="font-bold text-gray-800 group-hover:text-red-700 transition-colors">
+                    علت اسیدوز تنفسی
+                  </p>
+                  <p className="text-xs text-gray-400 mt-0.5">
+                    علل و اقدام درمانی
+                  </p>
+                </div>
+              </button>
             </div>
 
             <ModalContainer setIsOpen={setIsO2ModalOpen} isOpen={isO2ModalOpen}>
@@ -165,6 +184,14 @@ function PediatricVentilator() {
               isOpen={isHighPIPModalOpen}
             >
               <HighPIPModal onClose={() => setIsHighPIPModalOpen(false)} />
+            </ModalContainer>
+            <ModalContainer
+              setIsOpen={setIsRespiratoryAcidosis}
+              isOpen={isRespiratoryAcidosis}
+            >
+              <RespiratoryAcidosisModal
+                onClose={() => setIsRespiratoryAcidosis(false)}
+              />
             </ModalContainer>
           </div>
         )}
