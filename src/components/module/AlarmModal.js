@@ -1,7 +1,7 @@
 "use client";
 
 import { LuX, LuBell, LuTriangleAlert } from "react-icons/lu";
-import { calculateAlarmRanges } from "../../utils/Initialsettingsconfig "; // ⚠️ مسیر رو هماهنگ کن
+import { calculateAlarmRanges } from "../../utils/alarmUtils";
 
 function AlarmModal({ currentSettings, onClose }) {
   const ranges = calculateAlarmRanges(currentSettings);
