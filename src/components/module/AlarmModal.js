@@ -1,20 +1,33 @@
 "use client";
 
-import { LuX, LuBell, LuTriangleAlert } from "react-icons/lu";
+import { LuX, LuBell, LuTriangleAlert, LuCheck } from "react-icons/lu";
 import { calculateAlarmRanges } from "../../utils/alarmUtils";
 
 function AlarmModal({ currentSettings, onClose }) {
   const ranges = calculateAlarmRanges(currentSettings);
 
   const items = [
-    { key: "rr", label: "تعداد تنفس (RR)", unit: "/min", color: "green" },
+    {
+      key: "rr",
+      label: "تعداد تنفس",
+      shortLabel: "RR",
+      unit: "/min",
+      color: "green",
+    },
     {
       key: "mvent",
-      label: "تهویه دقیقه‌ای (MVent)",
+      label: "تهویه دقیقه‌ای",
+      shortLabel: "MVent",
       unit: "L/min",
       color: "teal",
     },
-    { key: "peep", label: "PEEP", unit: "cmH₂O", color: "red" },
+    {
+      key: "peep",
+      label: "PEEP",
+      shortLabel: "PEEP",
+      unit: "cmH₂O",
+      color: "red",
+    },
   ];
 
   const colorMap = {
@@ -22,50 +35,76 @@ function AlarmModal({ currentSettings, onClose }) {
       bg: "bg-green-50",
       border: "border-green-200",
       text: "text-green-700",
-      bar: "bg-green-400",
+      chip: "bg-green-100 text-green-700",
+      bar: "bg-green-500",
+      track: "from-green-200 via-green-300 to-green-200",
+      ring: "ring-green-100",
     },
     teal: {
       bg: "bg-teal-50",
       border: "border-teal-200",
       text: "text-teal-700",
-      bar: "bg-teal-400",
+      chip: "bg-teal-100 text-teal-700",
+      bar: "bg-teal-500",
+      track: "from-teal-200 via-teal-300 to-teal-200",
+      ring: "ring-teal-100",
     },
     red: {
       bg: "bg-red-50",
       border: "border-red-200",
       text: "text-red-700",
-      bar: "bg-red-400",
+      chip: "bg-red-100 text-red-700",
+      bar: "bg-red-500",
+      track: "from-red-200 via-red-300 to-red-200",
+      ring: "ring-red-100",
     },
   };
 
   return (
-    <div className="w-[92vw] max-w-xl max-h-[85vh] bg-white rounded-2xl shadow-2xl flex flex-col">
-      <div className="flex items-center justify-between px-6 py-4 border-b border-gray-100 shrink-0">
-        <div className="flex items-center gap-2">
-          <LuBell className="w-6 h-6 text-red-500" />
-          <h2 className="text-lg font-bold text-gray-800">محدوده‌های آلارم</h2>
+    <div
+      dir="rtl"
+      className="w-[92vw] max-w-xl max-h-[85vh] bg-white rounded-2xl shadow-2xl flex flex-col overflow-hidden"
+    >
+      {/* Header */}
+      <div className="relative bg-gradient-to-l from-blue-600 to-cyan-500 px-6 py-5 flex items-center justify-between shrink-0">
+        <div className="flex items-center gap-3">
+          <div className="w-11 h-11 rounded-xl bg-white/15 flex items-center justify-center">
+            <LuBell className="w-6 h-6 text-white" />
+          </div>
+          <div>
+            <h2 className="text-white font-bold text-lg leading-tight">
+              محدوده‌های آلارم
+            </h2>
+            <p className="text-blue-100 text-xs mt-0.5">
+              بر اساس تنظیمات فعلی ونتیلاتور
+            </p>
+          </div>
         </div>
         {onClose && (
           <button
             onClick={onClose}
-            className="text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded-lg p-1.5 transition-colors"
+            className="w-8 h-8 rounded-lg bg-white/15 hover:bg-white/25 flex items-center justify-center transition-colors"
+            aria-label="بستن"
           >
-            <LuX className="w-5 h-5" />
+            <LuX className="w-5 h-5 text-white" />
           </button>
         )}
       </div>
 
-      <div className="overflow-y-auto p-6 space-y-4">
-        <p className="text-sm text-gray-500 flex items-start gap-2">
+      {/* Body */}
+      <div className="overflow-y-auto px-6 py-5 space-y-4 bg-gradient-to-b from-blue-50/40 to-white">
+        <div className="flex items-start gap-2 bg-amber-50 border border-amber-200 rounded-xl px-4 py-3">
           <LuTriangleAlert className="w-4 h-4 text-amber-500 mt-0.5 shrink-0" />
-          محدوده‌های آلارم به‌طور خودکار بر اساس تنظیمات فعلی ونتیلاتور محاسبه
-          شده‌اند و با هر تغییر در مد یا تنظیمات به‌روز می‌شوند.
-        </p>
+          <p className="text-xs text-amber-700 leading-6">
+            این محدوده‌ها به‌طور خودکار محاسبه شده و با هر تغییر در مد یا
+            تنظیمات ونتیلاتور به‌روزرسانی می‌شوند.
+          </p>
+        </div>
 
-        {items.map(({ key, label, unit, color }) => {
+        {items.map(({ key, label, shortLabel, unit, color }) => {
           const r = ranges[key];
-          const c = colorMap[color];
           if (!r) return null;
+          const c = colorMap[color];
 
           const low = parseFloat(r.low);
           const high = parseFloat(r.high);
@@ -74,39 +113,89 @@ function AlarmModal({ currentSettings, onClose }) {
             100,
             Math.max(0, ((current - low) / (high - low)) * 100),
           );
+          const nearEdge = percent <= 10 || percent >= 90;
 
           return (
             <div
               key={key}
-              className={`rounded-xl border ${c.border} ${c.bg} p-4`}
+              className={`rounded-2xl border ${c.border} ${c.bg} p-4 transition-shadow hover:shadow-md`}
             >
-              <div className="flex items-center justify-between mb-2">
-                <span className={`font-bold ${c.text}`}>{label}</span>
-                <span className="text-sm text-gray-500">
-                  فعلی:{" "}
-                  <span className="font-bold text-gray-800">{r.current}</span>{" "}
-                  {unit}
-                </span>
+              {/* Row header */}
+              <div className="flex items-center justify-between mb-4">
+                <div className="flex items-center gap-2">
+                  <span
+                    className={`text-[11px] font-bold px-2 py-1 rounded-lg ${c.chip}`}
+                  >
+                    {shortLabel}
+                  </span>
+                  <span className="text-sm font-semibold text-gray-700">
+                    {label}
+                  </span>
+                </div>
+
+                <div className="flex items-center gap-2">
+                  <span
+                    className={`flex items-center gap-1 text-[11px] font-medium px-2 py-0.5 rounded-full ${
+                      nearEdge
+                        ? "bg-orange-100 text-orange-600"
+                        : "bg-emerald-100 text-emerald-600"
+                    }`}
+                  >
+                    {nearEdge ? (
+                      <LuTriangleAlert className="w-3 h-3" />
+                    ) : (
+                      <LuCheck className="w-3 h-3" />
+                    )}
+                    {nearEdge ? "نزدیک به حد" : "طبیعی"}
+                  </span>
+                </div>
               </div>
 
-              <div className="relative h-2 rounded-full bg-white border border-gray-200 mb-2">
+              {/* Current value */}
+              <div className="flex items-baseline gap-1 mb-3">
+                <span className={`text-2xl font-bold ${c.text}`}>
+                  {r.current}
+                </span>
+                <span className="text-xs text-gray-400">{unit}</span>
+              </div>
+
+              {/* Range bar */}
+              <div className="relative">
                 <div
-                  className={`absolute top-1/2 -translate-y-1/2 w-3 h-3 rounded-full ${c.bar} border-2 border-white shadow`}
-                  style={{ left: `calc(${percent}% - 6px)` }}
+                  className={`h-2.5 rounded-full bg-gradient-to-r ${c.track}`}
+                />
+                <div
+                  className={`absolute top-1/2 -translate-y-1/2 w-4 h-4 rounded-full ${c.bar} border-2 border-white shadow-md ring-4 ${c.ring} transition-all`}
+                  style={{ left: `calc(${percent}% - 8px)` }}
                 />
               </div>
 
-              <div className="flex items-center justify-between text-xs text-gray-500">
+              {/* Range labels */}
+              <div className="flex items-center justify-between mt-2 text-[11px] text-gray-500">
                 <span>
-                  حد پایین: {r.low} {unit}
+                  حد پایین:{" "}
+                  <span className="font-semibold text-gray-700">{r.low}</span>{" "}
+                  {unit}
                 </span>
                 <span>
-                  حد بالا: {r.high} {unit}
+                  حد بالا:{" "}
+                  <span className="font-semibold text-gray-700">{r.high}</span>{" "}
+                  {unit}
                 </span>
               </div>
             </div>
           );
         })}
+      </div>
+
+      {/* Footer */}
+      <div className="px-6 py-3 border-t border-gray-100 shrink-0 bg-white">
+        <button
+          onClick={onClose}
+          className="w-full py-2.5 rounded-xl bg-gradient-to-l from-blue-600 to-cyan-500 text-white text-sm font-semibold hover:opacity-90 transition-opacity"
+        >
+          متوجه شدم
+        </button>
       </div>
     </div>
   );
