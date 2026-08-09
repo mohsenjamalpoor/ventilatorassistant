@@ -94,21 +94,21 @@ function PediatricVentilator() {
           <div className="lg:col-span-2">
             <div className="grid grid-cols-1 gap-6">
               {/* مانیتور ونتیلاتور */}
-              <div className="bg-gradient-to-br from-blue-50 to-cyan-100 rounded-2xl shadow-lg p-6 border border-blue-200">
+              <div className="bg-linear-to-br from-blue-50 to-cyan-100 rounded-2xl shadow-lg p-6 border border-blue-200">
                 <div className="flex items-center justify-between mb-6">
                   <h2 className="text-xl font-bold text-blue-800">
-                    مانیتور ونتیلاتور -
+                    مانیتور ونتیلاتور
                   </h2>
                   <div className="flex items-center gap-2">
                     <button
                       // onClick={openAlarmModal}
                       className="text-blue-600 hover:text-blue-800 transition-colors p-2 rounded-lg hover:bg-blue-100"
                     >
-                      <PiBellLight className="w-8 h-8 bg-blue-500 hover:bg-blue-600 rounded-lg p-1 text-white" />
+                      <PiBellLight className="w-8 h-8 bg-red-500 hover:bg-red-600 rounded-lg p-1 text-white" />
                     </button>
                     <button
                       // onClick={openSettingsModal}
-                      className="bg-gradient-to-r from-blue-500 to-cyan-500 hover:from-blue-600 hover:to-cyan-600 text-white px-4 py-2 rounded-lg transition-all flex items-center gap-2 shadow-md"
+                      className="bg-linear-to-r from-blue-500 to-cyan-500 hover:from-blue-600 hover:to-cyan-600 text-white px-4 py-2 rounded-lg transition-all flex items-center gap-2 shadow-md"
                     >
                       <svg
                         className="w-4 h-4"
@@ -131,7 +131,7 @@ function PediatricVentilator() {
                 <div className="bg-white/80 backdrop-blur-sm rounded-xl p-4 mb-4 border border-blue-100 shadow-inner">
                   <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-3">
                     {/* PIP */}
-                    <div className="bg-gradient-to-br from-indigo-100 to-indigo-200 rounded-lg p-3 border border-indigo-300 shadow-sm">
+                    <div className="bg-linear-to-br from-indigo-100 to-indigo-200 rounded-lg p-3 border border-indigo-300 shadow-sm">
                       <div className="text-center">
                         <h3 className="text-indigo-700 text-xs mb-1 font-semibold">
                           PIP
@@ -142,7 +142,7 @@ function PediatricVentilator() {
                     </div>
 
                     {/* RR */}
-                    <div className="bg-gradient-to-br from-green-100 to-green-200 rounded-lg p-3 border-2 border-green-400 shadow-sm">
+                    <div className="bg-linear-to-br from-green-100 to-green-200 rounded-lg p-3 border-2 border-green-400 shadow-sm">
                       <div className="text-center">
                         <h3 className="text-green-700 text-xs mb-1 font-semibold">
                           RR
@@ -153,7 +153,7 @@ function PediatricVentilator() {
                     </div>
 
                     {/* FiO2 */}
-                    <div className="bg-gradient-to-br from-purple-100 to-purple-200 rounded-lg p-3 border border-purple-300 shadow-sm">
+                    <div className="bg-linear-to-br from-purple-100 to-purple-200 rounded-lg p-3 border border-purple-300 shadow-sm">
                       <div className="text-center">
                         <h3 className="text-purple-700 text-xs mb-1 font-semibold">
                           FiO₂
@@ -164,7 +164,7 @@ function PediatricVentilator() {
                     </div>
 
                     {/* PEEP */}
-                    <div className="bg-gradient-to-br from-red-100 to-red-200 rounded-lg p-3 border border-red-300 shadow-sm">
+                    <div className="bg-linear-to-br from-red-100 to-red-200 rounded-lg p-3 border border-red-300 shadow-sm">
                       <div className="text-center">
                         <h3 className="text-red-700 text-xs mb-1 font-semibold">
                           PEEP
@@ -175,7 +175,7 @@ function PediatricVentilator() {
                     </div>
 
                     {/* MVent */}
-                    <div className="bg-gradient-to-br from-teal-100 to-teal-200 rounded-lg p-3 border border-teal-300 shadow-sm">
+                    <div className="bg-linear-to-br from-teal-100 to-teal-200 rounded-lg p-3 border border-teal-300 shadow-sm">
                       <div className="text-center">
                         <h3 className="text-teal-700 text-xs mb-1 font-semibold">
                           MVent
@@ -186,7 +186,7 @@ function PediatricVentilator() {
                     </div>
 
                     {/* VTi */}
-                    <div className="bg-gradient-to-br from-blue-100 to-blue-200 rounded-lg p-3 border border-blue-300 shadow-sm">
+                    <div className="bg-linear-to-br from-blue-100 to-blue-200 rounded-lg p-3 border border-blue-300 shadow-sm">
                       <div className="text-center">
                         <h3 className="text-blue-700 text-xs mb-1 font-semibold">
                           VTi
