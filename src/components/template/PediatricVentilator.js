@@ -5,9 +5,14 @@ import BackButton from "../module/BackButton";
 import { PiBellLight } from "react-icons/pi";
 import { useState } from "react";
 import ModalContainer from "../partials/container/ModalContainer";
+import { FaEdit } from "react-icons/fa";
+import AlarmModal from "../module/AlarmModal";
+import O2DropModal from "../module/O2DropModal";
 
 function PediatricVentilator() {
   const [isOpen, setIsOpen] = useState(false);
+  const [isO2ModalOpen, setIsO2ModalOpen] = useState(false);
+  const [advance, setAdvance] = useState(false);
   const searchParams = useSearchParams();
 
   const weight = searchParams.get("weight");
@@ -28,20 +33,12 @@ function PediatricVentilator() {
             </div>
             <div className="flex gap-2">
               <button
-                onClick={() => setIsOpen(true)}
+                onClick={() => setAdvance((prv) => !prv)}
                 className="px-3 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors"
               >
                 تنظیمات پیشرفته
               </button>
-              <ModalContainer setIsOpen={setIsOpen} isOpen={isOpen}>
-                <div>
-                  <div className="bg-green-50 rounded-lg p-4 text-center">
-                    <p className="text-xl font-bold text-green-800">
-                      علت افت O₂
-                    </p>
-                  </div>
-                </div>
-              </ModalContainer>
+
               <button className="px-3 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors">
                 بازنشانی تنظیمات
               </button>
@@ -59,10 +56,7 @@ function PediatricVentilator() {
               <p className="text-cyan-600 text-sm">سن بیمار</p>
               <p className="text-xl font-bold text-cyan-800">{age}</p>
             </div>
-            <div className="bg-green-50 rounded-lg p-4 text-center">
-              <p className="text-green-600 text-sm">گروه سنی</p>
-              <p className="text-xl font-bold text-green-800">کودکان</p>
-            </div>
+
             <div className="bg-orange-50 rounded-lg p-4 text-center">
               <p className="text-orange-600 text-sm">نوع درگیری</p>
               <p className="text-xl font-bold text-orange-800">
@@ -75,6 +69,23 @@ function PediatricVentilator() {
             </div>
           </div>
         </div>
+        {/* تنظیمات پیشرفته */}
+        {advance && (
+          <div className="bg-white rounded-2xl shadow-lg p-6 mb-6">
+            <div className="mt-2 grid grid-cols-1 md:grid-cols-4 gap-4">
+              <button
+                onClick={() => setIsO2ModalOpen(true)}
+                className="text-xl font-bold text-blue-800 bg-green-50 hover:bg-green-100 transition-colors rounded-lg py-2 px-0 text-center cursor-pointer"
+              >
+                علت افت O₂
+              </button>
+            </div>
+
+            <ModalContainer setIsOpen={setIsO2ModalOpen} isOpen={isO2ModalOpen}>
+              <O2DropModal onClose={() => setIsO2ModalOpen(false)} />
+            </ModalContainer>
+          </div>
+        )}
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
           <div className="lg:col-span-1">
             <div className="bg-white rounded-2xl shadow-lg p-6 mb-6">
@@ -100,29 +111,22 @@ function PediatricVentilator() {
                     مانیتور ونتیلاتور
                   </h2>
                   <div className="flex items-center gap-2">
+                    {/* آلارم */}
                     <button
-                      // onClick={openAlarmModal}
+                      onClick={() => setIsOpen(true)}
                       className="text-blue-600 hover:text-blue-800 transition-colors p-2 rounded-lg hover:bg-blue-100"
                     >
                       <PiBellLight className="w-8 h-8 bg-red-500 hover:bg-red-600 rounded-lg p-1 text-white" />
                     </button>
+                    <ModalContainer setIsOpen={setIsOpen} isOpen={isOpen}>
+                      <AlarmModal />
+                    </ModalContainer>
+                    {/* setting مود فعال */}
                     <button
                       // onClick={openSettingsModal}
                       className="bg-linear-to-r from-blue-500 to-cyan-500 hover:from-blue-600 hover:to-cyan-600 text-white px-4 py-2 rounded-lg transition-all flex items-center gap-2 shadow-md"
                     >
-                      <svg
-                        className="w-4 h-4"
-                        fill="none"
-                        stroke="currentColor"
-                        viewBox="0 0 24 24"
-                      >
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          strokeWidth={2}
-                          d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"
-                        />
-                      </svg>
+                      <FaEdit />
                     </button>
                   </div>
                 </div>
