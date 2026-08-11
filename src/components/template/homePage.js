@@ -8,7 +8,9 @@ import {
 import { useState, useMemo } from "react";
 import { useRouter } from "next/navigation";
 import toast from "react-hot-toast";
-import { formatNumber, calculateEttSizes } from "@/utils/formatNumberEtt";
+import { calculateEttSizes } from "@/utils/formatNumberEtt";
+import EttSizeTable from "../module/ett/EttSizeTable";
+import EttTeachingNotes from "../module/ett/EttTeachingNotes";
 
 function HomePage() {
   const router = useRouter();
@@ -260,88 +262,17 @@ function HomePage() {
                 </div>
               ) : (
                 <div className="space-y-4">
-                  {/* جدول مقایسه‌ای برای دید یکجا و آموزشی */}
-                  <div className="rounded-2xl border border-blue-200 overflow-hidden">
-                    <div className="grid grid-cols-3 bg-slate-100 text-[13px] font-bold text-gray-600">
-                      <div className="p-3 border-l border-blue-100"></div>
-                      <div className="p-3 border-l border-blue-100 text-center">
-                        سایز لوله (mm)
-                      </div>
-                      <div className="p-3 text-center">عمق لوله (cm)</div>
-                    </div>
+                  <EttSizeTable ett={ett} />
 
-                    <div className="grid grid-cols-3 items-center border-t border-blue-100">
-                      <div className="p-3 border-l border-blue-100">
-                        <div className="text-sm font-bold text-gray-700">
-                          بدون کاف
-                        </div>
-                        <div className="text-[11px] text-gray-400">
-                          Uncuffed
-                        </div>
-                      </div>
-                      <div className="p-3 border-l border-blue-100 text-center">
-                        <span className="text-2xl font-extrabold text-blue-700">
-                          {formatNumber(ett.uncuffedSize)}
-                        </span>
-                      </div>
-                      <div className="p-3 text-center">
-                        <span className="text-xl font-bold text-cyan-700">
-                          {formatNumber(ett.uncuffedDepth)}
-                        </span>
-                      </div>
-                    </div>
-
-                    <div className="grid grid-cols-3 items-center border-t border-blue-100 bg-blue-50/50">
-                      <div className="p-3 border-l border-blue-100">
-                        <div className="text-sm font-bold text-gray-700">
-                          کاف‌دار
-                        </div>
-                        <div className="text-[11px] text-gray-400">Cuffed</div>
-                      </div>
-                      <div className="p-3 border-l border-blue-100 text-center">
-                        <span className="text-2xl font-extrabold text-blue-700">
-                          {formatNumber(ett.cuffedSize)}
-                        </span>
-                      </div>
-                      <div className="p-3 text-center">
-                        <span className="text-xl font-bold text-cyan-700">
-                          {formatNumber(ett.cuffedDepth)}
-                        </span>
-                      </div>
-                    </div>
-                  </div>
                   <button
                     type="button"
                     onClick={() => setNote((prev) => !prev)}
-                    className="w-full mt-4 rounded-xl bg-blue-600 text-white py-3"
+                    className="w-full mt-4 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 transition-colors"
                   >
-                    {note ? "مخفی کردن نکات" : "نمایش نکات"}
+                    {note ? "مخفی کردن نکات آموزشی" : "نمایش نکات آموزشی"}
                   </button>
-                  {note && (
-                    <div>
-                      <div className="mt-6 rounded-2xl border border-amber-200 bg-amber-50 p-5">
-                        <h3 className="font-bold text-amber-800 mb-3">
-                          نکات مهم بالینی
-                        </h3>
 
-                        <ul className="space-y-3 text-sm text-gray-700 leading-7">
-                          <li className="flex gap-2">
-                            <span>
-                              همیشه یک سایز <b> بزرگ‌تر</b> و<b> کوچک‌تر</b> از
-                              سایز محاسبه‌شده آماده باشد(۰/5mm).
-                            </span>
-                          </li>
-                          <li className="flex gap-2">
-                            <span>
-                              محل صحیح لوله در صورت وجود، با<b>Capnography</b>{" "}
-                              ودر غیر این صورت ، سمع دوطرفه ریه، بالا آمدن قفسه
-                              سینه و CXR تأیید شود.
-                            </span>
-                          </li>
-                        </ul>
-                      </div>
-                    </div>
-                  )}
+                  {note && <EttTeachingNotes />}
                 </div>
               )}
             </div>

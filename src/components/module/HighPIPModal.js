@@ -11,9 +11,10 @@ import {
   LuWind,
   LuLayers,
   LuActivity,
-  LuExternalLink,
   LuLightbulb,
 } from "react-icons/lu";
+import NoteCard from "./shared/NoteCard";
+import ReferenceFooter from "./shared/ReferenceFooter";
 
 const PIP_CAUSES = [
   {
@@ -326,24 +327,18 @@ function HighPIPModal({ onClose }) {
           })}
         </div>
 
-        {/* نکته فوق‌تخصصی */}
-        <div className="mt-5 bg-amber-50 border border-amber-200 rounded-xl p-4 flex gap-3">
-          <LuLightbulb className="w-5 h-5 text-amber-600 shrink-0 mt-0.5" />
-          <p className="text-sm text-amber-700 leading-7">
+        <div className="mt-5 space-y-3">
+          <NoteCard icon={LuLightbulb} title="نکته فوق‌تخصصی" tone="amber">
             در PICU، آلارم High PIP هرگز فقط با افزایش سقف آلارم مدیریت نمی‌شود
             — همیشه علت زمینه‌ای باید مشخص شود، چون PIP بالای مداوم می‌تواند به
             باروتروما و پنوموتوراکس منجر شود.
-          </p>
-        </div>
+          </NoteCard>
 
-        {/* فوتر رفرنس */}
-        <div className="flex items-center gap-2 pt-4 mt-4 border-t border-gray-100">
-          <LuExternalLink className="w-3.5 h-3.5 text-gray-400" />
-          <p className="text-[11px] text-gray-400">
-            منبع: UpToDate — Overview of mechanical ventilation / Ventilator
-            management strategies for adults and children with acute respiratory
-            failure
-          </p>
+          <ReferenceFooter
+            source={
+              'UpToDate — "Overview of mechanical ventilation" / "Ventilator management strategies for adults and children with acute respiratory failure"'
+            }
+          />
         </div>
       </div>
     </div>

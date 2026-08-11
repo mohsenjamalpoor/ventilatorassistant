@@ -9,9 +9,10 @@ import {
   LuBookOpen,
   LuTriangleAlert,
   LuGitBranch,
-  LuExternalLink,
   LuInfo,
 } from "react-icons/lu";
+import NoteCard from "./shared/NoteCard";
+import ReferenceFooter from "./shared/ReferenceFooter";
 
 function RespiratoryAcidosisModal({ onClose }) {
   const [severityTab, setSeverityTab] = useState("acute");
@@ -64,13 +65,12 @@ function RespiratoryAcidosisModal({ onClose }) {
               می‌یابد. علت اصلی، اختلال در یکی از اجزای پمپ تنفسی (مرکز تنفسی،
               عصب، عضله، دیواره قفسه سینه) یا خود پارانشیم ریه است.
             </p>
-            <div className="mt-3 bg-slate-50 border border-slate-200 rounded-xl p-3 flex gap-2.5">
-              <LuInfo className="w-4 h-4 text-slate-400 shrink-0 mt-0.5" />
-              <p className="text-xs text-slate-500 leading-6">
+            <div className="mt-3">
+              <NoteCard icon={LuInfo}>
                 معادله ساده‌شده: PaCO2 با تهویه دقیقه‌ای آلوئولی (VA) رابطه عکس
                 دارد — کاهش VA (به‌دلیل کاهش VT، کاهش RR، یا افزایش دد اسپیس)
                 مستقیماً منجر به افزایش PaCO2 می‌شود.
-              </p>
+              </NoteCard>
             </div>
           </section>
 
@@ -114,8 +114,8 @@ function RespiratoryAcidosisModal({ onClose }) {
                     detail: "کار تنفسی طولانی‌مدت، Guillain-Barré حاد",
                   },
                   {
-                    title: "پنوموتوراکس",
-                    detail: "کاهش حاد کمپلیانس",
+                    title: "پنوموتوراکس / فلیل چست",
+                    detail: "کاهش حاد کمپلیانس یا مکانیک قفسه سینه",
                   },
                   {
                     title: "تهویه مکانیکی نامناسب",
@@ -246,29 +246,19 @@ function RespiratoryAcidosisModal({ onClose }) {
             </ul>
           </section>
 
-          {/* نکته فوق تخصصی */}
-          <section className="bg-amber-50 border border-amber-200 rounded-xl p-4 flex gap-3">
-            <LuLightbulb className="w-5 h-5 text-amber-600 shrink-0 mt-0.5" />
-            <div>
-              <p className="text-sm font-semibold text-amber-800 mb-1">
-                نکته فوق‌تخصصی
-              </p>
-              <p className="text-sm text-amber-700 leading-7">
-                در بیمار PICU با اسیدوز تنفسی مزمن (مثل BPD یا بیماری
-                عصبی-عضلانی)، هدف هیپرکاپنی مجاز (Permissive Hypercapnia) با حفظ
-                pH قابل قبول (معمولاً بالای ۷.۲۵-۷.۳۰) ترجیح داده می‌شود تا تلاش
-                برای نرمال‌سازی کامل PaCO2 که می‌تواند منجر به آسیب حجمی/فشاری
-                ریه (Volutrauma/Barotrauma) شود.
-              </p>
-            </div>
-          </section>
+          {/* نکته فوق تخصصی و رفرنس */}
+          <div className="space-y-3">
+            <NoteCard icon={LuLightbulb} title="نکته فوق‌تخصصی" tone="amber">
+              در بیمار PICU با اسیدوز تنفسی مزمن (مثل BPD یا بیماری
+              عصبی-عضلانی)، هدف هیپرکاپنی مجاز (Permissive Hypercapnia) با حفظ
+              pH قابل قبول (معمولاً بالای ۷.۲۵-۷.۳۰) ترجیح داده می‌شود تا تلاش
+              برای نرمال‌سازی کامل PaCO2 که می‌تواند منجر به آسیب حجمی/فشاری ریه
+              (Volutrauma/Barotrauma) شود.
+            </NoteCard>
 
-          {/* فوتر رفرنس */}
-          <div className="flex items-center gap-2 pt-2 border-t border-slate-100">
-            <LuExternalLink className="w-3.5 h-3.5 text-slate-400" />
-            <p className="text-[11px] text-slate-400">
-              منبع: UpToDate — Simple and mixed acid-base disorders
-            </p>
+            <ReferenceFooter
+              source={'UpToDate — "Simple and mixed acid-base disorders"'}
+            />
           </div>
         </div>
       </div>

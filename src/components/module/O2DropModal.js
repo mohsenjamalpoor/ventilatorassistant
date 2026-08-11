@@ -6,7 +6,6 @@ import {
   LuStethoscope,
   LuTriangleAlert,
   LuX,
-  LuExternalLink,
   LuMoveHorizontal,
   LuBan,
   LuWind,
@@ -14,6 +13,8 @@ import {
   LuUser,
   LuLightbulb,
 } from "react-icons/lu";
+import NoteCard from "./shared/NoteCard";
+import ReferenceFooter from "./shared/ReferenceFooter";
 
 const O2_CAUSES = [
   {
@@ -353,24 +354,19 @@ function O2DropModal({ onClose }) {
           })}
         </div>
 
-        {/* نکته فوق‌تخصصی */}
-        <div className="mt-5 bg-amber-50 border border-amber-200 rounded-xl p-4 flex gap-3">
-          <LuLightbulb className="w-5 h-5 text-amber-600 shrink-0 mt-0.5" />
-          <p className="text-sm text-amber-700 leading-7">
+        <div className="mt-5 space-y-3">
+          <NoteCard icon={LuLightbulb} title="نکته فوق‌تخصصی" tone="amber">
             در بیمار PICU، همیشه ابتدا خودتان و مدار را بررسی کنید، نه فقط
             دستگاه یا بیمار — یک بررسی سریع «از بیمار به دستگاه» (تماس مستقیم با
             بیمار، سپس لوله، سپس مدار، سپس ونتیلاتور) از اتلاف زمان در حل مشکلات
             فوریتی جلوگیری می‌کند.
-          </p>
-        </div>
+          </NoteCard>
 
-        {/* فوتر رفرنس */}
-        <div className="flex items-center gap-2 pt-4 mt-4 border-t border-gray-100">
-          <LuExternalLink className="w-3.5 h-3.5 text-gray-400" />
-          <p className="text-[11px] text-gray-400">
-            منبع: UpToDate — Overview of mechanical ventilation / Complications
-            of mechanical ventilation
-          </p>
+          <ReferenceFooter
+            source={
+              'UpToDate — "Overview of mechanical ventilation" / "Complications of mechanical ventilation"'
+            }
+          />
         </div>
       </div>
     </div>
