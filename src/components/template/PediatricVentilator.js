@@ -297,7 +297,7 @@ function PediatricVentilator() {
             <div className="flex gap-2 flex-wrap">
               <button
                 onClick={() => setAdvance((prv) => !prv)}
-                className="px-4 py-2 border border-slate-300 text-slate-700 rounded-xl hover:bg-slate-50 transition-all hover:shadow-md flex items-center gap-2"
+                className="px-2 py-2 border border-slate-300 text-slate-700 rounded-xl hover:bg-slate-50 transition-all hover:shadow-md flex items-center gap-2"
               >
                 <LuStethoscope className="w-4 h-4 text-slate-500" />
                 <span className="text-sm font-medium">مدیریت مشکلات تنفسی</span>
@@ -326,7 +326,7 @@ function PediatricVentilator() {
                     ),
                   });
                 }}
-                className="px-4 py-2 border border-gray-300 text-gray-700 rounded-xl hover:bg-gray-50 transition-all hover:shadow-md"
+                className="px-3 py-2 border border-gray-300 text-gray-700 rounded-xl hover:bg-gray-50 transition-all hover:shadow-md"
               >
                 بازنشانی تنظیمات
               </button>
