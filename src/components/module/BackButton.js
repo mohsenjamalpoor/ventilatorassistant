@@ -1,7 +1,7 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { LuArrowLeft, LuArrowRight } from "react-icons/lu";
+import { LuArrowLeft } from "react-icons/lu";
 
 export default function BackButton() {
   const router = useRouter();
