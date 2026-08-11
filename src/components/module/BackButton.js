@@ -21,20 +21,10 @@ export default function BackButton() {
         bg-white/90
         px-3.5
         py-2.5
-
         text-sm
         font-bold
         text-slate-600
-
-        shadow-[0_2px_8px_rgba(15,23,42,0.06)]
-
-        backdrop-blur-sm
-
-        transition-all
-        duration-200
-        ease-out
-
-        hover:-translate-y-0.5
+        shadow-[0_2px_8px_rgba(15,23,42,0.06)] backdrop-blur-sm transition-all duration-200 ease-out hover:-translate-y-0.5
         hover:border-blue-200
         hover:bg-blue-50/70
         hover:text-blue-700
@@ -59,14 +49,11 @@ export default function BackButton() {
           w-8
           items-center
           justify-center
-
           rounded-xl
           bg-slate-100
           text-slate-500
-
           transition-all
           duration-200
-
           group-hover:bg-blue-100
           group-hover:text-blue-600
         "
