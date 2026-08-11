@@ -322,15 +322,15 @@ export const pediatricVentilatorModes = {
     disadvantages: [
       "بدون حمایت فشاری برای هر تنفس؛ نامناسب برای بیمار با کار تنفسی بالا",
     ],
-    keyParameters: ["cpap", "fio2"],
+    keyParameters: ["peep", "fio2"],
     settingsByInvolvement: {
-      normal: { cpap: 5, note: "سطح استاندارد شروع." },
+      normal: { peep: 5, note: "سطح استاندارد شروع." },
       obstructive: {
-        cpap: 6,
+        peep: 6,
         note: "سطح اندکی بالاتر برای غلبه بر مقاومت راه هوایی و PEEP خودبه‌خودی.",
       },
       restrictive: {
-        cpap: 8,
+        peep: 8,
         note: "سطح بالاتر برای بهبود اکسیژناسیون و کاهش آتلکتازی.",
       },
     },
