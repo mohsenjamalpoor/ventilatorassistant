@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import {
   LuX,
   LuActivity,
@@ -8,9 +8,14 @@ import {
   LuLightbulb,
   LuBookOpen,
   LuTriangleAlert,
+  LuGitBranch,
+  LuExternalLink,
+  LuInfo,
 } from "react-icons/lu";
 
 function RespiratoryAcidosisModal({ onClose }) {
+  const [severityTab, setSeverityTab] = useState("acute");
+
   return (
     <div
       dir="rtl"
@@ -19,7 +24,7 @@ function RespiratoryAcidosisModal({ onClose }) {
     >
       <div
         onClick={(e) => e.stopPropagation()}
-        className="w-[92vw] max-w-2xl max-h-[85vh] bg-white rounded-2xl shadow-2xl flex flex-col overflow-hidden"
+        className="w-[92vw] max-w-2xl max-h-[88vh] bg-white rounded-2xl shadow-2xl flex flex-col overflow-hidden"
       >
         {/* Header */}
         <div className="relative bg-gradient-to-l from-rose-600 to-rose-500 px-6 py-5 flex items-center justify-between shrink-0">
@@ -57,55 +62,105 @@ function RespiratoryAcidosisModal({ onClose }) {
               اسیدوز تنفسی زمانی رخ می‌دهد که تهویه آلوئولی برای دفع CO2
               تولیدشده در بدن کافی نباشد، در نتیجه PaCO2 بالا رفته و pH خون کاهش
               می‌یابد. علت اصلی، اختلال در یکی از اجزای پمپ تنفسی (مرکز تنفسی،
-              عصب، عضله، دیواره قفسه سینه) یا خود ریه است.
+              عصب، عضله، دیواره قفسه سینه) یا خود پارانشیم ریه است.
             </p>
+            <div className="mt-3 bg-slate-50 border border-slate-200 rounded-xl p-3 flex gap-2.5">
+              <LuInfo className="w-4 h-4 text-slate-400 shrink-0 mt-0.5" />
+              <p className="text-xs text-slate-500 leading-6">
+                معادله ساده‌شده: PaCO2 با تهویه دقیقه‌ای آلوئولی (VA) رابطه عکس
+                دارد — کاهش VA (به‌دلیل کاهش VT، کاهش RR، یا افزایش دد اسپیس)
+                مستقیماً منجر به افزایش PaCO2 می‌شود.
+              </p>
+            </div>
           </section>
 
-          {/* علل */}
+          {/* علل - با تب حاد/مزمن */}
           <section>
             <SectionTitle
               icon={<LuTriangleAlert className="w-4 h-4" />}
               label="علل شایع"
             />
-            <div className="grid grid-cols-2 gap-3">
-              <CauseCard
-                title="حاد"
-                items={[
-                  "دپرسیون CNS (سداتیو، اپیوئید)",
-                  "انسداد راه هوایی فوقانی",
-                  "برونکواسپاسم شدید (آسم)",
-                  "خستگی عضلات تنفسی",
-                  "پنوموتوراکس / فلیل چست",
-                  "تهویه مکانیکی نامناسب",
-                ]}
-              />
-              <CauseCard
-                title="مزمن"
-                items={[
-                  "بیماری‌های عصبی-عضلانی (SMA، دیستروفی)",
-                  "کیفواسکولیوز شدید",
-                  "برونکوپولمونری دیسپلازی (BPD)",
-                  "سندرم هیپوونتیلاسیون مرکزی",
-                  "چاقی مفرط (OHS)",
-                ]}
-              />
+            <div className="flex gap-2 mb-3">
+              <TabButton
+                active={severityTab === "acute"}
+                onClick={() => setSeverityTab("acute")}
+              >
+                حاد
+              </TabButton>
+              <TabButton
+                active={severityTab === "chronic"}
+                onClick={() => setSeverityTab("chronic")}
+              >
+                مزمن
+              </TabButton>
             </div>
+            {severityTab === "acute" ? (
+              <CauseList
+                items={[
+                  {
+                    title: "دپرسیون CNS",
+                    detail: "سداتیو، اپیوئید، تروما یا خونریزی مغزی",
+                  },
+                  {
+                    title: "انسداد راه هوایی فوقانی",
+                    detail: "کروپ شدید، لارنگواسپاسم، جسم خارجی",
+                  },
+                  {
+                    title: "برونکواسپاسم شدید",
+                    detail: "حمله حاد آسم با خستگی تنفسی",
+                  },
+                  {
+                    title: "خستگی عضلات تنفسی",
+                    detail: "کار تنفسی طولانی‌مدت، Guillain-Barré حاد",
+                  },
+                  {
+                    title: "پنوموتوراکس",
+                    detail: "کاهش حاد کمپلیانس",
+                  },
+                  {
+                    title: "تهویه مکانیکی نامناسب",
+                    detail: "VT یا RR ناکافی تنظیم‌شده",
+                  },
+                ]}
+              />
+            ) : (
+              <CauseList
+                items={[
+                  {
+                    title: "بیماری‌های عصبی-عضلانی",
+                    detail: "SMA، دیستروفی عضلانی، میوپاتی مزمن",
+                  },
+                  {
+                    title: "کیفواسکولیوز شدید",
+                    detail: "محدودیت مکانیکی مزمن دیواره قفسه سینه",
+                  },
+                  {
+                    title: "برونکوپولمونری دیسپلازی (BPD)",
+                    detail: "نوزادان نارس با بیماری ریوی مزمن",
+                  },
+                  {
+                    title: "سندرم هیپوونتیلاسیون مرکزی",
+                    detail: "مادرزادی (CCHS) یا اکتسابی",
+                  },
+                  {
+                    title: "چاقی مفرط (OHS)",
+                    detail: "کمتر در PICU، ولی در نوجوانان مطرح",
+                  },
+                ]}
+              />
+            )}
           </section>
 
           {/* یافته های ABG */}
           <section>
             <SectionTitle
               icon={<LuDroplet className="w-4 h-4" />}
-              label="یافته‌های گازومتری (ABG)"
+              label="یافته‌های ABG"
             />
             <div className="grid grid-cols-3 gap-3">
               <ValueBox label="pH" value="< 7.35" tone="rose" />
               <ValueBox label="PaCO2" value="> 45 mmHg" tone="rose" />
-              <ValueBox
-                label="HCO3"
-                value="طبیعی یا افزایش جبرانی"
-                tone="slate"
-              />
+              <ValueBox label="HCO3" value="طبیعی یا ↑ جبرانی" tone="slate" />
             </div>
           </section>
 
@@ -115,20 +170,53 @@ function RespiratoryAcidosisModal({ onClose }) {
               icon={<LuBookOpen className="w-4 h-4" />}
               label="جبران کلیوی مورد انتظار"
             />
-            <div className="bg-slate-50 border border-slate-200 rounded-xl p-4 space-y-2">
+            <div className="bg-slate-50 border border-slate-200 rounded-xl p-4 space-y-3">
               <FormulaRow
                 label="حاد (Acute)"
-                formula="به ازای هر 10 mmHg افزایش PaCO2 → HCO3 حدود 1 mEq/L افزایش می‌یابد"
+                formula="به ازای هر ۱۰ mmHg افزایش PaCO2 → HCO3 حدود ۱ mEq/L افزایش می‌یابد"
               />
               <FormulaRow
-                label="مزمن (Chronic، پس از 3-5 روز)"
-                formula="به ازای هر 10 mmHg افزایش PaCO2 → HCO3 حدود 3.5-4 mEq/L افزایش می‌یابد"
+                label="مزمن (Chronic، پس از ۳-۵ روز)"
+                formula="به ازای هر ۱۰ mmHg افزایش PaCO2 → HCO3 حدود ۳.۵-۴ mEq/L افزایش می‌یابد"
               />
-              <p className="text-xs text-slate-500 leading-6 pt-1">
-                عدم تطابق میزان جبران با این محدوده مطرح‌کننده اختلال اسید-باز
-                مختلط همراه است.
-              </p>
+              <div className="pt-1 border-t border-slate-200">
+                <p className="text-xs text-slate-500 leading-6">
+                  عدم تطابق میزان جبران با این محدوده، مطرح‌کننده اختلال
+                  اسید-باز مختلط همراه (مثل آلکالوز متابولیک یا اسیدوز متابولیک
+                  هم‌زمان) است.
+                </p>
+              </div>
             </div>
+          </section>
+
+          {/* الگوریتم افتراق سریع */}
+          <section>
+            <SectionTitle
+              icon={<LuGitBranch className="w-4 h-4" />}
+              label="الگوریتم افتراق سریع در تخت بیمار"
+            />
+            <ol className="space-y-2.5">
+              <AlgoStep
+                n={1}
+                text="تایید اسیدمی (pH < 7.35) و PaCO2 بالا در ABG"
+              />
+              <AlgoStep
+                n={2}
+                text="محاسبه HCO3 مورد انتظار طبق فرمول حاد/مزمن و مقایسه با HCO3 اندازه‌گیری‌شده بیمار"
+              />
+              <AlgoStep
+                n={3}
+                text="در صورت عدم تطابق → بررسی اختلال اسید-باز مختلط (مثلاً افت HCO3 بیشتر از حد انتظار → آلکالوز تنفسی مزمن هم‌زمان با CO2 بالا حاد)"
+              />
+              <AlgoStep
+                n={4}
+                text="ارزیابی هم‌زمان اکسیژناسیون (PaO2/SpO2) — هیپوکسمی همراه اغلب فوریت بالینی بیشتری دارد"
+              />
+              <AlgoStep
+                n={5}
+                text="تصمیم‌گیری درباره حمایت تنفسی (NIV / اینتوباسیون) بر اساس روند بالینی، نه فقط عدد PaCO2"
+              />
+            </ol>
           </section>
 
           {/* رویکرد بالینی */}
@@ -137,19 +225,19 @@ function RespiratoryAcidosisModal({ onClose }) {
               icon={<LuStethoscope className="w-4 h-4" />}
               label="رویکرد بالینی و درمان"
             />
-            <ul className="text-sm text-slate-600 leading-7 list-disc pr-5 space-y-1">
+            <ul className="text-sm text-slate-600 leading-7 list-disc pr-5 space-y-1.5">
               <li>یافتن و درمان علت زمینه‌ای، اولویت اول است.</li>
               <li>
                 در بیمار تحت تهویه مکانیکی، افزایش RR و/یا حجم جاری (در محدوده
                 ایمن ریه) برای بهبود تهویه دقیقه‌ای.
               </li>
               <li>
-                در نارسایی تنفسی حاد و pH پایین، بررسی نیاز به NIV یا
-                اینتوباسیون.
+                در نارسایی تنفسی حاد و pH پایین (معمولاً &lt; 7.20-7.25)، بررسی
+                نیاز به NIV یا اینتوباسیون.
               </li>
               <li>
                 در بیماران مزمن با جبران کامل، اجتناب از اصلاح سریع PaCO2 برای
-                پیشگیری از آلکالمی پس از درمان.
+                پیشگیری از آلکالمی پس از درمان (Post-hypercapnic alkalosis).
               </li>
               <li>
                 توجه ویژه به همزمانی هیپوکسمی، که در بسیاری از موارد اورژانسی‌تر
@@ -168,12 +256,20 @@ function RespiratoryAcidosisModal({ onClose }) {
               <p className="text-sm text-amber-700 leading-7">
                 در بیمار PICU با اسیدوز تنفسی مزمن (مثل BPD یا بیماری
                 عصبی-عضلانی)، هدف هیپرکاپنی مجاز (Permissive Hypercapnia) با حفظ
-                pH قابل قبول (معمولاً بالای 7.25-7.30) ترجیح داده می‌شود تا تلاش
+                pH قابل قبول (معمولاً بالای ۷.۲۵-۷.۳۰) ترجیح داده می‌شود تا تلاش
                 برای نرمال‌سازی کامل PaCO2 که می‌تواند منجر به آسیب حجمی/فشاری
-                ریه شود.
+                ریه (Volutrauma/Barotrauma) شود.
               </p>
             </div>
           </section>
+
+          {/* فوتر رفرنس */}
+          <div className="flex items-center gap-2 pt-2 border-t border-slate-100">
+            <LuExternalLink className="w-3.5 h-3.5 text-slate-400" />
+            <p className="text-[11px] text-slate-400">
+              منبع: UpToDate — Simple and mixed acid-base disorders
+            </p>
+          </div>
         </div>
       </div>
     </div>
@@ -189,21 +285,35 @@ function SectionTitle({ icon, label }) {
   );
 }
 
-function CauseCard({ title, items }) {
+function TabButton({ active, onClick, children }) {
   return (
-    <div className="bg-slate-50 border border-slate-200 rounded-xl p-3">
-      <p className="text-xs font-semibold text-slate-500 mb-2">{title}</p>
-      <ul className="space-y-1.5">
-        {items.map((item, i) => (
-          <li
-            key={i}
-            className="text-xs text-slate-600 leading-5 flex items-start gap-1.5"
-          >
-            <span className="w-1 h-1 rounded-full bg-rose-400 mt-1.5 shrink-0" />
-            {item}
-          </li>
-        ))}
-      </ul>
+    <button
+      onClick={onClick}
+      className={`px-3.5 py-1.5 rounded-lg text-xs font-semibold transition-colors ${
+        active
+          ? "bg-rose-500 text-white"
+          : "bg-slate-100 text-slate-500 hover:bg-slate-200"
+      }`}
+    >
+      {children}
+    </button>
+  );
+}
+
+function CauseList({ items }) {
+  return (
+    <div className="bg-slate-50 border border-slate-200 rounded-xl p-3 space-y-2.5">
+      {items.map((item, i) => (
+        <div key={i} className="flex items-start gap-2.5">
+          <span className="w-1.5 h-1.5 rounded-full bg-rose-400 mt-1.5 shrink-0" />
+          <div>
+            <p className="text-xs font-semibold text-slate-700">{item.title}</p>
+            <p className="text-xs text-slate-500 leading-5 mt-0.5">
+              {item.detail}
+            </p>
+          </div>
+        </div>
+      ))}
     </div>
   );
 }
@@ -227,6 +337,17 @@ function FormulaRow({ label, formula }) {
       <span className="text-xs font-semibold text-slate-700">{label}</span>
       <span className="text-sm text-slate-600 leading-6">{formula}</span>
     </div>
+  );
+}
+
+function AlgoStep({ n, text }) {
+  return (
+    <li className="flex items-start gap-3">
+      <span className="w-6 h-6 rounded-full bg-rose-100 text-rose-600 text-xs font-bold flex items-center justify-center shrink-0">
+        {n}
+      </span>
+      <p className="text-sm text-slate-600 leading-7 pt-0.5">{text}</p>
+    </li>
   );
 }
 

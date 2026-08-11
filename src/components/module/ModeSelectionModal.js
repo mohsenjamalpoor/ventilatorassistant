@@ -87,7 +87,7 @@ function ModeSelectionModal({
       className="flex w-[95vw] max-w-4xl max-h-[90vh] flex-col overflow-hidden rounded-2xl bg-white shadow-2xl"
     >
       {/* Header */}
-      <div className="flex shrink-0 items-center justify-between bg-gradient-to-l from-blue-600 to-cyan-500 px-6 py-4">
+      <div className="flex shrink-0 items-center justify-between bg-linear-to-l from-blue-600 to-cyan-500 px-6 py-4">
         <div>
           <h2 className="text-lg font-bold text-white">انتخاب مد ونتیلاتور</h2>
           <p className="text-xs text-blue-100 mt-0.5">
@@ -331,7 +331,7 @@ function ModeSelectionModal({
           type="button"
           onClick={handleConfirm}
           disabled={!selectedMode}
-          className="rounded-lg bg-gradient-to-l from-blue-600 to-cyan-500 px-5 py-2 font-bold text-white transition-opacity hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-40"
+          className="rounded-lg bg-linear-to-l from-blue-600 to-cyan-500 px-5 py-2 font-bold text-white transition-opacity hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-40"
         >
           اعمال تنظیمات
         </button>

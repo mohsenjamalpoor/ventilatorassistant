@@ -111,13 +111,13 @@ function PediatricVentilator() {
   const involvementDescription = getLungInvolvementDescription(lungInvolvement);
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-cyan-50 to-blue-100 py-8 px-4">
+    <div className="min-h-screen bg-linear-to-br from-blue-50 via-cyan-50 to-blue-100 py-8 px-4">
       <div className="max-w-7xl mx-auto">
         {/* هدر */}
         <div className="bg-white/90 backdrop-blur-sm rounded-2xl shadow-xl p-6 mb-6 border border-blue-100">
           <div className="flex items-center justify-between flex-wrap gap-4">
             <div>
-              <h1 className="text-2xl font-bold bg-gradient-to-r from-blue-600 to-cyan-600 bg-clip-text text-transparent mb-1">
+              <h1 className="text-2xl font-bold bg-linear-to-r from-blue-600 to-cyan-600 bg-clip-text text-transparent mb-1">
                 تنظیمات اولیه ونتیلاتور
               </h1>
               <div className="flex items-center gap-3 flex-wrap">
@@ -184,18 +184,18 @@ function PediatricVentilator() {
 
           {/* اطلاعات بیمار */}
           <div className="mt-4 grid grid-cols-1 md:grid-cols-4 gap-4">
-            <div className="bg-gradient-to-br from-blue-50 to-blue-100 rounded-xl p-4 text-center border border-blue-200">
+            <div className="bg-linear-to-br from-blue-50 to-blue-100 rounded-xl p-4 text-center border border-blue-200">
               <p className="text-blue-600 text-sm font-medium">وزن بیمار</p>
               <p className="text-2xl font-bold text-blue-800">
                 {weight || "--"} <span className="text-sm font-normal">kg</span>
               </p>
             </div>
-            <div className="bg-gradient-to-br from-cyan-50 to-cyan-100 rounded-xl p-4 text-center border border-cyan-200">
+            <div className="bg-linear-to-br from-cyan-50 to-cyan-100 rounded-xl p-4 text-center border border-cyan-200">
               <p className="text-cyan-600 text-sm font-medium">سن بیمار</p>
               <p className="text-2xl font-bold text-cyan-800">{age || "--"}</p>
             </div>
             <div
-              className={`bg-gradient-to-br rounded-xl p-4 text-center border ${
+              className={`bg-linear-to-br rounded-xl p-4 text-center border ${
                 lungInvolvement === "normal"
                   ? "from-green-50 to-green-100 border-green-200"
                   : lungInvolvement === "obstructive"
@@ -351,9 +351,9 @@ function PediatricVentilator() {
         </ModalContainer>
 
         {/* مانیتور ونتیلاتور */}
-        <div className="bg-gradient-to-br from-blue-50/95 to-cyan-50/95 backdrop-blur-sm rounded-2xl shadow-xl p-6 border border-blue-200">
+        <div className="bg-linear-to-br from-blue-50/95 to-cyan-50/95 backdrop-blur-sm rounded-2xl shadow-xl p-6 border border-blue-200">
           <div className="flex items-center justify-between mb-6 flex-wrap gap-3">
-            <h2 className="text-2xl font-bold bg-gradient-to-r from-blue-600 to-cyan-600 bg-clip-text text-transparent">
+            <h2 className="text-2xl font-bold bg-linear-to-r from-blue-600 to-cyan-600 bg-clip-text text-transparent">
               مانیتور ونتیلاتور
             </h2>
 
@@ -361,7 +361,7 @@ function PediatricVentilator() {
               {/* انتخاب مد */}
               <button
                 onClick={() => setIsModeModalOpen(true)}
-                className="group relative p-3 bg-gradient-to-r from-blue-50 to-cyan-50 rounded-lg hover:bg-blue-600 transition-all shadow-md hover:shadow-lg"
+                className="group relative p-3 bg-linear-to-r from-blue-50 to-cyan-50 rounded-lg hover:bg-blue-600 transition-all shadow-md hover:shadow-lg"
                 title="انتخاب مود ونتیلاتور"
               >
                 <p className="text-sm font-bold text-blue-800">
@@ -372,7 +372,7 @@ function PediatricVentilator() {
               {/* ویرایش تنظیمات */}
               <button
                 onClick={() => setIsEditModalOpen(true)}
-                className="group p-2 rounded-xl bg-gradient-to-r from-indigo-500 to-purple-500 hover:from-indigo-600 hover:to-purple-600 transition-all shadow-md hover:shadow-lg"
+                className="group p-2 rounded-xl bg-linear-to-r from-indigo-500 to-purple-500 hover:from-indigo-600 hover:to-purple-600 transition-all shadow-md hover:shadow-lg"
                 title="ویرایش تنظیمات ونتیلاتور"
               >
                 <FaEdit className="w-6 h-6 text-white" />
@@ -393,7 +393,7 @@ function PediatricVentilator() {
           <div className="bg-white/80 backdrop-blur-sm rounded-xl p-6 border border-blue-100 shadow-inner">
             <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-7 gap-4">
               {/* PIP */}
-              <div className="bg-gradient-to-br from-indigo-100 to-indigo-200 rounded-xl p-4 border-2 border-indigo-300 shadow-sm hover:shadow-md transition-all">
+              <div className="bg-linear-to-br from-indigo-100 to-indigo-200 rounded-xl p-4 border-2 border-indigo-300 shadow-sm hover:shadow-md transition-all">
                 <div className="text-center">
                   <h3 className="text-indigo-700 text-xs font-bold uppercase tracking-wider mb-2">
                     PIP
@@ -406,7 +406,7 @@ function PediatricVentilator() {
               </div>
 
               {/* RR */}
-              <div className="bg-gradient-to-br from-green-100 to-green-200 rounded-xl p-4 border-2 border-green-400 shadow-sm hover:shadow-md transition-all">
+              <div className="bg-linear-to-br from-green-100 to-green-200 rounded-xl p-4 border-2 border-green-400 shadow-sm hover:shadow-md transition-all">
                 <div className="text-center">
                   <h3 className="text-green-700 text-xs font-bold uppercase tracking-wider mb-2">
                     RR
@@ -419,7 +419,7 @@ function PediatricVentilator() {
               </div>
 
               {/* FiO2 */}
-              <div className="bg-gradient-to-br from-purple-100 to-purple-200 rounded-xl p-4 border-2 border-purple-300 shadow-sm hover:shadow-md transition-all">
+              <div className="bg-linear-to-br from-purple-100 to-purple-200 rounded-xl p-4 border-2 border-purple-300 shadow-sm hover:shadow-md transition-all">
                 <div className="text-center">
                   <h3 className="text-purple-700 text-xs font-bold uppercase tracking-wider mb-2">
                     FiO₂
@@ -432,7 +432,7 @@ function PediatricVentilator() {
               </div>
 
               {/* PEEP */}
-              <div className="bg-gradient-to-br from-red-100 to-red-200 rounded-xl p-4 border-2 border-red-300 shadow-sm hover:shadow-md transition-all">
+              <div className="bg-linear-to-br from-red-100 to-red-200 rounded-xl p-4 border-2 border-red-300 shadow-sm hover:shadow-md transition-all">
                 <div className="text-center">
                   <h3 className="text-red-700 text-xs font-bold uppercase tracking-wider mb-2">
                     PEEP
@@ -445,7 +445,7 @@ function PediatricVentilator() {
               </div>
 
               {/* MVent */}
-              <div className="bg-gradient-to-br from-teal-100 to-teal-200 rounded-xl p-4 border-2 border-teal-300 shadow-sm hover:shadow-md transition-all">
+              <div className="bg-linear-to-br from-teal-100 to-teal-200 rounded-xl p-4 border-2 border-teal-300 shadow-sm hover:shadow-md transition-all">
                 <div className="text-center">
                   <h3 className="text-teal-700 text-xs font-bold uppercase tracking-wider mb-2">
                     MVent
@@ -458,7 +458,7 @@ function PediatricVentilator() {
               </div>
 
               {/* VTi */}
-              <div className="bg-gradient-to-br from-blue-100 to-blue-200 rounded-xl p-4 border-2 border-blue-300 shadow-sm hover:shadow-md transition-all">
+              <div className="bg-linear-to-br from-blue-100 to-blue-200 rounded-xl p-4 border-2 border-blue-300 shadow-sm hover:shadow-md transition-all">
                 <div className="text-center">
                   <h3 className="text-blue-700 text-xs font-bold uppercase tracking-wider mb-2">
                     VTi
@@ -471,7 +471,7 @@ function PediatricVentilator() {
               </div>
 
               {/* VTe */}
-              <div className="bg-gradient-to-br from-green-100 to-green-200 rounded-xl p-4 border-2 border-green-300 shadow-sm hover:shadow-md transition-all">
+              <div className="bg-linear-to-br from-green-100 to-green-200 rounded-xl p-4 border-2 border-green-300 shadow-sm hover:shadow-md transition-all">
                 <div className="text-center">
                   <h3 className="text-green-700 text-xs font-bold uppercase tracking-wider mb-2">
                     VTe
@@ -486,13 +486,13 @@ function PediatricVentilator() {
 
             {/* نمایش جزئیات اضافی */}
             <div className="mt-4 grid grid-cols-2 md:grid-cols-4 gap-3">
-              <div className="bg-gradient-to-r from-indigo-50 to-purple-50 rounded-lg p-3 text-center border border-indigo-200">
+              <div className="bg-linear-to-r from-indigo-50 to-purple-50 rounded-lg p-3 text-center border border-indigo-200">
                 <p className="text-xs text-indigo-600 font-medium">نسبت I:E</p>
                 <p className="text-sm font-bold text-indigo-800">
                   {currentSettings.ieRatio || "1:2"}
                 </p>
               </div>
-              <div className="bg-gradient-to-r from-orange-50 to-amber-50 rounded-lg p-3 text-center border border-orange-200">
+              <div className="bg-linear-to-r from-orange-50 to-amber-50 rounded-lg p-3 text-center border border-orange-200">
                 <p className="text-xs text-orange-600 font-medium">
                   فشار حمایتی
                 </p>
@@ -500,7 +500,7 @@ function PediatricVentilator() {
                   {currentSettings.pressureSupport || "--"} cmH₂O
                 </p>
               </div>
-              <div className="bg-gradient-to-r from-teal-50 to-emerald-50 rounded-lg p-3 text-center border border-teal-200">
+              <div className="bg-linear-to-r from-teal-50 to-emerald-50 rounded-lg p-3 text-center border border-teal-200">
                 <p className="text-xs text-teal-600 font-medium">زمان دم</p>
                 <p className="text-sm font-bold text-teal-800">
                   {currentSettings.ti || "--"} sec
