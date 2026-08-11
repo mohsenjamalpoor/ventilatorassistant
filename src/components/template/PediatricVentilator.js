@@ -10,7 +10,12 @@ import AlarmModal from "../module/AlarmModal";
 import O2DropModal from "../module/O2DropModal";
 import HighPIPModal from "../module/HighPIPModal";
 import ModeSelectionModal from "../module/ModeSelectionModal";
-import { LuTrendingDown, LuTrendingUp, LuActivity } from "react-icons/lu";
+import {
+  LuTrendingDown,
+  LuTrendingUp,
+  LuActivity,
+  LuStethoscope,
+} from "react-icons/lu";
 import {
   getInitialSettings,
   calculateMvent,
@@ -146,11 +151,12 @@ function PediatricVentilator() {
             <div className="flex gap-2 flex-wrap">
               <button
                 onClick={() => setAdvance((prv) => !prv)}
-                className="px-4 py-2 border border-gray-300 text-gray-700 rounded-xl hover:bg-gray-50 transition-all hover:shadow-md flex items-center gap-2"
+                className="px-4 py-2 border border-slate-300 text-slate-700 rounded-xl hover:bg-slate-50 transition-all hover:shadow-md flex items-center gap-2"
               >
-                <span className="text-sm">تنظیمات پیشرفته</span>
+                <LuStethoscope className="w-4 h-4 text-slate-500" />
+                <span className="text-sm font-medium">عیب‌یابی بالینی</span>
                 <span
-                  className={`transform transition-transform ${advance ? "rotate-180" : ""}`}
+                  className={`transform transition-transform text-xs ${advance ? "rotate-180" : ""}`}
                 >
                   ▼
                 </span>
@@ -235,12 +241,18 @@ function PediatricVentilator() {
           </div>
         </div>
 
-        {/* تنظیمات پیشرفته - بخش اقدامات درمانی */}
+        {/* عیب‌یابی بالینی - بخش اقدامات درمانی */}
         {advance && (
           <div className="bg-white/90 backdrop-blur-sm rounded-2xl shadow-lg p-6 mb-6 border border-gray-100">
-            <h3 className="text-lg font-bold text-gray-800 mb-4">
-              اقدامات درمانی
-            </h3>
+            <div className="mb-4">
+              <h3 className="text-lg font-bold text-gray-800">
+                عیب‌یابی بالینی
+              </h3>
+              <p className="text-xs text-gray-400 mt-0.5">
+                Bedside Troubleshooting — رویکرد سریع به شایع‌ترین مشکلات
+                ونتیلاتور
+              </p>
+            </div>
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
               <button
                 onClick={() => setIsO2ModalOpen(true)}
@@ -282,14 +294,14 @@ function PediatricVentilator() {
 
               <button
                 onClick={() => setIsRespiratoryAcidosis(true)}
-                className="group relative flex flex-col items-start gap-3 p-5 rounded-xl border-2 border-gray-200 bg-white hover:border-red-300 hover:shadow-lg transition-all cursor-pointer text-right hover:bg-red-50"
+                className="group relative flex flex-col items-start gap-3 p-5 rounded-xl border-2 border-gray-200 bg-white hover:border-rose-300 hover:shadow-lg transition-all cursor-pointer text-right hover:bg-rose-50"
               >
                 <div className="flex items-center gap-3 w-full">
-                  <div className="flex items-center justify-center w-12 h-12 rounded-xl bg-red-50 group-hover:bg-red-100 transition-colors shrink-0">
-                    <LuTrendingDown className="w-6 h-6 text-red-500" />
+                  <div className="flex items-center justify-center w-12 h-12 rounded-xl bg-rose-50 group-hover:bg-rose-100 transition-colors shrink-0">
+                    <LuActivity className="w-6 h-6 text-rose-500" />
                   </div>
                   <div>
-                    <p className="font-bold text-gray-800 group-hover:text-red-700 transition-colors">
+                    <p className="font-bold text-gray-800 group-hover:text-rose-700 transition-colors">
                       علت اسیدوز تنفسی
                     </p>
                     <p className="text-xs text-gray-400 mt-0.5">

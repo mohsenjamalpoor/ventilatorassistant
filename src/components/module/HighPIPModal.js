@@ -7,75 +7,135 @@ import {
   LuTriangleAlert,
   LuX,
   LuGauge,
+  LuGitCompare,
+  LuWind,
+  LuLayers,
+  LuActivity,
+  LuExternalLink,
+  LuLightbulb,
 } from "react-icons/lu";
 
 const PIP_CAUSES = [
   {
     id: "key-differentiator",
+    letter: "1",
     title: "قدم اول: افتراق با Plateau Pressure",
+    icon: LuGitCompare,
     color: "slate",
     causes: [
-      "PIP بالا + Plateau نرمال → مشکل مقاومتی (Raw بالا) — اختلاف PIP-Plateau زیاد شده",
-      "PIP بالا + Plateau بالا → مشکل انطباقی (Compliance پایین) — اختلاف PIP-Plateau تقریباً ثابت مونده",
+      {
+        text: "PIP بالا + Plateau نرمال",
+        detail: "مشکل مقاومتی (Raw بالا) — اختلاف PIP-Plateau زیاد شده",
+      },
+      {
+        text: "PIP بالا + Plateau بالا",
+        detail:
+          "مشکل انطباقی (Compliance پایین) — اختلاف PIP-Plateau تقریباً ثابت مونده",
+      },
     ],
     treatment: [
-      "برای اندازه‌گیری Plateau، یک inspiratory hold کوتاه (0.5-1 ثانیه) انجام بده",
-      "این افتراق مسیر تشخیصی رو کاملاً از هم جدا می‌کنه — قدم اول همیشه همینه",
+      "برای اندازه‌گیری Plateau، یک inspiratory hold کوتاه (۰.۵-۱ ثانیه) انجام بده",
+      "این افتراق مسیر تشخیصی رو کاملاً از هم جدا می‌کنه — همیشه قدم اول همینه",
+      "در مدهای فشاری (PC)، Plateau معادل خود PIP است و این افتراق کاربرد ندارد؛ فقط در VC معنادار است",
     ],
   },
   {
     id: "resistive",
+    letter: "2",
     title: "علل مقاومتی (Raw بالا) — Plateau نرمال",
+    icon: LuWind,
     color: "amber",
     causes: [
-      "انسداد یا پیچ‌خوردگی لوله تراشه",
-      "گاز گرفتن لوله توسط بیمار (biting)",
-      "ترشحات فراوان در لوله یا راه هوایی",
-      "برونکواسپاسم (آسم، برونشیولیت)",
-      "لوله تراشه با سایز کوچک نسبت به فلوی تنظیم‌شده",
+      {
+        text: "انسداد یا پیچ‌خوردگی لوله تراشه",
+        detail: "شایع‌ترین علت قابل‌رفع سریع در بیمار انتوبه",
+      },
+      {
+        text: "گاز گرفتن لوله (biting)",
+        detail: "در سداسیون ناکافی یا هوشیاری بازگشته",
+      },
+      {
+        text: "ترشحات فراوان",
+        detail: "در لوله یا راه هوایی، به‌ویژه پس از مدت طولانی بدون ساکشن",
+      },
+      {
+        text: "برونکواسپاسم",
+        detail: "آسم، برونشیولیت — با ویز و افزایش زمان بازدم همراه",
+      },
+      {
+        text: "لوله تراشه کوچک نسبت به فلو",
+        detail: "مقاومت لوله با توان چهارم شعاع رابطه عکس دارد (قانون پواسوی)",
+      },
     ],
     treatment: [
       "بررسی موج Flow-Time — الگوی صاف‌شده (scooped) نشانه انسداد راه هوایی است",
       "ساکشن فوری لوله تراشه",
       "بررسی مسیر لوله و مدار از نظر پیچ‌خوردگی یا فشردگی توسط بیمار",
-      "تجویز برونکودیلاتور در صورت شک به برونکواسپاسم",
+      "تجویز برونکودیلاتور در شک به برونکواسپاسم",
       "در صورت عدم رفع، تعویض لوله تراشه",
     ],
   },
   {
     id: "compliance",
+    letter: "3",
     title: "علل انطباقی (Compliance پایین) — Plateau هم بالاست",
+    icon: LuLayers,
     color: "orange",
     causes: [
-      "پنوموتوراکس",
-      "انتوباسیون تک‌ریوی (لوله وارد برونش راست شده)",
-      "آتلکتازی گسترده",
-      "ادم ریوی / پیشرفت ARDS",
-      "اتساع شکمی یا آسیت (فشار به دیافراگم)",
-      "افیوژن پلور حجیم",
+      {
+        text: "پنوموتوراکس",
+        detail:
+          "همیشه در بیمار ناپایدار با PIP و Plateau ناگهانی بالا، اول رد شود",
+      },
+      {
+        text: "انتوباسیون تک‌ریوی",
+        detail: "لوله بیش‌ازحد پیش رفته و وارد برونش اصلی راست شده",
+      },
+      {
+        text: "آتلکتازی گسترده",
+        detail: "کاهش حجم ریه فعال، اغلب پس از مدت طولانی بی‌حرکتی",
+      },
+      {
+        text: "ادم ریوی / پیشرفت ARDS",
+        detail: "کاهش کمپلیانس پارانشیمی، معمولاً روند تدریجی‌تر",
+      },
+      {
+        text: "اتساع شکمی یا آسیت",
+        detail: "فشار به دیافراگم و کاهش کمپلیانس دیواره قفسه سینه",
+      },
+      { text: "افیوژن پلور حجیم", detail: "محدودیت مکانیکی خارج ریوی" },
     ],
     treatment: [
-      "معاینه صداهای تنفسی دو طرفه و تقارن قفسه سینه",
-      "بررسی عمق لوله تراشه و مقایسه با عمق ثبت‌شده",
+      "معاینه صداهای تنفسی دو طرفه و تقارن حرکت قفسه سینه",
+      "بررسی عمق لوله تراشه و مقایسه با عمق ثبت‌شده در پرونده",
       "رادیوگرافی قفسه سینه فوری در موارد ناپایدار",
-      "در پنوموتوراکس فشاری، نیدل دکامپرشن اورژانسی",
+      "در پنوموتوراکس فشاری، نیدل دکامپرشن اورژانسی بدون تاخیر",
       "بررسی دور شکم و فشار داخل‌شکمی در صورت اتساع",
     ],
   },
   {
     id: "dyssynchrony",
+    letter: "4",
     title: "عدم هماهنگی بیمار-ونتیلاتور و Auto-PEEP",
+    icon: LuActivity,
     color: "purple",
     causes: [
-      "زور زدن یا سرفه بیمار حین دم ونتیلاتور (fighting the vent)",
-      "Breath stacking / Auto-PEEP در بیماری‌های انسدادی با زمان بازدم ناکافی",
-      "درد یا اضطراب بدون Sedation کافی",
+      {
+        text: "زور زدن یا سرفه حین دم",
+        detail: "Fighting the vent — افزایش ناگهانی و متغیر PIP",
+      },
+      {
+        text: "Breath stacking / Auto-PEEP",
+        detail:
+          "در بیماری‌های انسدادی با زمان بازدم ناکافی؛ حجم بازدمی کامل تخلیه نمی‌شود",
+      },
+      { text: "درد یا اضطراب", detail: "بدون Sedation/Analgesia کافی" },
     ],
     treatment: [
       "بررسی موج Flow-Time برای برگشت کامل فلو به صفر قبل از دم بعدی (رد Auto-PEEP)",
-      "در صورت Auto-PEEP، افزایش زمان بازدم (کاهش RR یا افزایش Flow دمی)",
+      "در Auto-PEEP، افزایش زمان بازدم (کاهش RR یا افزایش Flow دمی)",
       "بررسی و تنظیم مجدد سطح Sedation/Analgesia",
-      "بررسی حساسیت تریگر برای کاهش عدم هماهنگی",
+      "بررسی و تنظیم حساسیت تریگر برای کاهش عدم هماهنگی",
     ],
   },
 ];
@@ -86,61 +146,105 @@ const colorMap = {
     bg: "bg-slate-50",
     text: "text-slate-700",
     icon: "text-slate-500",
+    dot: "bg-slate-400",
+    badge: "bg-slate-500",
   },
   amber: {
     border: "border-amber-200",
     bg: "bg-amber-50",
     text: "text-amber-700",
     icon: "text-amber-500",
+    dot: "bg-amber-400",
+    badge: "bg-amber-500",
   },
   orange: {
     border: "border-orange-200",
     bg: "bg-orange-50",
     text: "text-orange-700",
     icon: "text-orange-500",
+    dot: "bg-orange-400",
+    badge: "bg-orange-500",
   },
   purple: {
     border: "border-purple-200",
     bg: "bg-purple-50",
     text: "text-purple-700",
     icon: "text-purple-500",
+    dot: "bg-purple-400",
+    badge: "bg-purple-500",
   },
 };
 
 function HighPIPModal({ onClose }) {
-  const [openId, setOpenId] = useState(PIP_CAUSES[0].id);
+  const [openId, setOpenId] = useState(null);
 
   return (
-    <div className="w-[92vw] max-w-2xl max-h-[85vh] bg-white rounded-2xl shadow-2xl flex flex-col">
-      {/* هدر ثابت */}
-      <div className="flex items-center justify-between px-6 py-4 border-b border-gray-100 shrink-0">
-        <div className="flex items-center gap-2">
-          <LuGauge className="w-6 h-6 text-orange-500" />
-          <h2 className="text-lg font-bold text-gray-800">
-            علل افزایش PIP و اقدامات درمانی
-          </h2>
+    <div
+      dir="rtl"
+      className="w-[92vw] max-w-2xl max-h-[88vh] bg-white rounded-2xl shadow-2xl flex flex-col overflow-hidden"
+    >
+      {/* هدر گرادیانت */}
+      <div className="relative bg-gradient-to-l from-orange-600 to-amber-500 px-6 py-5 shrink-0">
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-3">
+            <div className="w-11 h-11 rounded-xl bg-white/15 flex items-center justify-center">
+              <LuGauge className="w-6 h-6 text-white" />
+            </div>
+            <div>
+              <h2 className="text-white font-bold text-lg leading-tight">
+                افزایش PIP
+              </h2>
+              <p className="text-orange-100 text-xs mt-0.5">
+                High Peak Inspiratory Pressure — Bedside Approach
+              </p>
+            </div>
+          </div>
+          {onClose && (
+            <button
+              onClick={onClose}
+              className="w-8 h-8 rounded-lg bg-white/15 hover:bg-white/25 flex items-center justify-center transition-colors"
+              aria-label="بستن"
+            >
+              <LuX className="w-5 h-5 text-white" />
+            </button>
+          )}
         </div>
-        {onClose && (
-          <button
-            onClick={onClose}
-            className="text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded-lg p-1.5 transition-colors"
-          >
-            <LuX className="w-5 h-5" />
-          </button>
-        )}
+
+        {/* نوار شماره مراحل */}
+        <div className="flex gap-2 mt-4">
+          {PIP_CAUSES.map((item) => {
+            const active = openId === item.id;
+            return (
+              <button
+                key={item.id}
+                onClick={() => setOpenId(active ? null : item.id)}
+                className={`flex-1 rounded-lg py-2 flex flex-col items-center gap-0.5 transition-colors ${
+                  active
+                    ? "bg-white text-orange-600"
+                    : "bg-white/10 text-white hover:bg-white/20"
+                }`}
+              >
+                <span className="text-sm font-extrabold leading-none">
+                  {item.letter}
+                </span>
+              </button>
+            );
+          })}
+        </div>
       </div>
 
       {/* بدنه اسکرول‌شونده */}
       <div className="overflow-y-auto p-6">
         <p className="text-sm text-gray-500 mb-5 flex items-start gap-2">
           <LuTriangleAlert className="w-4 h-4 text-amber-500 mt-0.5 shrink-0" />
-          افزایش PIP همیشه باید ابتدا با چک کردن Plateau Pressure افتراق داده
+          افزایش PIP همیشه باید ابتدا با چک‌کردن Plateau Pressure افتراق داده
           بشه — این کار مسیر تشخیصی و درمانی رو کاملاً مشخص می‌کنه.
         </p>
 
         <div className="space-y-3">
           {PIP_CAUSES.map((item) => {
             const c = colorMap[item.color];
+            const Icon = item.icon;
             const isOpen = openId === item.id;
 
             return (
@@ -152,7 +256,16 @@ function HighPIPModal({ onClose }) {
                   onClick={() => setOpenId(isOpen ? null : item.id)}
                   className={`w-full flex items-center justify-between px-4 py-3 ${c.bg}`}
                 >
-                  <span className={`font-bold ${c.text}`}>{item.title}</span>
+                  <div className="flex items-center gap-2.5">
+                    <span
+                      className={`w-7 h-7 rounded-lg ${c.badge} flex items-center justify-center shrink-0`}
+                    >
+                      <Icon className="w-4 h-4 text-white" />
+                    </span>
+                    <span className={`font-bold text-sm ${c.text}`}>
+                      {item.title}
+                    </span>
+                  </div>
                   <LuChevronDown
                     className={`w-5 h-5 ${c.icon} transition-transform ${isOpen ? "rotate-180" : ""}`}
                   />
@@ -166,16 +279,20 @@ function HighPIPModal({ onClose }) {
                           ? "نکات کلیدی"
                           : "علل احتمالی"}
                       </h4>
-                      <ul className="space-y-1.5">
+                      <ul className="space-y-2">
                         {item.causes.map((cause, i) => (
-                          <li
-                            key={i}
-                            className="text-sm text-gray-700 flex items-start gap-2"
-                          >
+                          <li key={i} className="flex items-start gap-2.5">
                             <span
-                              className={`mt-1.5 w-1.5 h-1.5 rounded-full ${c.icon.replace("text", "bg")} shrink-0`}
+                              className={`mt-1.5 w-1.5 h-1.5 rounded-full ${c.dot} shrink-0`}
                             />
-                            {cause}
+                            <div>
+                              <p className="text-sm font-medium text-gray-700">
+                                {cause.text}
+                              </p>
+                              <p className="text-xs text-gray-500 leading-5 mt-0.5">
+                                {cause.detail}
+                              </p>
+                            </div>
                           </li>
                         ))}
                       </ul>
@@ -207,6 +324,26 @@ function HighPIPModal({ onClose }) {
               </div>
             );
           })}
+        </div>
+
+        {/* نکته فوق‌تخصصی */}
+        <div className="mt-5 bg-amber-50 border border-amber-200 rounded-xl p-4 flex gap-3">
+          <LuLightbulb className="w-5 h-5 text-amber-600 shrink-0 mt-0.5" />
+          <p className="text-sm text-amber-700 leading-7">
+            در PICU، آلارم High PIP هرگز فقط با افزایش سقف آلارم مدیریت نمی‌شود
+            — همیشه علت زمینه‌ای باید مشخص شود، چون PIP بالای مداوم می‌تواند به
+            باروتروما و پنوموتوراکس منجر شود.
+          </p>
+        </div>
+
+        {/* فوتر رفرنس */}
+        <div className="flex items-center gap-2 pt-4 mt-4 border-t border-gray-100">
+          <LuExternalLink className="w-3.5 h-3.5 text-gray-400" />
+          <p className="text-[11px] text-gray-400">
+            منبع: UpToDate — Overview of mechanical ventilation / Ventilator
+            management strategies for adults and children with acute respiratory
+            failure
+          </p>
         </div>
       </div>
     </div>
