@@ -70,6 +70,7 @@ function PediatricVentilator() {
       restrictiveDisease,
     );
 
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setCurrentSettings({
       ...newSettings,
       mvent: Number(
