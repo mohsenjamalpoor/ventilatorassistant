@@ -212,7 +212,7 @@ function O2DropModal({ onClose }) {
       dir="rtl"
       className="w-[92vw] max-w-2xl max-h-[88vh] bg-white rounded-2xl shadow-2xl flex flex-col overflow-hidden"
     >
-      {/* هدر گرادیانت */}
+      {/* هدر  */}
       <div className="relative bg-gradient-to-l from-red-600 to-orange-500 px-6 py-5 shrink-0">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-3">
