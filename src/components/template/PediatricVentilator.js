@@ -3,7 +3,7 @@
 import { useSearchParams } from "next/navigation";
 import BackButton from "../module/BackButton";
 import { PiBellLight } from "react-icons/pi";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import ModalContainer from "../partials/container/ModalContainer";
 import { FaEdit } from "react-icons/fa";
 import AlarmModal from "../module/AlarmModal";
@@ -21,9 +21,137 @@ import {
   calculateMvent,
   getLungInvolvementName,
   getLungInvolvementDescription,
+  ventilatorItemLabels,
 } from "../../utils/Initialsettingsconfig ";
+import {
+  pediatricVentilatorModes,
+  modeParameterLabels,
+} from "../../utils/ventilatorModes";
 import RespiratoryAcidosisModal from "../module/RespiratoryAcidosisModal";
 import EditVentilatorModal from "../module/EditVentilatorModal";
+
+// لیبل‌های کامل همه پارامترهای ممکن (پایه + مختص مودها)
+const allLabels = { ...ventilatorItemLabels, ...modeParameterLabels };
+
+// استایل رنگی هر پارامتر — کلاس‌های کامل و استاتیک (سازگار با Tailwind JIT)
+const COLOR_STYLES = {
+  indigo: {
+    card: "bg-linear-to-br from-indigo-100 to-indigo-200 border-2 border-indigo-300",
+    label: "text-indigo-700",
+    value: "text-indigo-900",
+    unit: "text-indigo-600",
+  },
+  green: {
+    card: "bg-linear-to-br from-green-100 to-green-200 border-2 border-green-400",
+    label: "text-green-700",
+    value: "text-green-900",
+    unit: "text-green-600",
+  },
+  purple: {
+    card: "bg-linear-to-br from-purple-100 to-purple-200 border-2 border-purple-300",
+    label: "text-purple-700",
+    value: "text-purple-900",
+    unit: "text-purple-600",
+  },
+  red: {
+    card: "bg-linear-to-br from-red-100 to-red-200 border-2 border-red-300",
+    label: "text-red-700",
+    value: "text-red-900",
+    unit: "text-red-600",
+  },
+  teal: {
+    card: "bg-linear-to-br from-teal-100 to-teal-200 border-2 border-teal-300",
+    label: "text-teal-700",
+    value: "text-teal-900",
+    unit: "text-teal-600",
+  },
+  blue: {
+    card: "bg-linear-to-br from-blue-100 to-blue-200 border-2 border-blue-300",
+    label: "text-blue-700",
+    value: "text-blue-900",
+    unit: "text-blue-600",
+  },
+  orange: {
+    card: "bg-linear-to-br from-orange-100 to-orange-200 border-2 border-orange-300",
+    label: "text-orange-700",
+    value: "text-orange-900",
+    unit: "text-orange-600",
+  },
+  violet: {
+    card: "bg-linear-to-br from-violet-100 to-violet-200 border-2 border-violet-300",
+    label: "text-violet-700",
+    value: "text-violet-900",
+    unit: "text-violet-600",
+  },
+  pink: {
+    card: "bg-linear-to-br from-pink-100 to-pink-200 border-2 border-pink-300",
+    label: "text-pink-700",
+    value: "text-pink-900",
+    unit: "text-pink-600",
+  },
+  amber: {
+    card: "bg-linear-to-br from-amber-100 to-amber-200 border-2 border-amber-300",
+    label: "text-amber-700",
+    value: "text-amber-900",
+    unit: "text-amber-600",
+  },
+  slate: {
+    card: "bg-linear-to-br from-slate-100 to-slate-200 border-2 border-slate-300",
+    label: "text-slate-700",
+    value: "text-slate-900",
+    unit: "text-slate-600",
+  },
+  sky: {
+    card: "bg-linear-to-br from-sky-100 to-sky-200 border-2 border-sky-300",
+    label: "text-sky-700",
+    value: "text-sky-900",
+    unit: "text-sky-600",
+  },
+};
+
+// رنگ اختصاصی هر پارامتر
+const PARAM_COLOR = {
+  pip: "indigo",
+  pressureControl: "purple",
+  tidalVolume: "blue",
+  vte: "green",
+  mvent: "teal",
+  respiratoryRate: "green",
+  frequency: "green",
+  map: "violet",
+  amplitude: "pink",
+  inspiratoryTimePercent: "amber",
+  peep: "red",
+  cpap: "red",
+  pressureSupport: "orange",
+  fio2: "purple",
+  ieRatio: "indigo",
+  ti: "teal",
+  flowRate: "sky",
+  trigger: "slate",
+};
+
+// ترتیب نمایش کلی — فقط پارامترهای مرتبط با مود انتخابی از این لیست فیلتر می‌شوند
+const DISPLAY_ORDER = [
+  "pip",
+  "pressureControl",
+  "tidalVolume",
+  "vte",
+  "mvent",
+  "respiratoryRate",
+  "frequency",
+  "map",
+  "amplitude",
+  "inspiratoryTimePercent",
+  "peep",
+  "cpap",
+  "pressureSupport",
+  "fio2",
+  "ieRatio",
+  "ti",
+  "flowRate",
+  "trigger",
+];
 
 function PediatricVentilator() {
   const [isOpen, setIsOpen] = useState(false);
@@ -110,11 +238,28 @@ function PediatricVentilator() {
   };
 
   const formatValue = (value, defaultValue = "--") => {
-    return value !== undefined && value !== null ? value : defaultValue;
+    return value !== undefined && value !== null && value !== ""
+      ? value
+      : defaultValue;
   };
 
   const involvementName = getLungInvolvementName(lungInvolvement);
   const involvementDescription = getLungInvolvementDescription(lungInvolvement);
+
+  // --------------------------------------------------------------------
+  // محاسبه لیست پارامترهای قابل‌نمایش بر اساس مود فعلی
+  // --------------------------------------------------------------------
+  const activeModeDef = pediatricVentilatorModes[currentSettings.mode];
+
+  const displayKeys = useMemo(() => {
+    const baseParams = activeModeDef?.keyParameters || [];
+    const includeVteMvent = baseParams.includes("tidalVolume");
+
+    return DISPLAY_ORDER.filter((key) => {
+      if (key === "vte" || key === "mvent") return includeVteMvent;
+      return baseParams.includes(key);
+    });
+  }, [activeModeDef]);
 
   return (
     <div className="min-h-screen bg-linear-to-br from-blue-50 via-cyan-50 to-blue-100 py-8 px-4">
@@ -366,9 +511,16 @@ function PediatricVentilator() {
         {/* مانیتور ونتیلاتور */}
         <div className="bg-linear-to-br from-blue-50/95 to-cyan-50/95 backdrop-blur-sm rounded-2xl shadow-xl p-6 border border-blue-200">
           <div className="flex items-center justify-between mb-6 flex-wrap gap-3">
-            <h2 className="text-2xl font-bold bg-linear-to-r from-blue-600 to-cyan-600 bg-clip-text text-transparent">
-              مانیتور ونتیلاتور
-            </h2>
+            <div>
+              <h2 className="text-2xl font-bold bg-linear-to-r from-blue-600 to-cyan-600 bg-clip-text text-transparent">
+                مانیتور ونتیلاتور
+              </h2>
+              {activeModeDef && (
+                <p className="text-xs text-blue-500/70 mt-0.5">
+                  نمایش پارامترهای مرتبط با مود {activeModeDef.name}
+                </p>
+              )}
+            </div>
 
             <div className="flex items-center gap-2">
               {/* انتخاب مد */}
@@ -402,124 +554,54 @@ function PediatricVentilator() {
             </div>
           </div>
 
-          {/* بخش مانیتور */}
+          {/* بخش مانیتور — داینامیک بر اساس مود */}
           <div className="bg-white/80 backdrop-blur-sm rounded-xl p-6 border border-blue-100 shadow-inner">
-            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-7 gap-4">
-              {/* PIP */}
-              <div className="bg-linear-to-br from-indigo-100 to-indigo-200 rounded-xl p-4 border-2 border-indigo-300 shadow-sm hover:shadow-md transition-all">
-                <div className="text-center">
-                  <h3 className="text-indigo-700 text-xs font-bold uppercase tracking-wider mb-2">
-                    PIP
-                  </h3>
-                  <p className="text-2xl font-bold text-indigo-900">
-                    {formatValue(currentSettings.pip)}
-                  </p>
-                  <p className="text-indigo-600 text-xs mt-1">cmH₂O</p>
-                </div>
-              </div>
+            {displayKeys.length === 0 ? (
+              <p className="text-center text-sm text-gray-400 py-6">
+                پارامتری برای این مود تعریف نشده است.
+              </p>
+            ) : (
+              <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 xl:grid-cols-6 gap-4">
+                {displayKeys.map((key) => {
+                  const item = allLabels[key];
+                  if (!item) return null;
+                  const colorName = PARAM_COLOR[key] || "slate";
+                  const style = COLOR_STYLES[colorName];
+                  const rawValue = currentSettings[key];
+                  const displayValue =
+                    key === "mvent"
+                      ? formatValue(
+                          typeof rawValue === "number"
+                            ? rawValue.toFixed(1)
+                            : rawValue,
+                        )
+                      : formatValue(rawValue);
 
-              {/* RR */}
-              <div className="bg-linear-to-br from-green-100 to-green-200 rounded-xl p-4 border-2 border-green-400 shadow-sm hover:shadow-md transition-all">
-                <div className="text-center">
-                  <h3 className="text-green-700 text-xs font-bold uppercase tracking-wider mb-2">
-                    RR
-                  </h3>
-                  <p className="text-2xl font-bold text-green-900">
-                    {formatValue(currentSettings.respiratoryRate)}
-                  </p>
-                  <p className="text-green-600 text-xs mt-1">/min</p>
-                </div>
+                  return (
+                    <div
+                      key={key}
+                      className={`rounded-xl p-4 shadow-sm hover:shadow-md transition-all ${style.card}`}
+                    >
+                      <div className="text-center">
+                        <h3
+                          className={`text-xs font-bold uppercase tracking-wider mb-2 ${style.label}`}
+                        >
+                          {item.label}
+                        </h3>
+                        <p className={`text-2xl font-bold ${style.value}`}>
+                          {displayValue}
+                        </p>
+                        {item.unit && (
+                          <p className={`text-xs mt-1 ${style.unit}`}>
+                            {item.unit}
+                          </p>
+                        )}
+                      </div>
+                    </div>
+                  );
+                })}
               </div>
-
-              {/* FiO2 */}
-              <div className="bg-linear-to-br from-purple-100 to-purple-200 rounded-xl p-4 border-2 border-purple-300 shadow-sm hover:shadow-md transition-all">
-                <div className="text-center">
-                  <h3 className="text-purple-700 text-xs font-bold uppercase tracking-wider mb-2">
-                    FiO₂
-                  </h3>
-                  <p className="text-2xl font-bold text-purple-900">
-                    {formatValue(currentSettings.fio2)}
-                  </p>
-                  <p className="text-purple-600 text-xs mt-1">%</p>
-                </div>
-              </div>
-
-              {/* PEEP */}
-              <div className="bg-linear-to-br from-red-100 to-red-200 rounded-xl p-4 border-2 border-red-300 shadow-sm hover:shadow-md transition-all">
-                <div className="text-center">
-                  <h3 className="text-red-700 text-xs font-bold uppercase tracking-wider mb-2">
-                    PEEP
-                  </h3>
-                  <p className="text-2xl font-bold text-red-900">
-                    {formatValue(currentSettings.peep)}
-                  </p>
-                  <p className="text-red-600 text-xs mt-1">cmH₂O</p>
-                </div>
-              </div>
-
-              {/* MVent */}
-              <div className="bg-linear-to-br from-teal-100 to-teal-200 rounded-xl p-4 border-2 border-teal-300 shadow-sm hover:shadow-md transition-all">
-                <div className="text-center">
-                  <h3 className="text-teal-700 text-xs font-bold uppercase tracking-wider mb-2">
-                    MVent
-                  </h3>
-                  <p className="text-2xl font-bold text-teal-900">
-                    {formatValue(currentSettings.mvent?.toFixed(1))}
-                  </p>
-                  <p className="text-teal-600 text-xs mt-1">L/min</p>
-                </div>
-              </div>
-
-              {/* VTi */}
-              <div className="bg-linear-to-br from-blue-100 to-blue-200 rounded-xl p-4 border-2 border-blue-300 shadow-sm hover:shadow-md transition-all">
-                <div className="text-center">
-                  <h3 className="text-blue-700 text-xs font-bold uppercase tracking-wider mb-2">
-                    VTi
-                  </h3>
-                  <p className="text-2xl font-bold text-blue-900">
-                    {formatValue(currentSettings.tidalVolume)}
-                  </p>
-                  <p className="text-blue-600 text-xs mt-1">ml</p>
-                </div>
-              </div>
-
-              {/* VTe */}
-              <div className="bg-linear-to-br from-green-100 to-green-200 rounded-xl p-4 border-2 border-green-300 shadow-sm hover:shadow-md transition-all">
-                <div className="text-center">
-                  <h3 className="text-green-700 text-xs font-bold uppercase tracking-wider mb-2">
-                    VTe
-                  </h3>
-                  <p className="text-2xl font-bold text-green-900">
-                    {formatValue(currentSettings.vte)}
-                  </p>
-                  <p className="text-green-600 text-xs mt-1">ml</p>
-                </div>
-              </div>
-            </div>
-
-            {/* نمایش جزئیات اضافی */}
-            <div className="mt-4 grid grid-cols-2 md:grid-cols-4 gap-3">
-              <div className="bg-linear-to-r from-indigo-50 to-purple-50 rounded-lg p-3 text-center border border-indigo-200">
-                <p className="text-xs text-indigo-600 font-medium">نسبت I:E</p>
-                <p className="text-sm font-bold text-indigo-800">
-                  {currentSettings.ieRatio || "1:2"}
-                </p>
-              </div>
-              <div className="bg-linear-to-r from-orange-50 to-amber-50 rounded-lg p-3 text-center border border-orange-200">
-                <p className="text-xs text-orange-600 font-medium">
-                  فشار حمایتی
-                </p>
-                <p className="text-sm font-bold text-orange-800">
-                  {currentSettings.pressureSupport || "--"} cmH₂O
-                </p>
-              </div>
-              <div className="bg-linear-to-r from-teal-50 to-emerald-50 rounded-lg p-3 text-center border border-teal-200">
-                <p className="text-xs text-teal-600 font-medium">زمان دم</p>
-                <p className="text-sm font-bold text-teal-800">
-                  {currentSettings.ti || "--"} sec
-                </p>
-              </div>
-            </div>
+            )}
           </div>
         </div>
       </div>

@@ -6,7 +6,8 @@ import {
   LuX,
   LuInfo,
   LuTriangleAlert,
-  LuBookOpen,
+  LuSlidersHorizontal,
+  LuLightbulb,
 } from "react-icons/lu";
 
 import { ventilatorItemLabels } from "../../utils/Initialsettingsconfig ";
@@ -16,6 +17,8 @@ import {
   getModeSettings,
   modeOrder,
 } from "../../utils/ventilatorModes";
+import NoteCard from "./shared/NoteCard";
+import ReferenceFooter from "./shared/ReferenceFooter";
 
 const allLabels = { ...ventilatorItemLabels, ...modeParameterLabels };
 
@@ -52,6 +55,19 @@ const involvementLabel = {
   restrictive: "بیماری محدودکننده",
 };
 
+// نکته فوق‌تخصصی مختص هر مود (اختیاری—وقتی موجود نباشد بخش نمایش داده نمی‌شود)
+const modePearls = {
+  "VC-AC":
+    "در بیمار با کمپلیانس متغیر (مثل ARDS در حال پیشرفت)، فشار پیک را مرتب پایش کنید؛ افزایش ناگهانی آن هشدار زودهنگام افت کمپلیانس است.",
+  "PC-AC":
+    "چون حجم جاری تضمین‌شده نیست، VTe باید در هر شیفت پایش و با تغییر کمپلیانس/مقاومت، فشار کنترل بازبینی شود.",
+  SIMV: "در بیمار با تلاش تنفسی ضعیف، PS ناکافی می‌تواند کار تنفسی تنفس‌های خودبه‌خودی را به‌شدت بالا ببرد—افزایش کار تنفسی را با پایش RR و علائم دیسترس رصد کنید.",
+  PRVC: "این مود معمولاً پیش‌فرض مناسبی برای اغلب بیماران PICU با کمپلیانس متغیر است؛ الگوریتم دستگاه با تاخیر چند تنفسی به تغییرات پاسخ می‌دهد.",
+  PSV: "بدون بک‌آپ تنفسی، همیشه باید آلارم آپنه فعال و به‌درستی تنظیم شده باشد.",
+  CPAP: "مناسب‌ترین مرحله برای ارزیابی نهایی آمادگی اکستوباسیون است، نه یک مود درمانی طولانی‌مدت در نارسایی تنفسی فعال.",
+  HFOV: "قبل از شروع، اطمینان از حجم داخل عروقی کافی مهم است؛ MAP بالا می‌تواند برگشت وریدی و برون‌ده قلبی را کاهش دهد.",
+};
+
 function ModeSelectionModal({
   weight,
   lungInvolvement,
@@ -81,27 +97,38 @@ function ModeSelectionModal({
     onClose?.();
   };
 
+  const selectedModeDef = selectedMode
+    ? pediatricVentilatorModes[selectedMode]
+    : null;
+
   return (
     <div
       dir="rtl"
       className="flex w-[95vw] max-w-4xl max-h-[90vh] flex-col overflow-hidden rounded-2xl bg-white shadow-2xl"
     >
       {/* Header */}
-      <div className="flex shrink-0 items-center justify-between bg-linear-to-l from-blue-600 to-cyan-500 px-6 py-4">
-        <div>
-          <h2 className="text-lg font-bold text-white">انتخاب مد ونتیلاتور</h2>
-          <p className="text-xs text-blue-100 mt-0.5">
-            تنظیمات پیشنهادی بر اساس مد و نوع درگیری ریه محاسبه می‌شود
-          </p>
+      <div className="flex shrink-0 items-center justify-between bg-gradient-to-l from-blue-600 to-cyan-500 px-6 py-5">
+        <div className="flex items-center gap-3">
+          <div className="w-11 h-11 rounded-xl bg-white/15 flex items-center justify-center">
+            <LuSlidersHorizontal className="w-6 h-6 text-white" />
+          </div>
+          <div>
+            <h2 className="text-white font-bold text-lg leading-tight">
+              انتخاب مد ونتیلاتور
+            </h2>
+            <p className="text-blue-100 text-xs mt-0.5">
+              تنظیمات پیشنهادی بر اساس مد و نوع درگیری ریه محاسبه می‌شود
+            </p>
+          </div>
         </div>
         {onClose && (
           <button
             type="button"
             onClick={onClose}
-            className="rounded-lg p-2 text-white/90 transition-colors hover:bg-white/15"
+            className="w-8 h-8 rounded-lg bg-white/15 hover:bg-white/25 flex items-center justify-center transition-colors shrink-0"
             aria-label="بستن"
           >
-            <LuX className="h-5 w-5" />
+            <LuX className="h-5 w-5 text-white" />
           </button>
         )}
       </div>
@@ -210,11 +237,11 @@ function ModeSelectionModal({
         </div>
 
         {/* Selected mode detail */}
-        {selectedMode && (
-          <section className="rounded-xl border border-gray-100 bg-gray-50 p-4">
-            <div className="flex flex-wrap items-center justify-between gap-2 mb-3">
+        {selectedMode && selectedModeDef && (
+          <section className="rounded-xl border border-gray-100 bg-gray-50 p-4 space-y-4">
+            <div className="flex flex-wrap items-center justify-between gap-2">
               <h3 className="text-sm font-bold text-gray-800">
-                جزئیات {pediatricVentilatorModes[selectedMode].name}
+                جزئیات {selectedModeDef.name}
               </h3>
               <span
                 className={`text-[11px] font-medium px-2 py-0.5 rounded-full ${theme.chip}`}
@@ -224,20 +251,18 @@ function ModeSelectionModal({
               </span>
             </div>
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-3">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
               <div>
                 <p className="mb-1.5 text-xs font-semibold text-emerald-600">
                   مزایا
                 </p>
                 <ul className="space-y-1 text-xs text-gray-600">
-                  {pediatricVentilatorModes[selectedMode].advantages.map(
-                    (item, i) => (
-                      <li key={i} className="flex gap-1">
-                        <span>✓</span>
-                        <span>{item}</span>
-                      </li>
-                    ),
-                  )}
+                  {selectedModeDef.advantages.map((item, i) => (
+                    <li key={i} className="flex gap-1">
+                      <span>✓</span>
+                      <span>{item}</span>
+                    </li>
+                  ))}
                 </ul>
               </div>
               <div>
@@ -245,20 +270,18 @@ function ModeSelectionModal({
                   محدودیت‌ها
                 </p>
                 <ul className="space-y-1 text-xs text-gray-600">
-                  {pediatricVentilatorModes[selectedMode].disadvantages.map(
-                    (item, i) => (
-                      <li key={i} className="flex gap-1">
-                        <span>−</span>
-                        <span>{item}</span>
-                      </li>
-                    ),
-                  )}
+                  {selectedModeDef.disadvantages.map((item, i) => (
+                    <li key={i} className="flex gap-1">
+                      <span>−</span>
+                      <span>{item}</span>
+                    </li>
+                  ))}
                 </ul>
               </div>
             </div>
 
             {computed?.note && (
-              <div className="flex items-start gap-2 rounded-lg bg-blue-50 border border-blue-100 px-3 py-2 mb-4">
+              <div className="flex items-start gap-2 rounded-lg bg-blue-50 border border-blue-100 px-3 py-2">
                 <LuInfo className="w-4 h-4 text-blue-500 mt-0.5 shrink-0" />
                 <p className="text-xs text-blue-700 leading-5">
                   {computed.note}
@@ -266,8 +289,8 @@ function ModeSelectionModal({
               </div>
             )}
 
-            {pediatricVentilatorModes[selectedMode].category === "advanced" && (
-              <div className="flex items-start gap-2 rounded-lg bg-amber-50 border border-amber-200 px-3 py-2 mb-4">
+            {selectedModeDef.category === "advanced" && (
+              <div className="flex items-start gap-2 rounded-lg bg-amber-50 border border-amber-200 px-3 py-2">
                 <LuTriangleAlert className="w-4 h-4 text-amber-500 mt-0.5 shrink-0" />
                 <p className="text-xs text-amber-700 leading-5">
                   این یک مود پیشرفته/نجات است و استفاده از آن نیازمند تجربه و
@@ -278,52 +301,62 @@ function ModeSelectionModal({
 
             {/* Computed settings grid */}
             {computed && (
-              <div className="grid grid-cols-2 gap-2.5 sm:grid-cols-3">
-                {Object.entries(computed.settings)
-                  .filter(([key]) => key !== "mode")
-                  .map(([key, value]) => {
-                    const item = allLabels[key];
-                    if (!item) return null;
-                    return (
-                      <div
-                        key={key}
-                        className="rounded-lg border border-gray-200 bg-white p-3 text-center"
-                      >
-                        <p className="mb-1 text-[11px] text-gray-400">
-                          {item.label}
-                        </p>
-                        <p className="text-base font-bold text-gray-800">
-                          {value}
-                          {item.unit && (
-                            <span className="mr-1 text-[10px] font-normal text-gray-400">
-                              {item.unit}
-                            </span>
-                          )}
-                        </p>
-                      </div>
-                    );
-                  })}
+              <div>
+                <p className="mb-2 text-[11px] font-semibold text-gray-500">
+                  تنظیمات محاسبه‌شده
+                </p>
+                <div className="grid grid-cols-2 gap-2.5 sm:grid-cols-3">
+                  {Object.entries(computed.settings)
+                    .filter(([key]) => key !== "mode")
+                    .map(([key, value]) => {
+                      const item = allLabels[key];
+                      if (!item) return null;
+                      return (
+                        <div
+                          key={key}
+                          className="rounded-lg border border-gray-200 bg-white p-3 text-center"
+                        >
+                          <p className="mb-1 text-[11px] text-gray-400">
+                            {item.label}
+                          </p>
+                          <p className="text-base font-bold text-gray-800">
+                            {value}
+                            {item.unit && (
+                              <span className="mr-1 text-[10px] font-normal text-gray-400">
+                                {item.unit}
+                              </span>
+                            )}
+                          </p>
+                        </div>
+                      );
+                    })}
+                </div>
               </div>
+            )}
+
+            {/* نکته فوق‌تخصصی مختص مود */}
+            {modePearls[selectedMode] && (
+              <NoteCard icon={LuLightbulb} title="نکته فوق‌تخصصی" tone="amber">
+                {modePearls[selectedMode]}
+              </NoteCard>
             )}
           </section>
         )}
 
-        <div className="flex items-center gap-1.5 text-[11px] text-gray-400">
-          <LuBookOpen className="w-3.5 h-3.5" />
-          <span>
-            منبع مرجع:{" "}
-            {pediatricVentilatorModes[selectedMode]?.reference ||
-              "UpToDate — Modes of mechanical ventilation"}
-          </span>
-        </div>
+        <ReferenceFooter
+          source={
+            pediatricVentilatorModes[selectedMode]?.reference ||
+            "UpToDate — Modes of mechanical ventilation"
+          }
+        />
       </div>
 
       {/* Footer */}
-      <div className="flex shrink-0 justify-end gap-2 border-t border-gray-100 px-6 py-4">
+      <div className="flex shrink-0 justify-end gap-3 border-t border-gray-100 px-6 py-4">
         <button
           type="button"
           onClick={onClose}
-          className="rounded-lg px-4 py-2 text-gray-600 transition-colors hover:bg-gray-100"
+          className="rounded-xl px-5 py-2.5 text-gray-600 transition-colors hover:bg-gray-100 font-medium text-sm"
         >
           انصراف
         </button>
@@ -331,7 +364,7 @@ function ModeSelectionModal({
           type="button"
           onClick={handleConfirm}
           disabled={!selectedMode}
-          className="rounded-lg bg-linear-to-l from-blue-600 to-cyan-500 px-5 py-2 font-bold text-white transition-opacity hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-40"
+          className="rounded-xl bg-gradient-to-l from-blue-600 to-cyan-500 px-6 py-2.5 font-bold text-white text-sm transition-opacity hover:opacity-90 shadow-md disabled:cursor-not-allowed disabled:opacity-40"
         >
           اعمال تنظیمات
         </button>
