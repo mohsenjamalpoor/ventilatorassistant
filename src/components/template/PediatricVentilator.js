@@ -155,7 +155,7 @@ function PediatricVentilator() {
                 className="px-4 py-2 border border-slate-300 text-slate-700 rounded-xl hover:bg-slate-50 transition-all hover:shadow-md flex items-center gap-2"
               >
                 <LuStethoscope className="w-4 h-4 text-slate-500" />
-                <span className="text-sm font-medium">عیب‌یابی بالینی</span>
+                <span className="text-sm font-medium">مدیریت مشکلات تنفسی</span>
                 <span
                   className={`transform transition-transform text-xs ${advance ? "rotate-180" : ""}`}
                 >
@@ -247,11 +247,11 @@ function PediatricVentilator() {
           <div className="bg-white/90 backdrop-blur-sm rounded-2xl shadow-lg p-6 mb-6 border border-gray-100">
             <div className="mb-4">
               <h3 className="text-lg font-bold text-gray-800">
-                عیب‌یابی بالینی
+                مدیریت مشکلات تنفسی
               </h3>
               <p className="text-xs text-gray-400 mt-0.5">
-                Bedside Troubleshooting — رویکرد سریع به شایع‌ترین مشکلات
-                ونتیلاتور
+                Respiratory Troubleshooting — ارزیابی سریع و اقدامات اولیه در
+                مشکلات شایع تنفسی
               </p>
             </div>
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
@@ -385,7 +385,7 @@ function PediatricVentilator() {
               {/* ویرایش تنظیمات */}
               <button
                 onClick={() => setIsEditModalOpen(true)}
-                className="group p-2 rounded-xl bg-linear-to-r from-indigo-500 to-purple-500 hover:from-indigo-600 hover:to-purple-600 transition-all shadow-md hover:shadow-lg"
+                className="group p-2 rounded-xl bg-green-500 hover:bg-green-600 transition-all shadow-md hover:shadow-lg"
                 title="ویرایش تنظیمات ونتیلاتور"
               >
                 <FaEdit className="w-6 h-6 text-white" />
@@ -397,7 +397,7 @@ function PediatricVentilator() {
                 className="group relative p-2 rounded-xl bg-red-500 hover:bg-red-600 transition-all shadow-md hover:shadow-lg"
                 title="تنظیمات آلارم"
               >
-                <PiBellLight className="w-6 h-6 text-white" />
+                <PiBellLight className="w-6 h-6 text-white transition-transform group-hover:scale-110" />
               </button>
             </div>
           </div>

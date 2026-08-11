@@ -1,5 +1,3 @@
-// alarmUtils.js - Complete Alarm Management System
-
 // Main calculation function
 export const calculateAlarmRanges = (currentSettings) => {
   const currentRR = parseFloat(currentSettings.respiratoryRate) || 0;
