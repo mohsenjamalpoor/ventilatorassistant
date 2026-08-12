@@ -182,6 +182,7 @@ export const getLungInvolvementDescription = (lungInvolvement) => {
 // تابع اصلی محاسبه تنظیمات اولیه بر اساس نوع درگیری
 export const getInitialSettings = (
   weight,
+  age,
   lungInvolvement,
   normalLungCondition,
   obstructiveDisease,

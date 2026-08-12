@@ -175,6 +175,7 @@ function PediatricVentilator() {
   const [currentSettings, setCurrentSettings] = useState(() => {
     const initial = getInitialSettings(
       weight,
+      age,
       lungInvolvement,
       normalLungCondition,
       obstructiveDisease,

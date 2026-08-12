@@ -1,8 +1,12 @@
+"use client";
+
 import {
   LuRuler,
   LuStethoscope,
   LuLightbulb,
   LuTriangleAlert,
+  LuClipboardList,
+  LuScanLine,
 } from "react-icons/lu";
 import NoteCard from "../shared/NoteCard";
 import ReferenceFooter from "../shared/ReferenceFooter";
@@ -11,18 +15,31 @@ function EttTeachingNotes() {
   return (
     <div className="mt-4 space-y-3">
       <NoteCard icon={LuRuler} title="مبنای محاسبه (سن ≥ ۲ سال)" tone="blue">
-        <p>
-          بدون کاف: سایز = (سن ÷ ۴) + ۴ — کاف‌دار: سایز = (سن ÷ ۴) + ۳.۵ · عمق
-          لوله از لب (cm) تقریباً برابر ۳ × سایز لوله (mm) است.
+        <div className="grid grid-cols-1 gap-2 mb-2">
+          <div className="flex items-center justify-between bg-white/60 rounded-lg px-3 py-2 border border-blue-100">
+            <span className="text-xs font-bold text-blue-700">بدون کاف</span>
+            <span className="text-xs font-mono font-semibold text-gray-700">
+              (سن ÷ ۴) + ۴
+            </span>
+          </div>
+          <div className="flex items-center justify-between bg-white/60 rounded-lg px-3 py-2 border border-blue-100">
+            <span className="text-xs font-bold text-blue-700">کاف‌دار</span>
+            <span className="text-xs font-mono font-semibold text-gray-700">
+              (سن ÷ ۴) + ۳.۵
+            </span>
+          </div>
+        </div>
+        <p className="text-xs text-gray-600 leading-6">
+          عمق لوله از لب (cm) تقریباً برابر ۳ برابر سایز لوله (mm) است.
         </p>
-        <p className="mt-2 pt-2 border-t border-blue-200 font-medium">
+        <p className="mt-2 pt-2 border-t border-blue-200 text-xs font-medium text-gray-700 leading-6">
           سقف سایز: بدون کاف حداکثر ۷.۵ mm و کاف‌دار حداکثر ۷ mm — برای بیماران
           بزرگ‌تر (نوجوانان)، فرمول خام دیگر به‌کار نمی‌رود و به این سقف محدود
           می‌شود.
         </p>
       </NoteCard>
 
-      <NoteCard title="آماده‌سازی حین انتوباسیون">
+      <NoteCard icon={LuClipboardList} title="آماده‌سازی حین انتوباسیون">
         <ul className="space-y-2">
           <li className="flex items-start gap-2">
             <span className="w-1.5 h-1.5 rounded-full bg-slate-400 mt-1.5 shrink-0" />
@@ -37,11 +54,16 @@ function EttTeachingNotes() {
         </ul>
       </NoteCard>
 
-      <NoteCard icon={LuStethoscope} title="تایید محل صحیح لوله">
+      <NoteCard icon={LuScanLine} title="تایید محل صحیح لوله">
         <ul className="space-y-2">
           <li className="flex items-start gap-2">
             <span className="w-1.5 h-1.5 rounded-full bg-slate-400 mt-1.5 shrink-0" />
-            روش استاندارد طلایی: Capnography (تشخیص فوری CO2 بازدمی)
+            <span>
+              <span className="font-semibold text-slate-700">
+                روش استاندارد طلایی:
+              </span>{" "}
+              Capnography (تشخیص فوری CO2 بازدمی)
+            </span>
           </li>
           <li className="flex items-start gap-2">
             <span className="w-1.5 h-1.5 rounded-full bg-slate-400 mt-1.5 shrink-0" />
