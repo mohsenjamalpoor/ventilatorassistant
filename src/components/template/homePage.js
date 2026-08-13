@@ -9,38 +9,34 @@ import { useState, useMemo } from "react";
 import { useRouter } from "next/navigation";
 import toast from "react-hot-toast";
 import { calculateEttSizes } from "@/utils/formatNumberEtt";
-import {
-  LuWind,
-  LuActivity,
-  LuHeartPulse,
-  LuStethoscope,
-  LuRuler,
-  LuArrowLeft,
-  LuCheck,
-} from "react-icons/lu";
+import { LuStethoscope, LuRuler, LuArrowLeft, LuCheck } from "react-icons/lu";
 import EttSizeTable from "../module/ett/EttSizeTable";
 import EttTeachingNotes from "../module/ett/EttTeachingNotes";
+import { BsLungs } from "react-icons/bs";
+import { RiUserSettingsLine } from "react-icons/ri";
+import { TbLungsOff } from "react-icons/tb";
+import { FaLungsVirus } from "react-icons/fa";
 
 const LUNG_TYPES = [
   {
     value: "normal",
     label: "ریه نرمال",
     sub: "Normal Lung",
-    icon: LuHeartPulse,
+    icon: BsLungs,
     color: "green",
   },
   {
     value: "obstructive",
     label: "انسدادی",
     sub: "Obstructive",
-    icon: LuWind,
+    icon: TbLungsOff,
     color: "orange",
   },
   {
     value: "restrictive",
     label: "محدودکننده",
     sub: "Restrictive",
-    icon: LuActivity,
+    icon: FaLungsVirus,
     color: "red",
   },
 ];
@@ -235,7 +231,7 @@ function HomePage() {
                     : "bg-white text-gray-600 border-gray-200 hover:border-blue-300 hover:bg-blue-50/50"
                 }`}
               >
-                <LuStethoscope
+                <RiUserSettingsLine
                   className={`w-5 h-5 ${mode === "ventilator" ? "text-white" : "text-blue-500"}`}
                 />
                 تنظیمات اولیه ونتیلاتور

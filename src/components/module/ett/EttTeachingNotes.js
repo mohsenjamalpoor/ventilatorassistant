@@ -2,7 +2,6 @@
 
 import {
   LuRuler,
-  LuStethoscope,
   LuLightbulb,
   LuTriangleAlert,
   LuClipboardList,
