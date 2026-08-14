@@ -14,8 +14,9 @@ import EttSizeTable from "../module/ett/EttSizeTable";
 import EttTeachingNotes from "../module/ett/EttTeachingNotes";
 import { BsLungs } from "react-icons/bs";
 import { RiUserSettingsLine } from "react-icons/ri";
-import { TbLungsOff } from "react-icons/tb";
+
 import { FaLungsVirus } from "react-icons/fa";
+import { GiLungs } from "react-icons/gi";
 
 const LUNG_TYPES = [
   {
@@ -29,7 +30,7 @@ const LUNG_TYPES = [
     value: "obstructive",
     label: "انسدادی",
     sub: "Obstructive",
-    icon: TbLungsOff,
+    icon: GiLungs,
     color: "orange",
   },
   {
@@ -147,9 +148,6 @@ function HomePage() {
             <h1 className="text-xl font-extrabold mb-1">
               دستیار ونتیلاتور در کودکان
             </h1>
-            <p className="text-blue-100 text-xs">
-              ابزار آموزشی برای فلوها و دستیاران PICU
-            </p>
           </div>
         </div>
 
