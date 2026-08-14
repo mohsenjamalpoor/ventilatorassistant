@@ -9,14 +9,29 @@ import { useState, useMemo } from "react";
 import { useRouter } from "next/navigation";
 import toast from "react-hot-toast";
 import { calculateEttSizes } from "@/utils/formatNumberEtt";
-import { LuStethoscope, LuRuler, LuArrowLeft, LuCheck } from "react-icons/lu";
+import {
+  LuStethoscope,
+  LuRuler,
+  LuArrowLeft,
+  LuCheck,
+  LuClipboardList,
+  LuSyringe,
+  LuWind,
+  LuActivity,
+  LuGauge,
+  LuLightbulb,
+} from "react-icons/lu";
 import EttSizeTable from "../module/ett/EttSizeTable";
 import EttTeachingNotes from "../module/ett/EttTeachingNotes";
+// مسیر این دو کامپوننت رو مطابق محل واقعی‌شون در پروژه اصلاح کنید
+import ReferenceFooter from "../module/shared/ReferenceFooter";
+import NoteCard from "../module/shared/NoteCard";
 import { BsLungs } from "react-icons/bs";
 import { RiUserSettingsLine } from "react-icons/ri";
 
 import { FaLungsVirus } from "react-icons/fa";
 import { GiLungs } from "react-icons/gi";
+import { RSI_MEDICATIONS } from "@/utils/rsiMedications";
 
 const LUNG_TYPES = [
   {
@@ -42,6 +57,47 @@ const LUNG_TYPES = [
   },
 ];
 
+const VENT_MODES = [
+  {
+    value: "cpap",
+    label: "CPAP",
+    sub: "Continuous Positive Airway Pressure",
+    icon: LuWind,
+    color: "sky",
+  },
+  {
+    value: "simv",
+    label: "SIMV",
+    sub: "Synchronized Intermittent Mandatory",
+    icon: LuActivity,
+    color: "purple",
+  },
+  {
+    value: "prvc",
+    label: "PRVC",
+    sub: "Pressure-Regulated Volume Control",
+    icon: LuGauge,
+    color: "teal",
+  },
+];
+
+const PRE_INTUBATION_OPTIONS = [
+  {
+    value: "ett",
+    label: "سایز لوله تراشه",
+    sub: "ETT Size",
+    icon: LuRuler,
+    color: "sky",
+  },
+  {
+    value: "medications",
+    label: "داروهای RSI",
+    sub: "RSI Medications",
+    icon: LuSyringe,
+    color: "rose",
+  },
+];
+
 const LUNG_COLOR_STYLES = {
   green: {
     active: "border-green-500 bg-green-50 text-green-700 shadow-green-100",
@@ -55,6 +111,22 @@ const LUNG_COLOR_STYLES = {
     active: "border-red-500 bg-red-50 text-red-700 shadow-red-100",
     icon: "text-red-600",
   },
+  sky: {
+    active: "border-sky-500 bg-sky-50 text-sky-700 shadow-sky-100",
+    icon: "text-sky-600",
+  },
+  purple: {
+    active: "border-purple-500 bg-purple-50 text-purple-700 shadow-purple-100",
+    icon: "text-purple-600",
+  },
+  teal: {
+    active: "border-teal-500 bg-teal-50 text-teal-700 shadow-teal-100",
+    icon: "text-teal-600",
+  },
+  rose: {
+    active: "border-rose-500 bg-rose-50 text-rose-700 shadow-rose-100",
+    icon: "text-rose-600",
+  },
 };
 
 function HomePage() {
@@ -62,11 +134,10 @@ function HomePage() {
 
   const [weight, setWeight] = useState("");
   const [age, setAge] = useState("");
-  const [mode, setMode] = useState(""); // "ventilator" | "ett"
+  const [mode, setMode] = useState(""); // "ventilator" | "preintubation"
   const [lungInvolvement, setLungInvolvement] = useState("");
-  const [normalLungCondition, setNormalLungCondition] = useState("");
-  const [obstructiveDisease, setObstructiveDisease] = useState("");
-  const [restrictiveDisease, setRestrictiveDisease] = useState("");
+  const [ventMode, setVentMode] = useState("");
+  const [preIntubationSection, setPreIntubationSection] = useState(""); // "ett" | "medications"
   const [note, setNote] = useState(false);
   const [touched, setTouched] = useState(false);
 
@@ -79,7 +150,7 @@ function HomePage() {
     e.preventDefault();
     setTouched(true);
 
-    if (!weight || !age || !lungInvolvement) {
+    if (!weight || !age || !lungInvolvement || !ventMode) {
       toast.error("لطفا همه‌ی فیلدها را تکمیل کنید.");
       return;
     }
@@ -96,9 +167,7 @@ function HomePage() {
       weight,
       age,
       lungInvolvement,
-      ...(normalLungCondition && { normalLungCondition }),
-      ...(obstructiveDisease && { obstructiveDisease }),
-      ...(restrictiveDisease && { restrictiveDisease }),
+      ventMode,
     });
 
     router.push(`/ventilatortraining/setup?${params.toString()}`);
@@ -106,6 +175,9 @@ function HomePage() {
 
   const ageNumber = Number(age);
   const isAgeValid = age !== "" && ageNumber > 0;
+
+  const weightNumber = Number(weight);
+  const isWeightValid = weight !== "" && weightNumber > 0;
 
   const ett = useMemo(
     () => (isAgeValid ? calculateEttSizes(ageNumber) : null),
@@ -115,24 +187,23 @@ function HomePage() {
   const subOptionsMap = {
     normal: {
       list: NORMAL_CONDITIONS,
-      value: normalLungCondition,
-      set: setNormalLungCondition,
-      label: "بیماری ریه نرمال",
+      label: "نمونه بیماری‌های ریه نرمال",
     },
     obstructive: {
       list: OBSTRUCTIVE_DISEASES,
-      value: obstructiveDisease,
-      set: setObstructiveDisease,
-      label: "بیماری انسدادی",
+      label: "نمونه بیماری‌های انسدادی",
     },
     restrictive: {
       list: RESTRICTIVE_DISEASES,
-      value: restrictiveDisease,
-      set: setRestrictiveDisease,
-      label: "بیماری محدودکننده",
+      label: "نمونه بیماری‌های محدودکننده",
     },
   };
-  const activeSub = subOptionsMap[lungInvolvement];
+  const activeSub = lungInvolvement ? subOptionsMap[lungInvolvement] : null;
+
+  // دوز آتروپین: ۰.۰۲ mg/kg وریدی، حداکثر تک‌دوز ۰.۵ میلی‌گرم
+  const atropineDose = isWeightValid
+    ? Math.min(weightNumber * 0.02, 0.5).toFixed(2)
+    : null;
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-cyan-50 py-8 px-4">
@@ -222,7 +293,9 @@ function HomePage() {
             <div className="grid grid-cols-2 gap-3">
               <button
                 type="button"
-                onClick={() => setMode("ventilator")}
+                onClick={() =>
+                  setMode(mode === "ventilator" ? "" : "ventilator")
+                }
                 className={`group py-4 px-3 rounded-2xl border-2 text-sm font-bold transition-all flex flex-col items-center gap-2 ${
                   mode === "ventilator"
                     ? "bg-gradient-to-br from-blue-700 to-cyan-600 text-white border-transparent shadow-lg shadow-blue-200"
@@ -236,17 +309,19 @@ function HomePage() {
               </button>
               <button
                 type="button"
-                onClick={() => setMode("ett")}
+                onClick={() =>
+                  setMode(mode === "preintubation" ? "" : "preintubation")
+                }
                 className={`group py-4 px-3 rounded-2xl border-2 text-sm font-bold transition-all flex flex-col items-center gap-2 ${
-                  mode === "ett"
-                    ? "bg-gradient-to-br from-blue-700 to-cyan-600 text-white border-transparent shadow-lg shadow-blue-200"
+                  mode === "preintubation"
+                    ? "bg-linear-to-br from-blue-700 to-cyan-600 text-white border-transparent shadow-lg shadow-blue-200"
                     : "bg-white text-gray-600 border-gray-200 hover:border-blue-300 hover:bg-blue-50/50"
                 }`}
               >
-                <LuRuler
-                  className={`w-5 h-5 ${mode === "ett" ? "text-white" : "text-blue-500"}`}
+                <LuClipboardList
+                  className={`w-5 h-5 ${mode === "preintubation" ? "text-white" : "text-blue-500"}`}
                 />
-                تعیین سایز لوله تراشه
+                ملاحظات پیش از اینتوباسیون
               </button>
             </div>
           </div>
@@ -270,12 +345,9 @@ function HomePage() {
                       <button
                         key={item.value}
                         type="button"
-                        onClick={() => {
-                          setLungInvolvement(item.value);
-                          setNormalLungCondition("");
-                          setObstructiveDisease("");
-                          setRestrictiveDisease("");
-                        }}
+                        onClick={() =>
+                          setLungInvolvement(active ? "" : item.value)
+                        }
                         className={`relative rounded-xl border-2 py-3.5 px-2 flex flex-col items-center gap-1.5 transition-all ${
                           active
                             ? `${style.active} shadow-md`
@@ -298,30 +370,67 @@ function HomePage() {
                   })}
                 </div>
 
+                {/* نمایش اطلاعاتی (غیرقابل‌انتخاب) بیماری‌های این دسته */}
                 {activeSub && (
                   <div className="mt-4">
                     <label className="block text-gray-600 text-xs font-bold mb-2 tracking-wide">
                       {activeSub.label}
                     </label>
-                    <select
-                      value={activeSub.value}
-                      onChange={(e) => activeSub.set(e.target.value)}
-                      className="w-full px-4 py-3 border border-gray-200 rounded-xl text-right text-sm font-medium text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-200 focus:border-blue-400 transition-colors bg-white"
-                    >
-                      <option value="">— انتخاب کنید —</option>
+                    <div className="flex flex-wrap gap-2">
                       {activeSub.list.map((item, index) => (
-                        <option key={index} value={item.value}>
+                        <span
+                          key={index}
+                          className="px-3 py-1.5 rounded-full bg-gray-50 border border-gray-200 text-xs font-medium text-gray-600"
+                        >
                           {item.label}
-                        </option>
+                        </span>
                       ))}
-                    </select>
+                    </div>
                   </div>
                 )}
               </div>
 
+              {/* انتخاب نوع مود ونتیلاتور */}
+              <div className="mb-6">
+                <label className="block text-gray-600 text-xs font-bold mb-3 tracking-wide">
+                  نوع مود ونتیلاتور
+                </label>
+                <div className="grid grid-cols-3 gap-2.5">
+                  {VENT_MODES.map((item) => {
+                    const Icon = item.icon;
+                    const active = ventMode === item.value;
+                    const style = LUNG_COLOR_STYLES[item.color];
+                    return (
+                      <button
+                        key={item.value}
+                        type="button"
+                        onClick={() => setVentMode(active ? "" : item.value)}
+                        className={`relative rounded-xl border-2 py-3.5 px-2 flex flex-col items-center gap-1.5 transition-all ${
+                          active
+                            ? `${style.active} shadow-md`
+                            : "border-gray-200 text-gray-500 hover:border-gray-300"
+                        }`}
+                      >
+                        {active && (
+                          <span className="absolute top-1.5 left-1.5 w-4 h-4 rounded-full bg-current flex items-center justify-center">
+                            <LuCheck className="w-2.5 h-2.5 text-white" />
+                          </span>
+                        )}
+                        <Icon
+                          className={`w-5 h-5 ${active ? style.icon : "text-gray-400"}`}
+                        />
+                        <span className="text-xs font-bold leading-tight text-center">
+                          {item.label}
+                        </span>
+                      </button>
+                    );
+                  })}
+                </div>
+              </div>
+
               <button
                 type="submit"
-                className="w-full bg-gradient-to-l from-blue-700 to-cyan-600 text-white font-bold py-3.5 rounded-2xl shadow-md hover:shadow-lg transition active:scale-[0.98] flex items-center justify-center gap-2"
+                className="w-full bg-linear-to-l from-blue-700 to-cyan-600 text-white font-bold py-3.5 rounded-2xl shadow-md hover:shadow-lg transition active:scale-[0.98] flex items-center justify-center gap-2"
               >
                 شروع
                 <LuArrowLeft className="w-4 h-4" />
@@ -329,29 +438,149 @@ function HomePage() {
             </form>
           )}
 
-          {/* پنل تعیین سایز لوله تراشه */}
-          {mode === "ett" && (
+          {/* پنل ملاحظات پیش از اینتوباسیون */}
+          {mode === "preintubation" && (
             <div className="animate-in fade-in duration-200">
-              {!isAgeValid ? (
+              <div className="grid grid-cols-2 gap-3 mb-5">
+                {PRE_INTUBATION_OPTIONS.map((item) => {
+                  const Icon = item.icon;
+                  const active = preIntubationSection === item.value;
+                  const style = LUNG_COLOR_STYLES[item.color];
+                  return (
+                    <button
+                      key={item.value}
+                      type="button"
+                      onClick={() =>
+                        setPreIntubationSection(active ? "" : item.value)
+                      }
+                      className={`relative rounded-xl border-2 py-3.5 px-2 flex flex-col items-center gap-1.5 transition-all ${
+                        active
+                          ? `${style.active} shadow-md`
+                          : "border-gray-200 text-gray-500 hover:border-gray-300"
+                      }`}
+                    >
+                      {active && (
+                        <span className="absolute top-1.5 left-1.5 w-4 h-4 rounded-full bg-current flex items-center justify-center">
+                          <LuCheck className="w-2.5 h-2.5 text-white" />
+                        </span>
+                      )}
+                      <Icon
+                        className={`w-5 h-5 ${active ? style.icon : "text-gray-400"}`}
+                      />
+                      <span className="text-xs font-bold leading-tight text-center">
+                        {item.label}
+                      </span>
+                    </button>
+                  );
+                })}
+              </div>
+
+              {!preIntubationSection && (
                 <div className="rounded-2xl border-2 border-dashed border-gray-300 p-6 text-center">
-                  <LuRuler className="w-6 h-6 text-gray-300 mx-auto mb-2" />
+                  <LuClipboardList className="w-6 h-6 text-gray-300 mx-auto mb-2" />
                   <p className="text-sm text-gray-500">
-                    لطفا سن بیمار را در بالا وارد کنید
+                    یکی از گزینه‌های بالا را انتخاب کنید
                   </p>
                 </div>
-              ) : (
-                <div className="space-y-4">
-                  <EttSizeTable ett={ett} age={ageNumber} />
+              )}
 
-                  <button
-                    type="button"
-                    onClick={() => setNote((prev) => !prev)}
-                    className="w-full rounded-xl bg-blue-50 hover:bg-blue-100 text-blue-700 font-bold py-3 transition-colors text-sm flex items-center justify-center gap-2"
+              {/* سایز لوله تراشه */}
+              {preIntubationSection === "ett" && (
+                <>
+                  {!isAgeValid ? (
+                    <div className="rounded-2xl border-2 border-dashed border-gray-300 p-6 text-center">
+                      <LuRuler className="w-6 h-6 text-gray-300 mx-auto mb-2" />
+                      <p className="text-sm text-gray-500">
+                        لطفا سن بیمار را در بالا وارد کنید
+                      </p>
+                    </div>
+                  ) : (
+                    <div className="space-y-4">
+                      <EttSizeTable ett={ett} age={ageNumber} />
+
+                      <button
+                        type="button"
+                        onClick={() => setNote((prev) => !prev)}
+                        className="w-full rounded-xl bg-blue-50 hover:bg-blue-100 text-blue-700 font-bold py-3 transition-colors text-sm flex items-center justify-center gap-2"
+                      >
+                        {note ? "مخفی کردن نکات آموزشی" : "نمایش نکات آموزشی"}
+                      </button>
+
+                      {note && <EttTeachingNotes />}
+                    </div>
+                  )}
+                </>
+              )}
+
+              {/* داروهای RSI */}
+              {preIntubationSection === "medications" && (
+                <div className="space-y-3">
+                  {!isWeightValid && (
+                    <div className="rounded-xl bg-amber-50 border border-amber-200 px-4 py-2.5 text-[11px] text-amber-700 font-medium">
+                      برای محاسبه‌ی خودکار دوز بر حسب میلی‌گرم، وزن بیمار را در
+                      بالا وارد کنید.
+                    </div>
+                  )}
+
+                  {RSI_MEDICATIONS.map((med, index) => {
+                    const doseText = isWeightValid
+                      ? `${(weightNumber * med.doseLow).toFixed(1)} تا ${(weightNumber * med.doseHigh).toFixed(1)} ${med.unit.split("/")[0]}`
+                      : `${med.doseLow} تا ${med.doseHigh} ${med.unit}`;
+                    return (
+                      <div
+                        key={index}
+                        className="rounded-2xl border-2 border-gray-200 p-4"
+                      >
+                        <div className="flex items-center justify-between mb-1">
+                          <span className="text-sm font-bold text-gray-800">
+                            {med.name}
+                          </span>
+                          <span className="text-xs font-bold text-blue-600 bg-blue-50 rounded-full px-2.5 py-1 whitespace-nowrap">
+                            {doseText}
+                          </span>
+                        </div>
+                        <p className="text-xs text-gray-500 mb-1">{med.role}</p>
+                        <p className="text-[11px] text-gray-400 leading-relaxed">
+                          {med.note}
+                        </p>
+                      </div>
+                    );
+                  })}
+
+                  {/* آتروپین در صورت برادی‌کاردی */}
+                  <div className="rounded-2xl border-2 border-rose-200 bg-rose-50/50 p-4">
+                    <div className="flex items-center justify-between mb-1">
+                      <span className="text-sm font-bold text-rose-700">
+                        آتروپین (Atropine)
+                      </span>
+                      <span className="text-xs font-bold text-rose-700 bg-rose-100 rounded-full px-2.5 py-1 whitespace-nowrap">
+                        {atropineDose ? `${atropineDose} mg` : "0.02 mg/kg"}
+                      </span>
+                    </div>
+                    <p className="text-xs text-rose-600 mb-1">
+                      در صورت بروز برادی‌کاردی حین یا پس از RSI
+                    </p>
+                    <p className="text-[11px] text-rose-500 leading-relaxed">
+                      دوز ۰.۰۲ mg/kg وریدی، حداکثر تک‌دوز ۰.۵ میلی‌گرم. کاربرد
+                      آن بیشتر در سن زیر ۱ سال یا هم‌زمان با تجویز
+                      سوکسینیل‌کولین توصیه می‌شود؛ برای مصرف روتین در همه‌ی
+                      گروه‌های سنی شواهد قطعی وجود ندارد.
+                    </p>
+                  </div>
+
+                  <NoteCard
+                    icon={LuLightbulb}
+                    title="نکته فوق‌تخصصی"
+                    tone="amber"
                   >
-                    {note ? "مخفی کردن نکات آموزشی" : "نمایش نکات آموزشی"}
-                  </button>
+                    روکورونیوم با دسترسی به سوگاماداکس جهت ریورس اورژانسی،
+                    امروزه در بسیاری از پروتکل‌های PICU جایگزین اصلی
+                    ساکسینیل‌کولین شده است؛ اما در موقعیت‌های راه هوایی مشکل که
+                    سرعت بازگشت تنفس خودبه‌خودی اهمیت دارد، ساکسینیل‌کولین
+                    همچنان انتخاب رایج باقی مانده است.
+                  </NoteCard>
 
-                  {note && <EttTeachingNotes />}
+                  <ReferenceFooter source="پروتکل‌های بالینی Rapid Sequence Intubation در کودکان (UpToDate / PICU)" />
                 </div>
               )}
             </div>
