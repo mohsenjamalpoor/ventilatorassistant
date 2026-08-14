@@ -9,6 +9,7 @@ import { useState, useMemo } from "react";
 import { useRouter } from "next/navigation";
 import toast from "react-hot-toast";
 import { calculateEttSizes } from "@/utils/formatNumberEtt";
+import { checkWeightAgeMismatch } from "@/utils/estimateWeightForAge";
 import {
   LuStethoscope,
   LuRuler,
@@ -31,7 +32,7 @@ import { RiUserSettingsLine } from "react-icons/ri";
 
 import { FaLungsVirus } from "react-icons/fa";
 import { GiLungs } from "react-icons/gi";
-import { RSI_MEDICATIONS } from "@/utils/rsiMedications";
+import { IoMdAlert } from "react-icons/io";
 
 const LUNG_TYPES = [
   {
@@ -129,6 +130,42 @@ const LUNG_COLOR_STYLES = {
   },
 };
 
+// دوزهای داروهای RSI کودکان — بر اساس پروتکل‌های بالینی RSI اطفال
+const RSI_MEDICATIONS = [
+  {
+    name: "کتامین (Ketamine)",
+    role: "القای بیهوشی (ایندوکشن)",
+    doseLow: 1,
+    doseHigh: 2,
+    unit: "mg/kg",
+    note: "گزینه ارجح در بی‌ثباتی همودینامیک/شوک سپتیک؛ نگرانی سنتی درباره افزایش ICP در حال حاضر بحث‌برانگیز و رد‌شده تلقی می‌شود.",
+  },
+  {
+    name: "فنتانیل (Fentanyl)",
+    role: "آنالژزی / کاهش پاسخ سمپاتیک",
+    doseLow: 1,
+    doseHigh: 3,
+    unit: "mcg/kg",
+    note: "به‌عنوان آخرین داروی پیش از لارنگوسکوپی و به‌صورت آهسته تزریق شود تا خطر سفتی قفسه سینه (chest wall rigidity) کاهش یابد.",
+  },
+  {
+    name: "روکورونیوم (Rocuronium)",
+    role: "شل‌کننده عضلانی غیردپولاریزان",
+    doseLow: 1,
+    doseHigh: 1.2,
+    unit: "mg/kg",
+    note: "در صورت در دسترس بودن سوگاماداکس جهت ریورس، بر ساکسینیل‌کولین ارجح است؛ شروع اثر ۴۵ تا ۶۰ ثانیه.",
+  },
+  {
+    name: "سوکسینیل‌کولین (Succinylcholine)",
+    role: "شل‌کننده عضلانی دپولاریزان",
+    doseLow: 1,
+    doseHigh: 2,
+    unit: "mg/kg",
+    note: "دوز بر اساس سن متغیر است (نوزاد و شیرخوار ~۲ mg/kg، کودک ۱ تا ۱۰ سال ۱ تا ۱.۵ mg/kg)؛ در هیپرکالمی، بیماری نورومسکولار، سوختگی/تروما اخیر و هیپرترمی بدخیم منع مصرف دارد.",
+  },
+];
+
 function HomePage() {
   const router = useRouter();
 
@@ -184,6 +221,11 @@ function HomePage() {
     [isAgeValid, ageNumber],
   );
 
+  const weightAgeCheck = useMemo(
+    () => checkWeightAgeMismatch(weight, age),
+    [weight, age],
+  );
+
   const subOptionsMap = {
     normal: {
       list: NORMAL_CONDITIONS,
@@ -200,7 +242,7 @@ function HomePage() {
   };
   const activeSub = lungInvolvement ? subOptionsMap[lungInvolvement] : null;
 
-  // دوز آتروپین: ۰.۰۲ mg/kg وریدی، حداکثر تک‌دوز ۰.۵ میلی‌گرم
+  // محاسبه دوز آتروپین: ۰.۰۲ mg/kg وریدی، حداکثر تک‌دوز ۰.۵ میلی‌گرم
   const atropineDose = isWeightValid
     ? Math.min(weightNumber * 0.02, 0.5).toFixed(2)
     : null;
@@ -285,6 +327,19 @@ function HomePage() {
             </div>
           </div>
 
+          {/* هشدار عدم تطابق وزن و سن */}
+          {weightAgeCheck?.mismatched && (
+            <div className="mb-6 flex items-start gap-2 rounded-xl border border-amber-300 bg-amber-50 px-4 py-3">
+              <IoMdAlert className="w-5 h-5 text-amber-500 shrink-0 mt-0.5" />
+              <p className="text-xs text-amber-700 leading-relaxed">
+                <span className="font-bold">هشدار: </span>
+                وزن وارد شده با سن بیمار همخوانی معمول ندارد (وزن تخمینی بر اساس
+                سن حدود {weightAgeCheck.expected} کیلوگرم است). لطفاً از صحت
+                اطلاعات ثبت‌شده اطمینان حاصل کنید.
+              </p>
+            </div>
+          )}
+
           {/* انتخاب نوع کار */}
           <div className="mb-6">
             <label className="block text-gray-600 text-xs font-bold mb-3 tracking-wide">
@@ -314,7 +369,7 @@ function HomePage() {
                 }
                 className={`group py-4 px-3 rounded-2xl border-2 text-sm font-bold transition-all flex flex-col items-center gap-2 ${
                   mode === "preintubation"
-                    ? "bg-linear-to-br from-blue-700 to-cyan-600 text-white border-transparent shadow-lg shadow-blue-200"
+                    ? "bg-gradient-to-br from-blue-700 to-cyan-600 text-white border-transparent shadow-lg shadow-blue-200"
                     : "bg-white text-gray-600 border-gray-200 hover:border-blue-300 hover:bg-blue-50/50"
                 }`}
               >
@@ -430,7 +485,7 @@ function HomePage() {
 
               <button
                 type="submit"
-                className="w-full bg-linear-to-l from-blue-700 to-cyan-600 text-white font-bold py-3.5 rounded-2xl shadow-md hover:shadow-lg transition active:scale-[0.98] flex items-center justify-center gap-2"
+                className="w-full bg-gradient-to-l from-blue-700 to-cyan-600 text-white font-bold py-3.5 rounded-2xl shadow-md hover:shadow-lg transition active:scale-[0.98] flex items-center justify-center gap-2"
               >
                 شروع
                 <LuArrowLeft className="w-4 h-4" />

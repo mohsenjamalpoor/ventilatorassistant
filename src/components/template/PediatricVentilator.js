@@ -26,12 +26,18 @@ import {
 import {
   pediatricVentilatorModes,
   modeParameterLabels,
+  getModeSettings,
 } from "../../utils/ventilatorModes";
+import { checkWeightAgeMismatch } from "../../utils/estimateWeightForAge";
 import RespiratoryAcidosisModal from "../module/RespiratoryAcidosisModal";
 import EditVentilatorModal from "../module/EditVentilatorModal";
+import { IoMdAlert } from "react-icons/io";
 
 // لیبل‌های کامل همه پارامترهای ممکن (پایه + مختص مودها)
 const allLabels = { ...ventilatorItemLabels, ...modeParameterLabels };
+
+// نگاشت مقدار مود ارسالی از HomePage به شناسه مود در pediatricVentilatorModes
+const VENT_MODE_KEY_MAP = { cpap: "CPAP", simv: "SIMV", prvc: "PRVC" };
 
 // استایل رنگی هر پارامتر — کلاس‌های کامل و استاتیک (سازگار با Tailwind JIT)
 const COLOR_STYLES = {
@@ -170,9 +176,17 @@ function PediatricVentilator() {
   const normalLungCondition = searchParams.get("normalLungCondition");
   const obstructiveDisease = searchParams.get("obstructiveDisease");
   const restrictiveDisease = searchParams.get("restrictiveDisease");
+  const ventModeParam = searchParams.get("ventMode");
+  const initialModeKey = VENT_MODE_KEY_MAP[ventModeParam] || null;
 
-  // تنظیمات فعلی ونتیلاتور
+  // تنظیمات فعلی ونتیلاتور — اگر مودی از صفحه قبل انتخاب شده، همان مود
+  // با تنظیمات مخصوص نوع درگیری بارگذاری می‌شود؛ در غیر این صورت به
+  // تنظیمات پایه (getInitialSettings) برمی‌گردد
   const [currentSettings, setCurrentSettings] = useState(() => {
+    const modeResult = getModeSettings(initialModeKey, lungInvolvement, weight);
+    if (modeResult) {
+      return modeResult.settings;
+    }
     const initial = getInitialSettings(
       weight,
       age,
@@ -189,10 +203,24 @@ function PediatricVentilator() {
     };
   });
 
-  // اثر برای به‌روزرسانی تنظیمات هنگام تغییر نوع درگیری
+  // اثر برای به‌روزرسانی تنظیمات هنگام تغییر وزن یا نوع درگیری —
+  // مود فعلی حفظ می‌شود و فقط اعداد بازمحاسبه می‌شوند
   useEffect(() => {
+    const modeResult = getModeSettings(
+      currentSettings.mode,
+      lungInvolvement,
+      weight,
+    );
+
+    if (modeResult) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
+      setCurrentSettings(modeResult.settings);
+      return;
+    }
+
     const newSettings = getInitialSettings(
       weight,
+      age,
       lungInvolvement,
       normalLungCondition,
       obstructiveDisease,
@@ -206,13 +234,8 @@ function PediatricVentilator() {
         calculateMvent(newSettings.tidalVolume, newSettings.respiratoryRate),
       ),
     });
-  }, [
-    weight,
-    lungInvolvement,
-    normalLungCondition,
-    obstructiveDisease,
-    restrictiveDisease,
-  ]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [weight, lungInvolvement]);
 
   // هندلر انتخاب مود
   const handleModeSelect = (newSettings) => {
@@ -246,6 +269,11 @@ function PediatricVentilator() {
 
   const involvementName = getLungInvolvementName(lungInvolvement);
   const involvementDescription = getLungInvolvementDescription(lungInvolvement);
+
+  const weightAgeCheck = useMemo(
+    () => checkWeightAgeMismatch(weight, age),
+    [weight, age],
+  );
 
   // --------------------------------------------------------------------
   // محاسبه لیست پارامترهای قابل‌نمایش بر اساس مود فعلی
@@ -310,8 +338,18 @@ function PediatricVentilator() {
               </button>
               <button
                 onClick={() => {
+                  const modeResult = getModeSettings(
+                    currentSettings.mode,
+                    lungInvolvement,
+                    weight,
+                  );
+                  if (modeResult) {
+                    setCurrentSettings(modeResult.settings);
+                    return;
+                  }
                   const initial = getInitialSettings(
                     weight,
+                    age,
                     lungInvolvement,
                     normalLungCondition,
                     obstructiveDisease,
@@ -386,6 +424,20 @@ function PediatricVentilator() {
               </p>
             </div>
           </div>
+
+          {/* هشدار عدم تطابق وزن و سن */}
+          {weightAgeCheck?.mismatched && (
+            <div className="mt-4 flex items-start gap-2 rounded-xl border border-amber-300 bg-amber-50 px-4 py-3">
+              <IoMdAlert className="w-5 h-5 text-amber-500 shrink-0 mt-0.5" />
+              <p className="text-xs text-amber-700 leading-relaxed">
+                <span className="font-bold">هشدار: </span>
+                وزن ({weight} kg) با سن بیمار ({age} سال) همخوانی معمول ندارد —
+                وزن تخمینی بر اساس سن حدود {weightAgeCheck.expected} کیلوگرم
+                است. این فقط یک بررسی صوری برای خطای احتمالی ثبت اطلاعات است؛
+                اگر وزن واقعی و صحیح ثبت شده، طبق شرح‌حال بالینی بیمار عمل کنید.
+              </p>
+            </div>
+          )}
         </div>
 
         {/* عیب‌یابی بالینی - بخش اقدامات درمانی */}
