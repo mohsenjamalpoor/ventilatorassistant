@@ -213,10 +213,10 @@ function HomePage() {
     : null;
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-cyan-50 py-8 px-4">
+    <div className="min-h-screen bg-linear-to-br from-slate-50 via-blue-50 to-cyan-50 py-8 px-4">
       <div className="max-w-md mx-auto bg-white rounded-3xl shadow-xl shadow-blue-900/5 overflow-hidden border border-slate-100">
         {/* هدر */}
-        <div className="relative bg-gradient-to-l from-blue-700 via-blue-600 to-cyan-600 px-6 py-7 text-white text-center overflow-hidden">
+        <div className="relative bg-linear-to-l from-blue-700 via-blue-600 to-cyan-600 px-6 py-7 text-white text-center overflow-hidden">
           <div className="absolute -top-8 -left-8 w-32 h-32 rounded-full bg-white/10" />
           <div className="absolute -bottom-10 -right-6 w-28 h-28 rounded-full bg-white/10" />
           <div className="relative">
@@ -318,7 +318,7 @@ function HomePage() {
                 }
                 className={`group py-4 px-3 rounded-2xl border-2 text-sm font-bold transition-all flex flex-col items-center gap-2 ${
                   mode === "ventilator"
-                    ? "bg-gradient-to-br from-blue-700 to-cyan-600 text-white border-transparent shadow-lg shadow-blue-200"
+                    ? "bg-linear-to-br from-blue-700 to-cyan-600 text-white border-transparent shadow-lg shadow-blue-200"
                     : "bg-white text-gray-600 border-gray-200 hover:border-blue-300 hover:bg-blue-50/50"
                 }`}
               >
@@ -334,7 +334,7 @@ function HomePage() {
                 }
                 className={`group py-4 px-3 rounded-2xl border-2 text-sm font-bold transition-all flex flex-col items-center gap-2 ${
                   mode === "preintubation"
-                    ? "bg-gradient-to-br from-blue-700 to-cyan-600 text-white border-transparent shadow-lg shadow-blue-200"
+                    ? "bg-linear-to-br from-blue-700 to-cyan-600 text-white border-transparent shadow-lg shadow-blue-200"
                     : "bg-white text-gray-600 border-gray-200 hover:border-blue-300 hover:bg-blue-50/50"
                 }`}
               >
@@ -450,7 +450,7 @@ function HomePage() {
 
               <button
                 type="submit"
-                className="w-full bg-gradient-to-l from-blue-700 to-cyan-600 text-white font-bold py-3.5 rounded-2xl shadow-md hover:shadow-lg transition active:scale-[0.98] flex items-center justify-center gap-2"
+                className="w-full bg-linear-to-l from-blue-700 to-cyan-600 text-white font-bold py-3.5 rounded-2xl shadow-md hover:shadow-lg transition active:scale-[0.98] flex items-center justify-center gap-2"
               >
                 شروع
                 <LuArrowLeft className="w-4 h-4" />
