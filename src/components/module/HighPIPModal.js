@@ -45,7 +45,7 @@ const PIP_CAUSES = [
     letter: "2",
     title: "علل مقاومتی (Raw بالا) — Plateau نرمال",
     icon: LuWind,
-    color: "amber",
+    color: "sky",
     causes: [
       {
         text: "انسداد یا پیچ‌خوردگی لوله تراشه",
@@ -81,7 +81,7 @@ const PIP_CAUSES = [
     letter: "3",
     title: "علل انطباقی (Compliance پایین) — Plateau هم بالاست",
     icon: LuLayers,
-    color: "orange",
+    color: "cyan",
     causes: [
       {
         text: "پنوموتوراکس",
@@ -119,7 +119,7 @@ const PIP_CAUSES = [
     letter: "4",
     title: "عدم هماهنگی بیمار-ونتیلاتور و Auto-PEEP",
     icon: LuActivity,
-    color: "purple",
+    color: "indigo",
     causes: [
       {
         text: "زور زدن یا سرفه حین دم",
@@ -150,29 +150,29 @@ const colorMap = {
     dot: "bg-slate-400",
     badge: "bg-slate-500",
   },
-  amber: {
-    border: "border-amber-200",
-    bg: "bg-amber-50",
-    text: "text-amber-700",
-    icon: "text-amber-500",
-    dot: "bg-amber-400",
-    badge: "bg-amber-500",
+  sky: {
+    border: "border-sky-200",
+    bg: "bg-sky-50",
+    text: "text-sky-700",
+    icon: "text-sky-500",
+    dot: "bg-sky-400",
+    badge: "bg-sky-500",
   },
-  orange: {
-    border: "border-orange-200",
-    bg: "bg-orange-50",
-    text: "text-orange-700",
-    icon: "text-orange-500",
-    dot: "bg-orange-400",
-    badge: "bg-orange-500",
+  cyan: {
+    border: "border-cyan-200",
+    bg: "bg-cyan-50",
+    text: "text-cyan-700",
+    icon: "text-cyan-500",
+    dot: "bg-cyan-400",
+    badge: "bg-cyan-500",
   },
-  purple: {
-    border: "border-purple-200",
-    bg: "bg-purple-50",
-    text: "text-purple-700",
-    icon: "text-purple-500",
-    dot: "bg-purple-400",
-    badge: "bg-purple-500",
+  indigo: {
+    border: "border-indigo-200",
+    bg: "bg-indigo-50",
+    text: "text-indigo-700",
+    icon: "text-indigo-500",
+    dot: "bg-indigo-400",
+    badge: "bg-indigo-500",
   },
 };
 
@@ -185,7 +185,7 @@ function HighPIPModal({ onClose }) {
       className="w-[92vw] max-w-2xl max-h-[88vh] bg-white rounded-2xl shadow-2xl flex flex-col overflow-hidden"
     >
       {/* هدر گرادیانت */}
-      <div className="relative bg-gradient-to-l from-orange-600 to-amber-500 px-6 py-5 shrink-0">
+      <div className="relative bg-linear-to-l from-blue-700 to-cyan-600 px-6 py-5 shrink-0">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-3">
             <div className="w-11 h-11 rounded-xl bg-white/15 flex items-center justify-center">
@@ -195,7 +195,7 @@ function HighPIPModal({ onClose }) {
               <h2 className="text-white font-bold text-lg leading-tight">
                 افزایش PIP
               </h2>
-              <p className="text-orange-100 text-xs mt-0.5">
+              <p className="text-blue-100 text-xs mt-0.5">
                 High Peak Inspiratory Pressure — Bedside Approach
               </p>
             </div>
@@ -221,7 +221,7 @@ function HighPIPModal({ onClose }) {
                 onClick={() => setOpenId(active ? null : item.id)}
                 className={`flex-1 rounded-lg py-2 flex flex-col items-center gap-0.5 transition-colors ${
                   active
-                    ? "bg-white text-orange-600"
+                    ? "bg-white text-blue-700"
                     : "bg-white/10 text-white hover:bg-white/20"
                 }`}
               >

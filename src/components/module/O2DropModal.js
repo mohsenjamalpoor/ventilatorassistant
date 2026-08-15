@@ -22,7 +22,7 @@ const O2_CAUSES = [
     letter: "D",
     title: "جابجایی لوله (Displacement)",
     icon: LuMoveHorizontal,
-    color: "red",
+    color: "sky",
     causes: [
       {
         text: "خروج جزئی یا کامل لوله تراشه",
@@ -49,7 +49,7 @@ const O2_CAUSES = [
     letter: "O",
     title: "انسداد (Obstruction)",
     icon: LuBan,
-    color: "amber",
+    color: "cyan",
     causes: [
       {
         text: "انسداد لوله با ترشحات یا خون",
@@ -81,7 +81,7 @@ const O2_CAUSES = [
     letter: "P",
     title: "پنوموتوراکس (Pneumothorax)",
     icon: LuWind,
-    color: "orange",
+    color: "blue",
     causes: [
       {
         text: "پنوموتوراکس فشاری ناشی از باروتروما",
@@ -104,7 +104,7 @@ const O2_CAUSES = [
     letter: "E",
     title: "خرابی تجهیزات (Equipment Failure)",
     icon: LuWrench,
-    color: "purple",
+    color: "indigo",
     causes: [
       {
         text: "قطع اتصال مدار ونتیلاتور",
@@ -136,7 +136,7 @@ const O2_CAUSES = [
     letter: "+",
     title: "علل مربوط به بیمار",
     icon: LuUser,
-    color: "blue",
+    color: "teal",
     causes: [
       {
         text: "پیشرفت بیماری زمینه‌ای ریوی",
@@ -162,37 +162,21 @@ const O2_CAUSES = [
 ];
 
 const colorMap = {
-  red: {
-    border: "border-red-200",
-    bg: "bg-red-50",
-    text: "text-red-700",
-    icon: "text-red-500",
-    dot: "bg-red-400",
-    badge: "bg-red-500",
+  sky: {
+    border: "border-sky-200",
+    bg: "bg-sky-50",
+    text: "text-sky-700",
+    icon: "text-sky-500",
+    dot: "bg-sky-400",
+    badge: "bg-sky-500",
   },
-  amber: {
-    border: "border-amber-200",
-    bg: "bg-amber-50",
-    text: "text-amber-700",
-    icon: "text-amber-500",
-    dot: "bg-amber-400",
-    badge: "bg-amber-500",
-  },
-  orange: {
-    border: "border-orange-200",
-    bg: "bg-orange-50",
-    text: "text-orange-700",
-    icon: "text-orange-500",
-    dot: "bg-orange-400",
-    badge: "bg-orange-500",
-  },
-  purple: {
-    border: "border-purple-200",
-    bg: "bg-purple-50",
-    text: "text-purple-700",
-    icon: "text-purple-500",
-    dot: "bg-purple-400",
-    badge: "bg-purple-500",
+  cyan: {
+    border: "border-cyan-200",
+    bg: "bg-cyan-50",
+    text: "text-cyan-700",
+    icon: "text-cyan-500",
+    dot: "bg-cyan-400",
+    badge: "bg-cyan-500",
   },
   blue: {
     border: "border-blue-200",
@@ -201,6 +185,22 @@ const colorMap = {
     icon: "text-blue-500",
     dot: "bg-blue-400",
     badge: "bg-blue-500",
+  },
+  indigo: {
+    border: "border-indigo-200",
+    bg: "bg-indigo-50",
+    text: "text-indigo-700",
+    icon: "text-indigo-500",
+    dot: "bg-indigo-400",
+    badge: "bg-indigo-500",
+  },
+  teal: {
+    border: "border-teal-200",
+    bg: "bg-teal-50",
+    text: "text-teal-700",
+    icon: "text-teal-500",
+    dot: "bg-teal-400",
+    badge: "bg-teal-500",
   },
 };
 
@@ -213,7 +213,7 @@ function O2DropModal({ onClose }) {
       className="w-[92vw] max-w-2xl max-h-[88vh] bg-white rounded-2xl shadow-2xl flex flex-col overflow-hidden"
     >
       {/* هدر  */}
-      <div className="relative bg-gradient-to-l from-red-600 to-orange-500 px-6 py-5 shrink-0">
+      <div className="relative bg-linear-to-l from-blue-700 to-cyan-600 px-6 py-5 shrink-0">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-3">
             <div className="w-11 h-11 rounded-xl bg-white/15 flex items-center justify-center">
@@ -223,7 +223,7 @@ function O2DropModal({ onClose }) {
               <h2 className="text-white font-bold text-lg leading-tight">
                 علل افت اکسیژن (SpO₂)
               </h2>
-              <p className="text-red-100 text-xs mt-0.5">
+              <p className="text-blue-100 text-xs mt-0.5">
                 Sudden Desaturation — Bedside Approach
               </p>
             </div>
@@ -249,7 +249,7 @@ function O2DropModal({ onClose }) {
                 onClick={() => setOpenId(active ? null : item.id)}
                 className={`flex-1 rounded-lg py-2 flex flex-col items-center gap-0.5 transition-colors ${
                   active
-                    ? "bg-white text-red-600"
+                    ? "bg-white text-blue-700"
                     : "bg-white/10 text-white hover:bg-white/20"
                 }`}
               >

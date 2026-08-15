@@ -15,6 +15,7 @@ import {
   LuTrendingUp,
   LuActivity,
   LuStethoscope,
+  LuWind,
 } from "react-icons/lu";
 import {
   getInitialSettings,
@@ -32,6 +33,7 @@ import { checkWeightAgeMismatch } from "../../utils/estimateWeightForAge";
 import RespiratoryAcidosisModal from "../module/RespiratoryAcidosisModal";
 import EditVentilatorModal from "../module/EditVentilatorModal";
 import { IoMdAlert } from "react-icons/io";
+import ReferenceFooter from "../module/shared/ReferenceFooter";
 
 // لیبل‌های کامل همه پارامترهای ممکن (پایه + مختص مودها)
 const allLabels = { ...ventilatorItemLabels, ...modeParameterLabels };
@@ -39,79 +41,67 @@ const allLabels = { ...ventilatorItemLabels, ...modeParameterLabels };
 // نگاشت مقدار مود ارسالی از HomePage به شناسه مود در pediatricVentilatorModes
 const VENT_MODE_KEY_MAP = { cpap: "CPAP", simv: "SIMV", prvc: "PRVC" };
 
-// استایل رنگی هر پارامتر — کلاس‌های کامل و استاتیک (سازگار با Tailwind JIT)
+// استایل هر پارامتر — نوار رنگی باریک بالای کارت + مقدار مشکی/خاکستری تیره
 const COLOR_STYLES = {
   indigo: {
-    card: "bg-linear-to-br from-indigo-100 to-indigo-200 border-2 border-indigo-300",
-    label: "text-indigo-700",
-    value: "text-indigo-900",
-    unit: "text-indigo-600",
+    bar: "bg-indigo-500",
+    label: "text-indigo-600",
+    ring: "hover:border-indigo-200",
   },
   green: {
-    card: "bg-linear-to-br from-green-100 to-green-200 border-2 border-green-400",
-    label: "text-green-700",
-    value: "text-green-900",
-    unit: "text-green-600",
+    bar: "bg-green-500",
+    label: "text-green-600",
+    ring: "hover:border-green-200",
   },
   purple: {
-    card: "bg-linear-to-br from-purple-100 to-purple-200 border-2 border-purple-300",
-    label: "text-purple-700",
-    value: "text-purple-900",
-    unit: "text-purple-600",
+    bar: "bg-purple-500",
+    label: "text-purple-600",
+    ring: "hover:border-purple-200",
   },
   red: {
-    card: "bg-linear-to-br from-red-100 to-red-200 border-2 border-red-300",
-    label: "text-red-700",
-    value: "text-red-900",
-    unit: "text-red-600",
+    bar: "bg-red-500",
+    label: "text-red-600",
+    ring: "hover:border-red-200",
   },
   teal: {
-    card: "bg-linear-to-br from-teal-100 to-teal-200 border-2 border-teal-300",
-    label: "text-teal-700",
-    value: "text-teal-900",
-    unit: "text-teal-600",
+    bar: "bg-teal-500",
+    label: "text-teal-600",
+    ring: "hover:border-teal-200",
   },
   blue: {
-    card: "bg-linear-to-br from-blue-100 to-blue-200 border-2 border-blue-300",
-    label: "text-blue-700",
-    value: "text-blue-900",
-    unit: "text-blue-600",
+    bar: "bg-blue-500",
+    label: "text-blue-600",
+    ring: "hover:border-blue-200",
   },
   orange: {
-    card: "bg-linear-to-br from-orange-100 to-orange-200 border-2 border-orange-300",
-    label: "text-orange-700",
-    value: "text-orange-900",
-    unit: "text-orange-600",
+    bar: "bg-orange-500",
+    label: "text-orange-600",
+    ring: "hover:border-orange-200",
   },
   violet: {
-    card: "bg-linear-to-br from-violet-100 to-violet-200 border-2 border-violet-300",
-    label: "text-violet-700",
-    value: "text-violet-900",
-    unit: "text-violet-600",
+    bar: "bg-violet-500",
+    label: "text-violet-600",
+    ring: "hover:border-violet-200",
   },
   pink: {
-    card: "bg-linear-to-br from-pink-100 to-pink-200 border-2 border-pink-300",
-    label: "text-pink-700",
-    value: "text-pink-900",
-    unit: "text-pink-600",
+    bar: "bg-pink-500",
+    label: "text-pink-600",
+    ring: "hover:border-pink-200",
   },
   amber: {
-    card: "bg-linear-to-br from-amber-100 to-amber-200 border-2 border-amber-300",
-    label: "text-amber-700",
-    value: "text-amber-900",
-    unit: "text-amber-600",
+    bar: "bg-amber-500",
+    label: "text-amber-600",
+    ring: "hover:border-amber-200",
   },
   slate: {
-    card: "bg-linear-to-br from-slate-100 to-slate-200 border-2 border-slate-300",
-    label: "text-slate-700",
-    value: "text-slate-900",
-    unit: "text-slate-600",
+    bar: "bg-slate-400",
+    label: "text-slate-600",
+    ring: "hover:border-slate-200",
   },
   sky: {
-    card: "bg-linear-to-br from-sky-100 to-sky-200 border-2 border-sky-300",
-    label: "text-sky-700",
-    value: "text-sky-900",
-    unit: "text-sky-600",
+    bar: "bg-sky-500",
+    label: "text-sky-600",
+    ring: "hover:border-sky-200",
   },
 };
 
@@ -326,10 +316,10 @@ function PediatricVentilator() {
             <div className="flex gap-2 flex-wrap">
               <button
                 onClick={() => setAdvance((prv) => !prv)}
-                className="px-2 py-2  border border-slate-300 text-slate-700 rounded-xl hover:bg-slate-50 transition-all hover:shadow-md flex items-center gap-2"
+                className="px-4 py-2.5 bg-linear-to-l from-blue-600 to-cyan-500 text-white rounded-xl shadow-md hover:shadow-lg transition-all flex items-center gap-2"
               >
-                <LuStethoscope className="w-4 h-4 text-slate-500" />
-                <span className="text-sm font-bold">مدیریت مشکلات تنفسی</span>
+                <LuWind className="w-4 h-4" />
+                <span className="text-sm font-bold">اختلال O₂/CO₂</span>
                 <span
                   className={`transform transition-transform text-xs ${advance ? "rotate-180" : ""}`}
                 >
@@ -440,29 +430,39 @@ function PediatricVentilator() {
           )}
         </div>
 
-        {/* عیب‌یابی بالینی - بخش اقدامات درمانی */}
+        {/* اختلال O2/CO2 - بخش اقدامات درمانی */}
         {advance && (
-          <div className="bg-white/90 backdrop-blur-sm rounded-2xl shadow-lg p-6 mb-6 border border-gray-100">
-            <div className="mb-4">
-              <h3 className="text-lg font-bold text-gray-800">
-                مدیریت مشکلات تنفسی
-              </h3>
-              <p className="text-xs text-gray-400 mt-0.5">
-                Respiratory Troubleshooting — ارزیابی سریع و اقدامات اولیه در
-                مشکلات شایع تنفسی
-              </p>
+          <div className="relative bg-white rounded-3xl shadow-xl shadow-blue-900/5 p-6 mb-6 border border-slate-100 overflow-hidden">
+            {/* دکوراسیون گرادیان مثل هدر هوم‌پیج */}
+            <div className="absolute -top-10 -left-10 w-40 h-40 rounded-full bg-blue-50 pointer-events-none" />
+            <div className="absolute -bottom-14 -right-10 w-36 h-36 rounded-full bg-cyan-50 pointer-events-none" />
+
+            <div className="relative mb-5 flex items-center gap-3">
+              <div className="w-11 h-11 rounded-2xl bg-linear-to-br from-blue-700 to-cyan-600 flex items-center justify-center shadow-md shadow-blue-200 shrink-0">
+                <LuWind className="w-5 h-5 text-white" />
+              </div>
+              <div>
+                <h3 className="text-lg font-extrabold bg-linear-to-r from-blue-700 to-cyan-600 bg-clip-text text-transparent">
+                  اختلال O₂/CO₂
+                </h3>
+                <p className="text-xs text-gray-400 mt-0.5">
+                  بررسی سریع افت اکسیژن، اختلال تهویه (CO₂) و افزایش فشار راه
+                  هوایی — علل شایع و اقدام درمانی بر اساس UpToDate
+                </p>
+              </div>
             </div>
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+
+            <div className="relative grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
               <button
                 onClick={() => setIsO2ModalOpen(true)}
-                className="group relative flex flex-col items-start gap-3 p-5 rounded-xl border-2 border-gray-200 bg-white hover:border-red-300 hover:shadow-lg transition-all cursor-pointer text-right hover:bg-red-50"
+                className="group relative flex flex-col items-start gap-3 p-5 rounded-2xl border-2 border-slate-200 bg-white hover:border-blue-400 hover:bg-blue-50/60 hover:shadow-lg transition-all cursor-pointer text-right"
               >
                 <div className="flex items-center gap-3 w-full">
-                  <div className="flex items-center justify-center w-12 h-12 rounded-xl bg-red-50 group-hover:bg-red-100 transition-colors shrink-0">
-                    <LuTrendingDown className="w-6 h-6 text-red-500" />
+                  <div className="flex items-center justify-center w-12 h-12 rounded-xl bg-blue-50 group-hover:bg-blue-100 transition-colors shrink-0">
+                    <LuTrendingDown className="w-6 h-6 text-blue-600" />
                   </div>
                   <div>
-                    <p className="font-bold text-gray-800 group-hover:text-red-700 transition-colors">
+                    <p className="font-bold text-gray-800 group-hover:text-blue-700 transition-colors">
                       علت افت O₂
                     </p>
                     <p className="text-xs text-gray-400 mt-0.5">
@@ -474,14 +474,14 @@ function PediatricVentilator() {
 
               <button
                 onClick={() => setIsHighPIPModalOpen(true)}
-                className="group relative flex flex-col items-start gap-3 p-5 rounded-xl border-2 border-gray-200 bg-white hover:border-orange-300 hover:shadow-lg transition-all cursor-pointer text-right hover:bg-orange-50"
+                className="group relative flex flex-col items-start gap-3 p-5 rounded-2xl border-2 border-slate-200 bg-white hover:border-cyan-400 hover:bg-cyan-50/60 hover:shadow-lg transition-all cursor-pointer text-right"
               >
                 <div className="flex items-center gap-3 w-full">
-                  <div className="flex items-center justify-center w-12 h-12 rounded-xl bg-orange-50 group-hover:bg-orange-100 transition-colors shrink-0">
-                    <LuTrendingUp className="w-6 h-6 text-orange-500" />
+                  <div className="flex items-center justify-center w-12 h-12 rounded-xl bg-cyan-50 group-hover:bg-cyan-100 transition-colors shrink-0">
+                    <LuTrendingUp className="w-6 h-6 text-cyan-600" />
                   </div>
                   <div>
-                    <p className="font-bold text-gray-800 group-hover:text-orange-700 transition-colors">
+                    <p className="font-bold text-gray-800 group-hover:text-cyan-700 transition-colors">
                       علت افزایش PIP
                     </p>
                     <p className="text-xs text-gray-400 mt-0.5">
@@ -493,15 +493,15 @@ function PediatricVentilator() {
 
               <button
                 onClick={() => setIsRespiratoryAcidosis(true)}
-                className="group relative flex flex-col items-start gap-3 p-5 rounded-xl border-2 border-gray-200 bg-white hover:border-rose-300 hover:shadow-lg transition-all cursor-pointer text-right hover:bg-rose-50"
+                className="group relative flex flex-col items-start gap-3 p-5 rounded-2xl border-2 border-slate-200 bg-white hover:border-sky-400 hover:bg-sky-50/60 hover:shadow-lg transition-all cursor-pointer text-right"
               >
                 <div className="flex items-center gap-3 w-full">
-                  <div className="flex items-center justify-center w-12 h-12 rounded-xl bg-rose-50 group-hover:bg-rose-100 transition-colors shrink-0">
-                    <LuActivity className="w-6 h-6 text-rose-500" />
+                  <div className="flex items-center justify-center w-12 h-12 rounded-xl bg-sky-50 group-hover:bg-sky-100 transition-colors shrink-0">
+                    <LuActivity className="w-6 h-6 text-sky-600" />
                   </div>
                   <div>
-                    <p className="font-bold text-gray-800 group-hover:text-rose-700 transition-colors">
-                      علت اسیدوز تنفسی
+                    <p className="font-bold text-gray-800 group-hover:text-sky-700 transition-colors">
+                      علت اسیدوز تنفسی (CO₂)
                     </p>
                     <p className="text-xs text-gray-400 mt-0.5">
                       علل و اقدام درمانی
@@ -509,6 +509,10 @@ function PediatricVentilator() {
                   </div>
                 </div>
               </button>
+            </div>
+
+            <div className="relative mt-5">
+              <ReferenceFooter source="پروتکل‌های بالینی مدیریت اختلالات اکسیژناسیون و تهویه در کودکان (UpToDate / PICU)" />
             </div>
           </div>
         )}
@@ -562,59 +566,69 @@ function PediatricVentilator() {
         </ModalContainer>
 
         {/* مانیتور ونتیلاتور */}
-        <div className="bg-linear-to-br from-blue-50/95 to-cyan-50/95 backdrop-blur-sm rounded-2xl shadow-xl p-6 border border-blue-200">
-          <div className="flex items-center justify-between mb-6 flex-wrap gap-3">
-            <div>
-              <h2 className="text-2xl font-bold bg-linear-to-r from-blue-600 to-cyan-600 bg-clip-text text-transparent">
-                مانیتور ونتیلاتور
-              </h2>
-              {activeModeDef && (
-                <p className="text-xs text-blue-500/70 mt-0.5">
-                  نمایش پارامترهای مرتبط با مود {activeModeDef.name}
-                </p>
-              )}
+        <div className="relative bg-white rounded-3xl shadow-xl shadow-blue-900/5 p-6 border border-slate-100 overflow-hidden">
+          {/* دکوراسیون گرادیان مثل سایر پنل‌ها */}
+          <div className="absolute -top-12 -right-12 w-44 h-44 rounded-full bg-blue-50 pointer-events-none" />
+          <div className="absolute -bottom-16 -left-10 w-36 h-36 rounded-full bg-cyan-50 pointer-events-none" />
+
+          <div className="relative flex items-center justify-between mb-6 flex-wrap gap-3">
+            <div className="flex items-center gap-3">
+              <div className="w-11 h-11 rounded-2xl bg-linear-to-br from-blue-700 to-cyan-600 flex items-center justify-center shadow-md shadow-blue-200 shrink-0">
+                <LuActivity className="w-5 h-5 text-white" />
+              </div>
+              <div>
+                <h2 className="text-xl font-extrabold bg-linear-to-r from-blue-700 to-cyan-600 bg-clip-text text-transparent">
+                  مانیتور ونتیلاتور
+                </h2>
+                {activeModeDef && (
+                  <p className="text-xs text-gray-400 mt-0.5">
+                    نمایش پارامترهای مرتبط با مود{" "}
+                    <span className="font-semibold text-blue-600">
+                      {activeModeDef.name}
+                    </span>
+                  </p>
+                )}
+              </div>
             </div>
 
             <div className="flex items-center gap-2">
               {/* انتخاب مد */}
               <button
                 onClick={() => setIsModeModalOpen(true)}
-                className="group relative p-3 bg-linear-to-r from-blue-50 to-cyan-50 rounded-lg hover:bg-blue-600 transition-all shadow-md hover:shadow-lg"
+                className="px-4 py-2.5 rounded-xl border-2 border-blue-200 bg-blue-50 text-blue-700 font-bold text-sm hover:border-blue-400 hover:bg-blue-100 transition-all shadow-sm hover:shadow-md"
                 title="انتخاب مود ونتیلاتور"
               >
-                <p className="text-sm font-bold text-blue-800">
-                  {currentSettings.mode || "SIMV"}
-                </p>
+                {currentSettings.mode || "SIMV"}
               </button>
 
               {/* ویرایش تنظیمات */}
               <button
                 onClick={() => setIsEditModalOpen(true)}
-                className="group p-2 rounded-xl bg-green-500 hover:bg-green-600 transition-all shadow-md hover:shadow-lg"
+                className="p-2.5 rounded-xl bg-linear-to-br from-blue-700 to-cyan-600 hover:shadow-lg shadow-md shadow-blue-200 transition-all"
                 title="ویرایش تنظیمات ونتیلاتور"
               >
-                <FaEdit className="w-6 h-6 text-white" />
+                <FaEdit className="w-5 h-5 text-white" />
               </button>
 
               {/* آلارم */}
               <button
                 onClick={() => setIsOpen(true)}
-                className="group relative p-2 rounded-xl bg-red-500 hover:bg-red-600 transition-all shadow-md hover:shadow-lg"
+                className="group p-2.5 rounded-xl bg-white border-2 border-slate-200 hover:border-red-300 hover:bg-red-50 transition-all shadow-sm hover:shadow-md"
                 title="تنظیمات آلارم"
               >
-                <PiBellLight className="w-6 h-6 text-white transition-transform group-hover:scale-110" />
+                <PiBellLight className="w-5 h-5 text-slate-500 group-hover:text-red-500 transition-colors" />
               </button>
             </div>
           </div>
 
           {/* بخش مانیتور — داینامیک بر اساس مود */}
-          <div className="bg-white/80 backdrop-blur-sm rounded-xl p-6 border border-blue-100 shadow-inner">
+          <div className="relative bg-slate-50/70 rounded-2xl p-5 border border-slate-100">
             {displayKeys.length === 0 ? (
-              <p className="text-center text-sm text-gray-400 py-6">
+              <p className="text-center text-sm text-gray-400 py-8">
                 پارامتری برای این مود تعریف نشده است.
               </p>
             ) : (
-              <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 xl:grid-cols-6 gap-4">
+              <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 xl:grid-cols-6 gap-3.5">
                 {displayKeys.map((key) => {
                   const item = allLabels[key];
                   if (!item) return null;
@@ -633,19 +647,21 @@ function PediatricVentilator() {
                   return (
                     <div
                       key={key}
-                      className={`rounded-xl p-4 shadow-sm hover:shadow-md transition-all ${style.card}`}
+                      className={`group relative bg-white rounded-xl border border-slate-200 ${style.ring} shadow-sm hover:shadow-md transition-all overflow-hidden`}
                     >
-                      <div className="text-center">
+                      {/* نوار رنگی بالای کارت */}
+                      <div className={`h-1 w-full ${style.bar}`} />
+                      <div className="px-3.5 py-3 text-center">
                         <h3
-                          className={`text-xs font-bold uppercase tracking-wider mb-2 ${style.label}`}
+                          className={`text-[10px] font-bold uppercase tracking-wider mb-1.5 ${style.label}`}
                         >
                           {item.label}
                         </h3>
-                        <p className={`text-2xl font-bold ${style.value}`}>
+                        <p className="text-2xl font-extrabold text-slate-800 tabular-nums leading-none">
                           {displayValue}
                         </p>
                         {item.unit && (
-                          <p className={`text-xs mt-1 ${style.unit}`}>
+                          <p className="text-[11px] text-slate-400 mt-1 font-medium">
                             {item.unit}
                           </p>
                         )}

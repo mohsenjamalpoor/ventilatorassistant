@@ -28,7 +28,7 @@ function RespiratoryAcidosisModal({ onClose }) {
         className="w-[92vw] max-w-2xl max-h-[88vh] bg-white rounded-2xl shadow-2xl flex flex-col overflow-hidden"
       >
         {/* Header */}
-        <div className="relative bg-gradient-to-l from-rose-600 to-rose-500 px-6 py-5 flex items-center justify-between shrink-0">
+        <div className="relative bg-linear-to-l from-blue-700 to-cyan-600 px-6 py-5 flex items-center justify-between shrink-0">
           <div className="flex items-center gap-3">
             <div className="w-11 h-11 rounded-xl bg-white/15 flex items-center justify-center">
               <LuWind className="w-6 h-6 text-white" />
@@ -37,7 +37,7 @@ function RespiratoryAcidosisModal({ onClose }) {
               <h2 className="text-white font-bold text-lg leading-tight">
                 اسیدوز تنفسی
               </h2>
-              <p className="text-rose-100 text-xs mt-0.5">
+              <p className="text-blue-100 text-xs mt-0.5">
                 Respiratory Acidosis
               </p>
             </div>
@@ -162,8 +162,8 @@ function RespiratoryAcidosisModal({ onClose }) {
               label="یافته‌های ABG"
             />
             <div className="grid grid-cols-3 gap-3">
-              <ValueBox label="pH" value="< 7.35" tone="rose" />
-              <ValueBox label="PaCO2" value="> 45 mmHg" tone="rose" />
+              <ValueBox label="pH" value="< 7.35" tone="blue" />
+              <ValueBox label="PaCO2" value="> 45 mmHg" tone="blue" />
               <ValueBox label="HCO3" value="طبیعی یا ↑ جبرانی" tone="slate" />
             </div>
           </section>
@@ -273,7 +273,7 @@ function RespiratoryAcidosisModal({ onClose }) {
 function SectionTitle({ icon, label }) {
   return (
     <div className="flex items-center gap-2 mb-2.5">
-      <span className="text-rose-500">{icon}</span>
+      <span className="text-blue-600">{icon}</span>
       <h3 className="text-sm font-bold text-slate-800">{label}</h3>
     </div>
   );
@@ -285,7 +285,7 @@ function TabButton({ active, onClick, children }) {
       onClick={onClick}
       className={`px-3.5 py-1.5 rounded-lg text-xs font-semibold transition-colors ${
         active
-          ? "bg-rose-500 text-white"
+          ? "bg-linear-to-l from-blue-700 to-cyan-600 text-white"
           : "bg-slate-100 text-slate-500 hover:bg-slate-200"
       }`}
     >
@@ -299,7 +299,7 @@ function CauseList({ items }) {
     <div className="bg-slate-50 border border-slate-200 rounded-xl p-3 space-y-2.5">
       {items.map((item, i) => (
         <div key={i} className="flex items-start gap-2.5">
-          <span className="w-1.5 h-1.5 rounded-full bg-rose-400 mt-1.5 shrink-0" />
+          <span className="w-1.5 h-1.5 rounded-full bg-blue-400 mt-1.5 shrink-0" />
           <div>
             <p className="text-xs font-semibold text-slate-700">{item.title}</p>
             <p className="text-xs text-slate-500 leading-5 mt-0.5">
@@ -314,8 +314,8 @@ function CauseList({ items }) {
 
 function ValueBox({ label, value, tone }) {
   const toneClasses =
-    tone === "rose"
-      ? "bg-rose-50 border-rose-200 text-rose-700"
+    tone === "blue"
+      ? "bg-blue-50 border-blue-200 text-blue-700"
       : "bg-slate-50 border-slate-200 text-slate-700";
   return (
     <div className={`rounded-xl border px-3 py-3 text-center ${toneClasses}`}>
@@ -337,7 +337,7 @@ function FormulaRow({ label, formula }) {
 function AlgoStep({ n, text }) {
   return (
     <li className="flex items-start gap-3">
-      <span className="w-6 h-6 rounded-full bg-rose-100 text-rose-600 text-xs font-bold flex items-center justify-center shrink-0">
+      <span className="w-6 h-6 rounded-full bg-blue-100 text-blue-700 text-xs font-bold flex items-center justify-center shrink-0">
         {n}
       </span>
       <p className="text-sm text-slate-600 leading-7 pt-0.5">{text}</p>
