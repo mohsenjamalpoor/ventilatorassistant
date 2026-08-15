@@ -653,7 +653,7 @@ function PediatricVentilator() {
                       <div className={`h-1 w-full ${style.bar}`} />
                       <div className="px-3.5 py-3 text-center">
                         <h3
-                          className={`text-[10px] font-bold uppercase tracking-wider mb-1.5 ${style.label}`}
+                          className={`text-[11px] font-bold uppercase tracking-wider mb-1.5 ${style.label}`}
                         >
                           {item.label}
                         </h3>
