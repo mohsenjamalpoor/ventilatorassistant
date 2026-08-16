@@ -21,7 +21,6 @@ import {
   getInitialSettings,
   calculateMvent,
   getLungInvolvementName,
-  getLungInvolvementDescription,
   ventilatorItemLabels,
 } from "../../utils/Initialsettingsconfig ";
 import {
@@ -267,7 +266,6 @@ function PediatricVentilator() {
   };
 
   const involvementName = getLungInvolvementName(lungInvolvement);
-  const involvementDescription = getLungInvolvementDescription(lungInvolvement);
 
   const weightAgeCheck = useMemo(
     () => checkWeightAgeMismatch(weight, age),
@@ -315,10 +313,6 @@ function PediatricVentilator() {
                   >
                     {involvementName}
                   </span>
-                </p>
-                <span className="text-xs text-gray-400">|</span>
-                <p className="text-xs text-gray-500">
-                  {involvementDescription}
                 </p>
               </div>
             </div>

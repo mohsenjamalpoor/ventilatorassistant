@@ -169,16 +169,6 @@ export const getLungInvolvementName = (lungInvolvement) => {
   return names[lungInvolvement] || "بدون درگیری مشخص";
 };
 
-// تابع دریافت توضیحات نوع درگیری
-export const getLungInvolvementDescription = (lungInvolvement) => {
-  const descriptions = {
-    normal: "تنظیمات استاندارد برای ریه نرمال(کاهش سطح هوشیاری، تشنج)",
-    obstructive: "تنظیمات مناسب برای بیماری‌های انسدادی (آسم، برونشیولیت)",
-    restrictive: "تنظیمات مناسب برای بیماری‌های محدودکننده (پنومونی، ARDS)",
-  };
-  return descriptions[lungInvolvement] || "تنظیمات پیش‌فرض";
-};
-
 // تابع اصلی محاسبه تنظیمات اولیه بر اساس نوع درگیری
 export const getInitialSettings = (
   weight,
