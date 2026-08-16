@@ -2,6 +2,12 @@
 // مودهای ونتیلاتور به همراه تنظیمات پیشنهادی بر اساس نوع درگیری ریه
 // منبع مرجع: UpToDate — Overview of mechanical ventilation / High-frequency
 // oscillatory ventilation in children / Modes of mechanical ventilation
+//
+// ساختار هماهنگ با HomePage: چهار مود اصلی (CPAP, PC, VC, PRVC) که به‌جز
+// CPAP هر کدام زیرمجموعه‌ی AC یا SIMV دارند → کلیدهای:
+// CPAP, PC-AC, PC-SIMV, VC-AC, VC-SIMV, PRVC-AC, PRVC-SIMV
+// (PSV و HFOV مودهای پیشرفته/weaning هستند و از HomePage قابل انتخاب
+// نیستند، اما برای تعویض مود در ModeSelectionModal همچنان موجودند)
 
 import { calculateMvent, calculateVTe } from "../utils/Initialsettingsconfig ";
 
@@ -81,6 +87,66 @@ export const pediatricVentilatorModes = {
     },
   },
 
+  "VC-SIMV": {
+    name: "VC-SIMV",
+    fullName: "Volume-Controlled SIMV (+PS)",
+    description:
+      "تهویه اجباری حجمی متناوب هماهنگ‌شده همراه با تنفس‌های خودبه‌خودی حمایت‌شده",
+    icon: "🔄",
+    category: "conventional",
+    reference: "UpToDate — Modes of mechanical ventilation",
+    clinicalIndications: [
+      "مناسب برای اکثر بیماران با تلاش تنفسی حفظ‌شده",
+      "مرحله انتقال به سمت جداسازی از ونتیلاتور (weaning)",
+    ],
+    advantages: [
+      "کاهش تعداد تنفس‌های اجباری با کاهش تدریجی RR",
+      "حفظ عضلات تنفسی نسبت به کنترل کامل",
+    ],
+    disadvantages: [
+      "احتمال افزایش کار تنفسی در تنفس‌های خودبه‌خودی بدون PS کافی",
+      "امکان عدم هماهنگی بین تنفس بیمار و ونتیلاتور",
+    ],
+    keyParameters: [
+      "tidalVolume",
+      "respiratoryRate",
+      "pressureSupport",
+      "peep",
+      "ieRatio",
+      "fio2",
+      "trigger",
+    ],
+    settingsByInvolvement: {
+      normal: {
+        tidalVolume: (w) => (w * 6).toFixed(1),
+        respiratoryRate: 20,
+        pressureSupport: 10,
+        peep: 5,
+        ieRatio: "1:2",
+        trigger: 5,
+        note: "PS معمولاً برابر با غلبه بر مقاومت لوله تراشه (۸-۱۲ cmH₂O) تنظیم می‌شود.",
+      },
+      obstructive: {
+        tidalVolume: (w) => (w * 6).toFixed(1),
+        respiratoryRate: 16,
+        pressureSupport: 12,
+        peep: 6,
+        ieRatio: "1:3",
+        trigger: 4,
+        note: "PS اندکی بالاتر برای غلبه بر مقاومت راه هوایی و PEEP خودبه‌خودی احتمالی.",
+      },
+      restrictive: {
+        tidalVolume: (w) => (w * 6.5).toFixed(1),
+        respiratoryRate: 22,
+        pressureSupport: 14,
+        peep: 8,
+        ieRatio: "1:2",
+        trigger: 5,
+        note: "PEEP بالاتر برای حفظ باز بودن آلوئولی؛ PS برای جبران کار تنفسی افزایش‌یافته.",
+      },
+    },
+  },
+
   "PC-AC": {
     name: "PC-A/C",
     fullName: "Pressure Control – Assist/Control",
@@ -142,69 +208,74 @@ export const pediatricVentilatorModes = {
     },
   },
 
-  SIMV: {
-    name: "SIMV",
-    fullName: "Synchronized Intermittent Mandatory Ventilation (+PS)",
+  "PC-SIMV": {
+    name: "PC-SIMV",
+    fullName: "Pressure-Controlled SIMV (+PS)",
     description:
-      "تهویه اجباری متناوب هماهنگ‌شده همراه با تنفس‌های خودبه‌خودی حمایت‌شده",
-    icon: "🔄",
+      "تنفس‌های اجباری فشاری متناوب هماهنگ‌شده همراه با تنفس‌های خودبه‌خودی حمایت‌شده",
+    icon: "🎛️",
     category: "conventional",
     reference: "UpToDate — Modes of mechanical ventilation",
     clinicalIndications: [
-      "مناسب برای اکثر بیماران با تلاش تنفسی حفظ‌شده",
-      "مرحله انتقال به سمت جداسازی از ونتیلاتور (weaning)",
+      "راه هوایی نشتی همراه با نیاز به کاهش تدریجی حمایت تنفسی",
+      "مرحله weaning در بیمار تحت PC-A/C با تلاش تنفسی بازگشته",
     ],
     advantages: [
-      "کاهش تعداد تنفس‌های اجباری با کاهش تدریجی RR",
-      "حفظ عضلات تنفسی نسبت به کنترل کامل",
+      "کنترل فشار پیک راه هوایی همراه با حفظ تنفس خودبه‌خودی",
+      "کاهش تدریجی RR اجباری در روند weaning",
     ],
     disadvantages: [
-      "احتمال افزایش کار تنفسی در تنفس‌های خودبه‌خودی بدون PS کافی",
-      "امکان عدم هماهنگی بین تنفس بیمار و ونتیلاتور",
+      "حجم جاری تضمین‌شده نیست؛ نیاز به پایش دقیق VTe",
+      "احتمال عدم هماهنگی بین تنفس بیمار و ونتیلاتور",
     ],
     keyParameters: [
-      "tidalVolume",
+      "pressureControl",
       "respiratoryRate",
       "pressureSupport",
       "peep",
+      "ti",
       "ieRatio",
       "fio2",
       "trigger",
     ],
     settingsByInvolvement: {
       normal: {
-        tidalVolume: (w) => (w * 6).toFixed(1),
-        respiratoryRate: 20,
+        pressureControl: 15,
+        respiratoryRate: 16,
         pressureSupport: 10,
         peep: 5,
+        ti: 0.8,
         ieRatio: "1:2",
         trigger: 5,
-        note: "PS معمولاً برابر با غلبه بر مقاومت لوله تراشه (۸-۱۲ cmH₂O) تنظیم می‌شود.",
+        note: "RR اجباری کمتر از PC-A/C؛ PS برای غلبه بر مقاومت لوله در تنفس‌های خودبه‌خودی.",
       },
       obstructive: {
-        tidalVolume: (w) => (w * 6).toFixed(1),
-        respiratoryRate: 16,
+        pressureControl: 18,
+        respiratoryRate: 12,
         pressureSupport: 12,
         peep: 6,
-        ieRatio: "1:3",
+        ti: 0.6,
+        ieRatio: "1:4",
         trigger: 4,
-        note: "PS اندکی بالاتر برای غلبه بر مقاومت راه هوایی و PEEP خودبه‌خودی احتمالی.",
+        note: "RR اجباری پایین‌تر و زمان بازدمی کافی برای کاهش ایر-تراپینگ.",
       },
       restrictive: {
-        tidalVolume: (w) => (w * 6.5).toFixed(1),
-        respiratoryRate: 22,
+        pressureControl: 20,
+        respiratoryRate: 18,
         pressureSupport: 14,
         peep: 8,
-        ieRatio: "1:2",
+        ti: 0.6,
+        ieRatio: "1:1.5",
         trigger: 5,
-        note: "PEEP بالاتر برای حفظ باز بودن آلوئولی؛ PS برای جبران کار تنفسی افزایش‌یافته.",
+        note: "PEEP بالاتر برای حفظ باز بودن آلوئولی؛ PS متناسب با کار تنفسی افزایش‌یافته.",
       },
     },
   },
 
-  PRVC: {
-    name: "PRVC",
-    fullName: "Pressure-Regulated Volume Control (VC+ / AutoFlow)",
+  "PRVC-AC": {
+    name: "PRVC-A/C",
+    fullName:
+      "Pressure-Regulated Volume Control – Assist/Control (VC+ / AutoFlow)",
     description:
       "حجم جاری تضمین‌شده با کمترین فشار ممکن؛ ترکیب مزایای حجمی و فشاری",
     icon: "📊",
@@ -259,13 +330,73 @@ export const pediatricVentilatorModes = {
     },
   },
 
+  "PRVC-SIMV": {
+    name: "PRVC-SIMV",
+    fullName: "Pressure-Regulated Volume Control SIMV (+PS)",
+    description:
+      "تنفس‌های اجباری PRVC متناوب هماهنگ‌شده همراه با تنفس‌های خودبه‌خودی حمایت‌شده",
+    icon: "📈",
+    category: "conventional",
+    reference: "UpToDate — Modes of mechanical ventilation",
+    clinicalIndications: [
+      "روند weaning در بیمارانی که تحت PRVC-A/C تلاش تنفسی بازگشته‌اند",
+      "نیاز به حجم جاری تضمین‌شده در تنفس‌های اجباری همراه با حفظ تنفس خودبه‌خودی",
+    ],
+    advantages: [
+      "تضمین حجم جاری در تنفس‌های اجباری با کمترین فشار ممکن",
+      "کاهش تدریجی RR اجباری در روند جداسازی از ونتیلاتور",
+    ],
+    disadvantages: [
+      "پیچیدگی بیشتر در تنظیم و تفسیر نسبت به PRVC-A/C",
+      "احتمال افزایش کار تنفسی در تنفس‌های خودبه‌خودی بدون PS کافی",
+    ],
+    keyParameters: [
+      "tidalVolume",
+      "respiratoryRate",
+      "pressureSupport",
+      "peep",
+      "ieRatio",
+      "fio2",
+      "trigger",
+    ],
+    settingsByInvolvement: {
+      normal: {
+        tidalVolume: (w) => (w * 7).toFixed(1),
+        respiratoryRate: 16,
+        pressureSupport: 10,
+        peep: 5,
+        ieRatio: "1:2",
+        trigger: 5,
+        note: "RR اجباری کمتر از PRVC-A/C؛ PS برای تنفس‌های خودبه‌خودی.",
+      },
+      obstructive: {
+        tidalVolume: (w) => (w * 6).toFixed(1),
+        respiratoryRate: 12,
+        pressureSupport: 12,
+        peep: 6,
+        ieRatio: "1:4",
+        trigger: 4,
+        note: "RR اجباری پایین‌تر و زمان بازدمی کافی برای کاهش ایر-تراپینگ.",
+      },
+      restrictive: {
+        tidalVolume: (w) => (w * 6).toFixed(1),
+        respiratoryRate: 18,
+        pressureSupport: 14,
+        peep: 8,
+        ieRatio: "1:1.5",
+        trigger: 5,
+        note: "حجم جاری محافظتی همراه با PS متناسب با کار تنفسی افزایش‌یافته.",
+      },
+    },
+  },
+
   PSV: {
     name: "PSV",
     fullName: "Pressure Support Ventilation",
     description:
       "حمایت فشاری از تنفس‌های خودبه‌خودی بیمار؛ بدون تنفس اجباری پشتیبان",
     icon: "🫁",
-    category: "conventional",
+    category: "advanced",
     reference: "UpToDate — Weaning from mechanical ventilation",
     clinicalIndications: [
       "مرحله weaning در بیمار با درایو تنفسی پایدار",
@@ -429,9 +560,11 @@ export const getModeSettings = (modeId, lungInvolvement, weight) => {
 // لیست شناسه مودها به ترتیب نمایش (متداول سپس پیشرفته)
 export const modeOrder = [
   "VC-AC",
+  "VC-SIMV",
   "PC-AC",
-  "SIMV",
-  "PRVC",
+  "PC-SIMV",
+  "PRVC-AC",
+  "PRVC-SIMV",
   "PSV",
   "CPAP",
   "HFOV",

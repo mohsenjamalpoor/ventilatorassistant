@@ -5,7 +5,7 @@ import {
   OBSTRUCTIVE_DISEASES,
   RESTRICTIVE_DISEASES,
 } from "@/utils/lungInvolvement";
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import toast from "react-hot-toast";
 import { calculateEttSizes } from "@/utils/formatNumberEtt";
@@ -21,6 +21,8 @@ import {
   LuActivity,
   LuGauge,
   LuLightbulb,
+  LuRepeat,
+  LuZap,
 } from "react-icons/lu";
 import EttSizeTable from "../module/ett/EttSizeTable";
 import EttTeachingNotes from "../module/ett/EttTeachingNotes";
@@ -60,6 +62,7 @@ const LUNG_TYPES = [
   },
 ];
 
+// مودهای اصلی ونتیلاتور — CPAP زیرمجموعه ندارد، بقیه AC/SIMV دارند
 const VENT_MODES = [
   {
     value: "cpap",
@@ -67,20 +70,47 @@ const VENT_MODES = [
     sub: "Continuous Positive Airway Pressure",
     icon: LuWind,
     color: "sky",
+    hasSubModes: false,
   },
   {
-    value: "simv",
-    label: "SIMV",
-    sub: "Synchronized Intermittent Mandatory",
-    icon: LuActivity,
+    value: "pc",
+    label: "کنترل فشار",
+    sub: "Pressure Control",
+    icon: LuGauge,
     color: "purple",
+    hasSubModes: true,
+  },
+  {
+    value: "vc",
+    label: "کنترل حجم",
+    sub: "Volume Control",
+    icon: LuActivity,
+    color: "teal",
+    hasSubModes: true,
   },
   {
     value: "prvc",
     label: "PRVC",
     sub: "Pressure-Regulated Volume Control",
-    icon: LuGauge,
-    color: "teal",
+    icon: LuZap,
+    color: "indigo",
+    hasSubModes: true,
+  },
+];
+
+// زیرمجموعه‌ی هر مود (به‌جز CPAP): AC یا SIMV
+const VENT_SUB_MODES = [
+  {
+    value: "ac",
+    label: "AC",
+    sub: "Assist Control",
+    icon: LuActivity,
+  },
+  {
+    value: "simv",
+    label: "SIMV",
+    sub: "Synchronized IMV",
+    icon: LuRepeat,
   },
 ];
 
@@ -130,6 +160,10 @@ const LUNG_COLOR_STYLES = {
     active: "border-rose-500 bg-rose-50 text-rose-700 shadow-rose-100",
     icon: "text-rose-600",
   },
+  indigo: {
+    active: "border-indigo-500 bg-indigo-50 text-indigo-700 shadow-indigo-100",
+    icon: "text-indigo-600",
+  },
 };
 
 function HomePage() {
@@ -139,7 +173,8 @@ function HomePage() {
   const [age, setAge] = useState("");
   const [mode, setMode] = useState(""); // "ventilator" | "preintubation"
   const [lungInvolvement, setLungInvolvement] = useState("");
-  const [ventMode, setVentMode] = useState("");
+  const [ventMode, setVentMode] = useState(""); // "cpap" | "pc" | "vc" | "prvc"
+  const [subVentMode, setSubVentMode] = useState(""); // "ac" | "simv" (برای همه به‌جز cpap)
   const [preIntubationSection, setPreIntubationSection] = useState(""); // "ett" | "medications"
   const [note, setNote] = useState(false);
   const [touched, setTouched] = useState(false);
@@ -149,12 +184,29 @@ function HomePage() {
   const ageError =
     touched && (!age || Number(age) <= 0) ? "سن معتبر وارد کنید" : null;
 
+  const selectedVentModeMeta = VENT_MODES.find((m) => m.value === ventMode);
+  const needsSubMode = !!selectedVentModeMeta?.hasSubModes;
+
+  // با تغییر مود اصلی، زیرمود قبلی پاک شود
+  useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    setSubVentMode("");
+  }, [ventMode]);
+
+  const handleSelectVentMode = (value) => {
+    setVentMode((prev) => (prev === value ? "" : value));
+  };
+
   const handleSubmit = (e) => {
     e.preventDefault();
     setTouched(true);
 
     if (!weight || !age || !lungInvolvement || !ventMode) {
       toast.error("لطفا همه‌ی فیلدها را تکمیل کنید.");
+      return;
+    }
+    if (needsSubMode && !subVentMode) {
+      toast.error("لطفا نوع تهویه (AC یا SIMV) را انتخاب کنید.");
       return;
     }
     if (Number(weight) <= 0) {
@@ -166,11 +218,15 @@ function HomePage() {
       return;
     }
 
+    // کد نهایی مود: cpap تنها، یا ترکیب مثل pc-ac / vc-simv / prvc-ac
+    const finalVentMode =
+      ventMode === "cpap" ? "cpap" : `${ventMode}-${subVentMode}`;
+
     const params = new URLSearchParams({
       weight,
       age,
       lungInvolvement,
-      ventMode,
+      ventMode: finalVentMode,
     });
 
     router.push(`/ventilatortraining/setup?${params.toString()}`);
@@ -416,7 +472,7 @@ function HomePage() {
                 <label className="block text-gray-600 text-xs font-bold mb-3 tracking-wide">
                   نوع مود ونتیلاتور
                 </label>
-                <div className="grid grid-cols-3 gap-2.5">
+                <div className="grid grid-cols-2 gap-2.5">
                   {VENT_MODES.map((item) => {
                     const Icon = item.icon;
                     const active = ventMode === item.value;
@@ -425,7 +481,7 @@ function HomePage() {
                       <button
                         key={item.value}
                         type="button"
-                        onClick={() => setVentMode(active ? "" : item.value)}
+                        onClick={() => handleSelectVentMode(item.value)}
                         className={`relative rounded-xl border-2 py-3.5 px-2 flex flex-col items-center gap-1.5 transition-all ${
                           active
                             ? `${style.active} shadow-md`
@@ -443,10 +499,67 @@ function HomePage() {
                         <span className="text-xs font-bold leading-tight text-center">
                           {item.label}
                         </span>
+                        <span
+                          className={`text-[10px] font-medium leading-tight text-center ${
+                            active ? "opacity-80" : "text-gray-400"
+                          }`}
+                        >
+                          {item.sub}
+                        </span>
                       </button>
                     );
                   })}
                 </div>
+
+                {/* زیرمنوی AC / SIMV — فقط برای مودهایی که hasSubModes دارند */}
+                {needsSubMode && (
+                  <div className="mt-4 animate-in fade-in duration-200">
+                    <label className="block text-gray-600 text-xs font-bold mb-2.5 tracking-wide">
+                      نوع تهویه ({selectedVentModeMeta.label})
+                    </label>
+                    <div className="grid grid-cols-2 gap-2.5">
+                      {VENT_SUB_MODES.map((item) => {
+                        const Icon = item.icon;
+                        const active = subVentMode === item.value;
+                        const style =
+                          LUNG_COLOR_STYLES[selectedVentModeMeta.color];
+                        return (
+                          <button
+                            key={item.value}
+                            type="button"
+                            onClick={() =>
+                              setSubVentMode(active ? "" : item.value)
+                            }
+                            className={`relative rounded-xl border-2 py-3 px-2 flex flex-col items-center gap-1 transition-all ${
+                              active
+                                ? `${style.active} shadow-md`
+                                : "border-gray-200 text-gray-500 hover:border-gray-300"
+                            }`}
+                          >
+                            {active && (
+                              <span className="absolute top-1.5 left-1.5 w-4 h-4 rounded-full bg-current flex items-center justify-center">
+                                <LuCheck className="w-2.5 h-2.5 text-white" />
+                              </span>
+                            )}
+                            <Icon
+                              className={`w-4.5 h-4.5 ${active ? style.icon : "text-gray-400"}`}
+                            />
+                            <span className="text-xs font-bold leading-tight text-center">
+                              {item.label}
+                            </span>
+                            <span
+                              className={`text-[10px] font-medium leading-tight text-center ${
+                                active ? "opacity-80" : "text-gray-400"
+                              }`}
+                            >
+                              {item.sub}
+                            </span>
+                          </button>
+                        );
+                      })}
+                    </div>
+                  </div>
+                )}
               </div>
 
               <button

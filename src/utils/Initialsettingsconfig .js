@@ -7,7 +7,7 @@ export const initialSettingsConfig = {
     peep: 5,
     ieRatio: "1:2",
     flowRate: 25,
-    mode: "SIMV",
+    mode: "VC-SIMV",
     pressureSupport: 12,
     cpap: 6,
     pip: 20,
@@ -19,7 +19,7 @@ export const initialSettingsConfig = {
   // تنظیمات بر اساس نوع درگیری ریه
   lungInvolvementSettings: {
     normal: {
-      mode: "SIMV",
+      mode: "VC-SIMV",
       respiratoryRate: 25,
       tidalVolume: (weight) => (weight * 6).toFixed(1),
       fio2: 100,
@@ -36,7 +36,7 @@ export const initialSettingsConfig = {
     },
 
     obstructive: {
-      mode: "SIMV",
+      mode: "VC-SIMV",
       respiratoryRate: 18,
       tidalVolume: (weight) => (weight * 6).toFixed(1),
       fio2: 100,
@@ -53,7 +53,7 @@ export const initialSettingsConfig = {
     },
 
     restrictive: {
-      mode: "SIMV",
+      mode: "VC-SIMV",
       respiratoryRate: 22,
       tidalVolume: (weight) => (weight * 7).toFixed(1),
       fio2: 100,

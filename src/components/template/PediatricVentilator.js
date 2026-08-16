@@ -38,8 +38,17 @@ import ReferenceFooter from "../module/shared/ReferenceFooter";
 // لیبل‌های کامل همه پارامترهای ممکن (پایه + مختص مودها)
 const allLabels = { ...ventilatorItemLabels, ...modeParameterLabels };
 
-// نگاشت مقدار مود ارسالی از HomePage به شناسه مود در pediatricVentilatorModes
-const VENT_MODE_KEY_MAP = { cpap: "CPAP", simv: "SIMV", prvc: "PRVC" };
+// نگاشت مقدار مود ارسالی از HomePage (cpap, pc-ac, pc-simv, vc-ac, vc-simv,
+// prvc-ac, prvc-simv) به شناسه مود در pediatricVentilatorModes
+const VENT_MODE_KEY_MAP = {
+  cpap: "CPAP",
+  "pc-ac": "PC-AC",
+  "pc-simv": "PC-SIMV",
+  "vc-ac": "VC-AC",
+  "vc-simv": "VC-SIMV",
+  "prvc-ac": "PRVC-AC",
+  "prvc-simv": "PRVC-SIMV",
+};
 
 // استایل هر پارامتر — نوار رنگی باریک بالای کارت + مقدار مشکی/خاکستری تیره
 const COLOR_STYLES = {
@@ -375,44 +384,6 @@ function PediatricVentilator() {
               <p className="text-cyan-600 text-sm font-medium">سن بیمار</p>
               <p className="text-2xl font-bold text-cyan-800">{age || "--"}</p>
             </div>
-            <div
-              className={`bg-linear-to-br rounded-xl p-4 text-center border ${
-                lungInvolvement === "normal"
-                  ? "from-green-50 to-green-100 border-green-200"
-                  : lungInvolvement === "obstructive"
-                    ? "from-orange-50 to-orange-100 border-orange-200"
-                    : lungInvolvement === "restrictive"
-                      ? "from-red-50 to-red-100 border-red-200"
-                      : "from-gray-50 to-gray-100 border-gray-200"
-              }`}
-            >
-              <p
-                className={`text-sm font-medium ${
-                  lungInvolvement === "normal"
-                    ? "text-green-600"
-                    : lungInvolvement === "obstructive"
-                      ? "text-orange-600"
-                      : lungInvolvement === "restrictive"
-                        ? "text-red-600"
-                        : "text-gray-600"
-                }`}
-              >
-                نوع درگیری
-              </p>
-              <p
-                className={`text-2xl font-bold ${
-                  lungInvolvement === "normal"
-                    ? "text-green-800"
-                    : lungInvolvement === "obstructive"
-                      ? "text-orange-800"
-                      : lungInvolvement === "restrictive"
-                        ? "text-red-800"
-                        : "text-gray-800"
-                }`}
-              >
-                {involvementName}
-              </p>
-            </div>
           </div>
 
           {/* هشدار عدم تطابق وزن و سن */}
@@ -598,7 +569,7 @@ function PediatricVentilator() {
                 className="px-4 py-2.5 rounded-xl border-2 border-blue-200 bg-blue-50 text-blue-700 font-bold text-sm hover:border-blue-400 hover:bg-blue-100 transition-all shadow-sm hover:shadow-md"
                 title="انتخاب مود ونتیلاتور"
               >
-                {currentSettings.mode || "SIMV"}
+                {currentSettings.mode || "VC-SIMV"}
               </button>
 
               {/* ویرایش تنظیمات */}
