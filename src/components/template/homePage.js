@@ -74,7 +74,7 @@ const VENT_MODES = [
   },
   {
     value: "pc",
-    label: "کنترل فشار",
+    label: "مود فشاری",
     sub: "Pressure Control",
     icon: LuGauge,
     color: "purple",
@@ -82,7 +82,7 @@ const VENT_MODES = [
   },
   {
     value: "vc",
-    label: "کنترل حجم",
+    label: "مود حجمی",
     sub: "Volume Control",
     icon: LuActivity,
     color: "teal",
