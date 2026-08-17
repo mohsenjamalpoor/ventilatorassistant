@@ -23,6 +23,10 @@ import {
   LuLightbulb,
   LuRepeat,
   LuZap,
+  LuChevronDown,
+  LuMoon,
+  LuHeartPulse,
+  LuShieldAlert,
 } from "react-icons/lu";
 import EttSizeTable from "../module/ett/EttSizeTable";
 import EttTeachingNotes from "../module/ett/EttTeachingNotes";
@@ -35,7 +39,7 @@ import { RiUserSettingsLine } from "react-icons/ri";
 import { FaLungsVirus } from "react-icons/fa";
 import { GiLungs } from "react-icons/gi";
 import { IoMdAlert } from "react-icons/io";
-import { RSI_MEDICATIONS } from "@/utils/rsiMedications";
+import { RSI_MEDICATION_CATEGORIES } from "@/utils/rsiMedications";
 import RsiMedications from "../module/RsiMedications";
 
 const LUNG_TYPES = [
@@ -74,7 +78,7 @@ const VENT_MODES = [
   },
   {
     value: "pc",
-    label: "مود فشاری",
+    label: "کنترل فشار",
     sub: "Pressure Control",
     icon: LuGauge,
     color: "purple",
@@ -82,7 +86,7 @@ const VENT_MODES = [
   },
   {
     value: "vc",
-    label: "مود حجمی",
+    label: "کنترل حجم",
     sub: "Volume Control",
     icon: LuActivity,
     color: "teal",
@@ -131,6 +135,14 @@ const PRE_INTUBATION_OPTIONS = [
   },
 ];
 
+// آیکون هر دسته دارویی RSI
+const RSI_CATEGORY_ICONS = {
+  sedative: LuMoon,
+  opioid: LuHeartPulse,
+  nmb: LuZap,
+  pretreatment: LuShieldAlert,
+};
+
 const LUNG_COLOR_STYLES = {
   green: {
     active: "border-green-500 bg-green-50 text-green-700 shadow-green-100",
@@ -164,7 +176,29 @@ const LUNG_COLOR_STYLES = {
     active: "border-indigo-500 bg-indigo-50 text-indigo-700 shadow-indigo-100",
     icon: "text-indigo-600",
   },
+  amber: {
+    active: "border-amber-500 bg-amber-50 text-amber-700 shadow-amber-100",
+    icon: "text-amber-600",
+  },
 };
+
+// محاسبه متن دوز دارو بر اساس وزن بیمار — پشتیبانی از دوز بازه‌ای و دوز سقف‌دار
+function getMedDoseText(med, weightNumber, isWeightValid) {
+  if (med.type === "capped") {
+    if (!isWeightValid) {
+      return `${med.factor} mg/kg (حداکثر ${med.maxDose} ${med.unit})`;
+    }
+    const dose = Math.min(weightNumber * med.factor, med.maxDose).toFixed(2);
+    return `${dose} ${med.unit}`;
+  }
+
+  // type === "range"
+  if (!isWeightValid) {
+    return `${med.doseLow} تا ${med.doseHigh} ${med.unit}`;
+  }
+  const baseUnit = med.unit.split("/")[0];
+  return `${(weightNumber * med.doseLow).toFixed(1)} تا ${(weightNumber * med.doseHigh).toFixed(1)} ${baseUnit}`;
+}
 
 function HomePage() {
   const router = useRouter();
@@ -176,6 +210,7 @@ function HomePage() {
   const [ventMode, setVentMode] = useState(""); // "cpap" | "pc" | "vc" | "prvc"
   const [subVentMode, setSubVentMode] = useState(""); // "ac" | "simv" (برای همه به‌جز cpap)
   const [preIntubationSection, setPreIntubationSection] = useState(""); // "ett" | "medications"
+  const [openRsiCategory, setOpenRsiCategory] = useState(""); // آکاردئون دسته‌های دارویی RSI
   const [note, setNote] = useState(false);
   const [touched, setTouched] = useState(false);
 
@@ -263,11 +298,6 @@ function HomePage() {
     },
   };
   const activeSub = lungInvolvement ? subOptionsMap[lungInvolvement] : null;
-
-  // محاسبه دوز آتروپین: ۰.۰۲ mg/kg وریدی، حداکثر تک‌دوز ۰.۵ میلی‌گرم
-  const atropineDose = isWeightValid
-    ? Math.min(weightNumber * 0.02, 0.5).toFixed(2)
-    : null;
 
   return (
     <div className="min-h-screen bg-linear-to-br from-slate-50 via-blue-50 to-cyan-50 py-8 px-4">
@@ -646,7 +676,7 @@ function HomePage() {
                 </>
               )}
 
-              {/* داروهای RSI */}
+              {/* داروهای RSI — آکاردئون دسته‌بندی‌شده */}
               {preIntubationSection === "medications" && (
                 <div className="space-y-3">
                   {!isWeightValid && (
@@ -656,39 +686,78 @@ function HomePage() {
                     </div>
                   )}
 
-                  {RSI_MEDICATIONS.map((med, index) => {
-                    const doseText = isWeightValid
-                      ? `${(weightNumber * med.doseLow).toFixed(1)} تا ${(weightNumber * med.doseHigh).toFixed(1)} ${med.unit.split("/")[0]}`
-                      : `${med.doseLow} تا ${med.doseHigh} ${med.unit}`;
+                  {RSI_MEDICATION_CATEGORIES.map((cat) => {
+                    const CatIcon = RSI_CATEGORY_ICONS[cat.id] || LuSyringe;
+                    const isOpen = openRsiCategory === cat.id;
+                    const style = LUNG_COLOR_STYLES[cat.color];
                     return (
-                      <RsiMedications
-                        key={index}
-                        med={med}
-                        doseText={doseText}
-                      />
+                      <div
+                        key={cat.id}
+                        className={`rounded-2xl border-2 overflow-hidden transition-colors ${
+                          isOpen ? style.active : "border-gray-200 bg-white"
+                        }`}
+                      >
+                        <button
+                          type="button"
+                          onClick={() =>
+                            setOpenRsiCategory(isOpen ? "" : cat.id)
+                          }
+                          className="w-full flex items-center justify-between gap-3 px-4 py-3.5"
+                        >
+                          <div className="flex items-center gap-3 min-w-0">
+                            <div
+                              className={`w-9 h-9 shrink-0 rounded-xl flex items-center justify-center ${
+                                isOpen ? "bg-white/60" : "bg-gray-50"
+                              }`}
+                            >
+                              <CatIcon
+                                className={`w-4.5 h-4.5 ${isOpen ? style.icon : "text-gray-400"}`}
+                              />
+                            </div>
+                            <div className="text-right min-w-0">
+                              <p
+                                className={`text-xs font-bold leading-tight truncate ${
+                                  isOpen ? style.icon : "text-gray-700"
+                                }`}
+                              >
+                                {cat.label}
+                              </p>
+                              <p
+                                className={`text-[10px] font-medium leading-tight truncate mt-0.5 ${
+                                  isOpen ? "opacity-70" : "text-gray-400"
+                                }`}
+                              >
+                                {cat.sub}
+                              </p>
+                            </div>
+                          </div>
+                          <LuChevronDown
+                            className={`w-4 h-4 shrink-0 transition-transform ${
+                              isOpen
+                                ? `rotate-180 ${style.icon}`
+                                : "text-gray-400"
+                            }`}
+                          />
+                        </button>
+
+                        {isOpen && (
+                          <div className="px-3 pb-3 pt-1 space-y-2.5 animate-in fade-in duration-200">
+                            {cat.medications.map((med, index) => (
+                              <RsiMedications
+                                key={index}
+                                med={med}
+                                doseText={getMedDoseText(
+                                  med,
+                                  weightNumber,
+                                  isWeightValid,
+                                )}
+                              />
+                            ))}
+                          </div>
+                        )}
+                      </div>
                     );
                   })}
-
-                  {/* آتروپین در صورت برادی‌کاردی */}
-                  <div className="rounded-2xl border-2 border-rose-200 bg-rose-50/50 p-4">
-                    <div className="flex items-center justify-between mb-1">
-                      <span className="text-sm font-bold text-rose-700">
-                        آتروپین (Atropine)
-                      </span>
-                      <span className="text-xs font-bold text-rose-700 bg-rose-100 rounded-full px-2.5 py-1 whitespace-nowrap">
-                        {atropineDose ? `${atropineDose} mg` : "0.02 mg/kg"}
-                      </span>
-                    </div>
-                    <p className="text-xs text-rose-600 mb-1">
-                      در صورت بروز برادی‌کاردی حین یا پس از RSI
-                    </p>
-                    <p className="text-[11px] text-rose-500 leading-relaxed">
-                      دوز ۰.۰۲ mg/kg وریدی، حداکثر تک‌دوز ۰.۵ میلی‌گرم. کاربرد
-                      آن بیشتر در سن زیر ۱ سال یا هم‌زمان با تجویز
-                      سوکسینیل‌کولین توصیه می‌شود؛ برای مصرف روتین در همه‌ی
-                      گروه‌های سنی شواهد قطعی وجود ندارد.
-                    </p>
-                  </div>
 
                   <NoteCard
                     icon={LuLightbulb}
