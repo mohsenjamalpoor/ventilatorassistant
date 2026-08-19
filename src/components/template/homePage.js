@@ -602,7 +602,7 @@ function HomePage() {
             </form>
           )}
 
-          {/* پنل ملاحظات پیش از اینتوباسیون */}
+          {/* پنل اقدامات پیش از اینتوباسیون */}
           {mode === "preintubation" && (
             <div className="animate-in fade-in duration-200">
               <div className="grid grid-cols-2 gap-3 mb-5">
