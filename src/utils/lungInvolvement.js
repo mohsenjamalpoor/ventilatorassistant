@@ -7,10 +7,10 @@ export const NORMAL_CONDITIONS = [
 export const OBSTRUCTIVE_DISEASES = [
   { value: "bronchiolitis", label: "برونشیولیت" },
   { value: "asthma", label: "آسم" },
-  { value: "copd", label: "بیماری انسدادی مزمن ریوی (COPD)" },
   { value: "bronchiectasis", label: "برونشکتازی" },
-  { value: "cystic_fibrosis", label: "فیبروز سیستیک" },
+  { value: "copd", label: "بیماری انسدادی مزمن ریوی (COPD)" },
   { value: "foreign_body_aspiration", label: "آسپیراسیون جسم خارجی" },
+  { value: "cystic_fibrosis", label: "فیبروز سیستیک" },
 ];
 
 export const RESTRICTIVE_DISEASES = [
