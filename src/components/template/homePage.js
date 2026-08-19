@@ -428,7 +428,7 @@ function HomePage() {
                 <LuClipboardList
                   className={`w-5 h-5 ${mode === "preintubation" ? "text-white" : "text-blue-500"}`}
                 />
-                ملاحظات پیش از اینتوباسیون
+                اقدامات پیش از اینتوباسیون
               </button>
             </div>
           </div>
