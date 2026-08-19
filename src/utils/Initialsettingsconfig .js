@@ -20,7 +20,7 @@ export const initialSettingsConfig = {
   lungInvolvementSettings: {
     normal: {
       mode: "VC-SIMV",
-      respiratoryRate: 25,
+      respiratoryRate: 35,
       tidalVolume: (weight) => (weight * 6).toFixed(1),
       fio2: 100,
       peep: 5,
@@ -37,7 +37,7 @@ export const initialSettingsConfig = {
 
     obstructive: {
       mode: "VC-SIMV",
-      respiratoryRate: 18,
+      respiratoryRate: 25,
       tidalVolume: (weight) => (weight * 8).toFixed(1),
       fio2: 100,
       peep: 3,
@@ -54,7 +54,7 @@ export const initialSettingsConfig = {
 
     restrictive: {
       mode: "VC-SIMV",
-      respiratoryRate: 22,
+      respiratoryRate: 30,
       tidalVolume: (weight) => (weight * 6).toFixed(1),
       fio2: 100,
       peep: 8,

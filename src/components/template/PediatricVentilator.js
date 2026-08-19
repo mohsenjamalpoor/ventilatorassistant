@@ -367,16 +367,30 @@ function PediatricVentilator() {
           </div>
 
           {/* اطلاعات بیمار */}
-          <div className="mt-4 grid grid-cols-1 md:grid-cols-4 gap-4">
-            <div className="bg-linear-to-br from-blue-50 to-blue-100 rounded-xl p-4 text-center border border-blue-200">
-              <p className="text-blue-600 text-sm font-medium">وزن بیمار</p>
-              <p className="text-2xl font-bold text-blue-800">
-                {weight || "--"} <span className="text-sm font-normal">kg</span>
-              </p>
+          <div className="mt-4 grid grid-cols-1 md:grid-cols-4 gap-3.5">
+            <div className="group relative bg-white rounded-xl border border-slate-200 hover:border-blue-200 shadow-sm hover:shadow-md transition-all overflow-hidden">
+              <div className="h-1 w-full bg-blue-500" />
+              <div className="px-3.5 py-3 text-center">
+                <h3 className="text-[11px] font-bold uppercase tracking-wider mb-1.5 text-blue-600">
+                  وزن بیمار
+                </h3>
+                <p className="text-2xl font-extrabold text-slate-800 tabular-nums leading-none">
+                  {weight || "--"}{" "}
+                  <span className="text-sm font-normal text-slate-400">kg</span>
+                </p>
+              </div>
             </div>
-            <div className="bg-linear-to-br from-cyan-50 to-cyan-100 rounded-xl p-4 text-center border border-cyan-200">
-              <p className="text-cyan-600 text-sm font-medium">سن بیمار</p>
-              <p className="text-2xl font-bold text-cyan-800">{age || "--"}</p>
+
+            <div className="group relative bg-white rounded-xl border border-slate-200 hover:border-cyan-200 shadow-sm hover:shadow-md transition-all overflow-hidden">
+              <div className="h-1 w-full bg-cyan-500" />
+              <div className="px-3.5 py-3 text-center">
+                <h3 className="text-[11px] font-bold uppercase tracking-wider mb-1.5 text-cyan-600">
+                  سن بیمار
+                </h3>
+                <p className="text-2xl font-extrabold text-slate-800 tabular-nums leading-none">
+                  {age || "--"}
+                </p>
+              </div>
             </div>
           </div>
 
