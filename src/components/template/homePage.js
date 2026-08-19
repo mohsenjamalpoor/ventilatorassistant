@@ -428,7 +428,7 @@ function HomePage() {
                 <LuClipboardList
                   className={`w-5 h-5 ${mode === "preintubation" ? "text-white" : "text-blue-500"}`}
                 />
-                اقدامات پیش از اینتوباسیون
+                ملاحظات پیش از اینتوباسیون
               </button>
             </div>
           </div>
@@ -742,6 +742,13 @@ function HomePage() {
 
                         {isOpen && (
                           <div className="px-3 pb-3 pt-1 space-y-2.5 animate-in fade-in duration-200">
+                            {cat.description && (
+                              <p
+                                className={`text-[11px] leading-relaxed px-1 pb-1 ${style.icon} opacity-80`}
+                              >
+                                {cat.description}
+                              </p>
+                            )}
                             {cat.medications.map((med, index) => (
                               <RsiMedications
                                 key={index}
