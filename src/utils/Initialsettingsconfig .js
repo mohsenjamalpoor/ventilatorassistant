@@ -38,9 +38,9 @@ export const initialSettingsConfig = {
     obstructive: {
       mode: "VC-SIMV",
       respiratoryRate: 18,
-      tidalVolume: (weight) => (weight * 6).toFixed(1),
+      tidalVolume: (weight) => (weight * 8).toFixed(1),
       fio2: 100,
-      peep: 6,
+      peep: 3,
       ieRatio: "1:3",
       flowRate: 30,
       pressureSupport: 14,
@@ -55,7 +55,7 @@ export const initialSettingsConfig = {
     restrictive: {
       mode: "VC-SIMV",
       respiratoryRate: 22,
-      tidalVolume: (weight) => (weight * 7).toFixed(1),
+      tidalVolume: (weight) => (weight * 6).toFixed(1),
       fio2: 100,
       peep: 8,
       ieRatio: "1:2",
