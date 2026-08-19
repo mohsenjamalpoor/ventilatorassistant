@@ -8,26 +8,26 @@ export const initialSettingsConfig = {
     ieRatio: "1:2",
     flowRate: 25,
     mode: "VC-SIMV",
-    pressureSupport: 12,
-    cpap: 6,
+    pressureSupport: 10,
+    cpap: 5,
     pip: 20,
     ti: 1.0,
     trigger: 5,
     vteRatio: 0.85,
   },
 
-  // تنظیمات بر اساس نوع درگیری ریه
+  // تنظیمات بر اساس نوع درگیری ریه — هماهنگ با مقادیر VC-SIMV در ventilatorModes.js
   lungInvolvementSettings: {
     normal: {
       mode: "VC-SIMV",
-      respiratoryRate: 35,
+      respiratoryRate: 20,
       tidalVolume: (weight) => (weight * 6).toFixed(1),
       fio2: 100,
       peep: 5,
       ieRatio: "1:2",
       flowRate: 25,
-      pressureSupport: 15,
-      cpap: 6,
+      pressureSupport: 10,
+      cpap: 5,
       pip: 20,
       ti: 1.0,
       trigger: 5,
@@ -37,13 +37,13 @@ export const initialSettingsConfig = {
 
     obstructive: {
       mode: "VC-SIMV",
-      respiratoryRate: 25,
-      tidalVolume: (weight) => (weight * 8).toFixed(1),
+      respiratoryRate: 16,
+      tidalVolume: (weight) => (weight * 6).toFixed(1),
       fio2: 100,
-      peep: 3,
+      peep: 6,
       ieRatio: "1:3",
       flowRate: 30,
-      pressureSupport: 14,
+      pressureSupport: 12,
       cpap: 6,
       pip: 22,
       ti: 0.7,
@@ -54,8 +54,8 @@ export const initialSettingsConfig = {
 
     restrictive: {
       mode: "VC-SIMV",
-      respiratoryRate: 30,
-      tidalVolume: (weight) => (weight * 6).toFixed(1),
+      respiratoryRate: 22,
+      tidalVolume: (weight) => (weight * 6.5).toFixed(1),
       fio2: 100,
       peep: 8,
       ieRatio: "1:2",
@@ -167,6 +167,16 @@ export const getLungInvolvementName = (lungInvolvement) => {
     restrictive: "بیماری محدودکننده",
   };
   return names[lungInvolvement] || "بدون درگیری مشخص";
+};
+
+// تابع دریافت توضیحات نوع درگیری
+export const getLungInvolvementDescription = (lungInvolvement) => {
+  const descriptions = {
+    normal: "تنظیمات استاندارد برای ریه نرمال (کاهش سطح هوشیاری، تشنج)",
+    obstructive: "تنظیمات مناسب برای بیماری‌های انسدادی (آسم، برونشیولیت)",
+    restrictive: "تنظیمات مناسب برای بیماری‌های محدودکننده (پنومونی، ARDS)",
+  };
+  return descriptions[lungInvolvement] || "تنظیمات پیش‌فرض";
 };
 
 // تابع اصلی محاسبه تنظیمات اولیه بر اساس نوع درگیری
