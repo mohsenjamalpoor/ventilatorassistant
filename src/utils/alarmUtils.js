@@ -1,4 +1,3 @@
-// Main calculation function
 export const calculateAlarmRanges = (currentSettings) => {
   const currentRR = parseFloat(currentSettings.respiratoryRate) || 0;
   const currentMvent = parseFloat(currentSettings.mvent) || 0;

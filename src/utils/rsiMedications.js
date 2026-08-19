@@ -1,15 +1,3 @@
-// دوزهای داروهای RSI کودکان — نسخه‌ی آموزشی، دسته‌بندی‌شده بر اساس پروتکل‌های بالینی RSI اطفال
-// منبع مرجع: UpToDate — Rapid sequence intubation (induction agents) in children /
-// Neuromuscular blocking agents in children
-
-// type: "range"  → دوز به‌صورت بازه (doseLow تا doseHigh) بر حسب mg/kg یا mcg/kg
-// type: "capped" → دوز ثابت بر حسب فاکتور × وزن با سقف حداکثر تک‌دوز (مثل آتروپین)
-// mechanism      → مکانیسم اثر (برای درک فارماکولوژیک)
-// onset/duration → شروع و مدت اثر بالینی
-// contraindications → موارد منع مصرف مهم
-// sideEffects    → عوارض شایع/مهم بالینی
-// pearl          → نکته بالینی کاربردی (Clinical Pearl)
-
 export const RSI_MEDICATION_CATEGORIES = [
   {
     id: "sedative",
