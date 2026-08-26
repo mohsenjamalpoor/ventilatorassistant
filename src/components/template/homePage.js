@@ -10,6 +10,7 @@ import { useRouter } from "next/navigation";
 import toast from "react-hot-toast";
 import { calculateEttSizes } from "@/utils/formatNumberEtt";
 import { checkWeightAgeMismatch } from "@/utils/estimateWeightForAge";
+import { getLaryngoscopeBlade } from "@/utils/laryngoscopeBlade";
 import {
   LuStethoscope,
   LuRuler,
@@ -27,12 +28,14 @@ import {
   LuMoon,
   LuHeartPulse,
   LuShieldAlert,
+  LuFlashlight,
 } from "react-icons/lu";
 import EttSizeTable from "../module/ett/EttSizeTable";
 import EttTeachingNotes from "../module/ett/EttTeachingNotes";
-// مسیر این دو کامپوننت رو مطابق محل واقعی‌شون در پروژه اصلاح کنید
+// مسیر این کامپوننت‌ها رو مطابق محل واقعی‌شون در پروژه اصلاح کنید
 import ReferenceFooter from "../module/shared/ReferenceFooter";
 import NoteCard from "../module/shared/NoteCard";
+import LaryngoscopeBladeCard from "../module/laryngoscope/LaryngoscopeBladeCard";
 import { BsLungs } from "react-icons/bs";
 import { RiUserSettingsLine } from "react-icons/ri";
 
@@ -127,6 +130,13 @@ const PRE_INTUBATION_OPTIONS = [
     color: "sky",
   },
   {
+    value: "laryngoscope",
+    label: "تیغه‌ی لارنگوسکوپ",
+    sub: "Laryngoscope Blade",
+    icon: LuFlashlight,
+    color: "amber",
+  },
+  {
     value: "medications",
     label: "داروهای RSI",
     sub: "RSI Medications",
@@ -209,7 +219,7 @@ function HomePage() {
   const [lungInvolvement, setLungInvolvement] = useState("");
   const [ventMode, setVentMode] = useState(""); // "cpap" | "pc" | "vc" | "prvc"
   const [subVentMode, setSubVentMode] = useState(""); // "ac" | "simv" (برای همه به‌جز cpap)
-  const [preIntubationSection, setPreIntubationSection] = useState(""); // "ett" | "medications"
+  const [preIntubationSection, setPreIntubationSection] = useState(""); // "ett" | "laryngoscope" | "medications"
   const [openRsiCategory, setOpenRsiCategory] = useState(""); // آکاردئون دسته‌های دارویی RSI
   const [note, setNote] = useState(false);
   const [touched, setTouched] = useState(false);
@@ -275,6 +285,11 @@ function HomePage() {
 
   const ett = useMemo(
     () => (isAgeValid ? calculateEttSizes(ageNumber) : null),
+    [isAgeValid, ageNumber],
+  );
+
+  const laryngoscopeRec = useMemo(
+    () => (isAgeValid ? getLaryngoscopeBlade(ageNumber) : null),
     [isAgeValid, ageNumber],
   );
 
@@ -605,7 +620,7 @@ function HomePage() {
           {/* پنل اقدامات پیش از اینتوباسیون */}
           {mode === "preintubation" && (
             <div className="animate-in fade-in duration-200">
-              <div className="grid grid-cols-2 gap-3 mb-5">
+              <div className="grid grid-cols-3 gap-2.5 mb-5">
                 {PRE_INTUBATION_OPTIONS.map((item) => {
                   const Icon = item.icon;
                   const active = preIntubationSection === item.value;
@@ -672,6 +687,22 @@ function HomePage() {
 
                       {note && <EttTeachingNotes />}
                     </div>
+                  )}
+                </>
+              )}
+
+              {/* نوع تیغه‌ی لارنگوسکوپ */}
+              {preIntubationSection === "laryngoscope" && (
+                <>
+                  {!isAgeValid ? (
+                    <div className="rounded-2xl border-2 border-dashed border-gray-300 p-6 text-center">
+                      <LuFlashlight className="w-6 h-6 text-gray-300 mx-auto mb-2" />
+                      <p className="text-sm text-gray-500">
+                        لطفا سن بیمار را در بالا وارد کنید
+                      </p>
+                    </div>
+                  ) : (
+                    <LaryngoscopeBladeCard recommendation={laryngoscopeRec} />
                   )}
                 </>
               )}
