@@ -100,7 +100,7 @@ function EttSizeTable({ ett, age }) {
                 عمق لوله
               </p>
               <p className="text-lg font-bold text-cyan-700">
-                {formatNumber(ett.cuffedDepth)}
+                {formatNumber(ett.uncuffedDepth)}
                 <span className="text-xs font-medium text-gray-400 mr-1">
                   cm
                 </span>
