@@ -14,7 +14,6 @@ import {
   LuTrendingDown,
   LuTrendingUp,
   LuActivity,
-  LuStethoscope,
   LuWind,
 } from "react-icons/lu";
 import {
@@ -34,8 +33,18 @@ import EditVentilatorModal from "../module/EditVentilatorModal";
 import { IoMdAlert } from "react-icons/io";
 import ReferenceFooter from "../module/shared/ReferenceFooter";
 
+// لیبل‌های جایگزین — اگر پارامتری در هیچ‌کدام از دو منبع اصلی تعریف نشده باشد
+// (منابع اصلی اولویت دارند)
+const fallbackLabels = {
+  trigger: { label: "Trigger", unit: "" },
+};
+
 // لیبل‌های کامل همه پارامترهای ممکن (پایه + مختص مودها)
-const allLabels = { ...ventilatorItemLabels, ...modeParameterLabels };
+const allLabels = {
+  ...fallbackLabels,
+  ...ventilatorItemLabels,
+  ...modeParameterLabels,
+};
 
 // نگاشت مقدار مود ارسالی از HomePage (cpap, pc-ac, pc-simv, vc-ac, vc-simv,
 // prvc-ac, prvc-simv) به شناسه مود در pediatricVentilatorModes
@@ -128,6 +137,8 @@ const PARAM_COLOR = {
   peep: "red",
   cpap: "red",
   pressureSupport: "orange",
+  PSabovePEEP: "orange",
+  cycleOff: "pink",
   fio2: "purple",
   ieRatio: "indigo",
   ti: "teal",
@@ -150,12 +161,32 @@ const DISPLAY_ORDER = [
   "peep",
   "cpap",
   "pressureSupport",
+  "PSabovePEEP",
+  "cycleOff",
   "fio2",
   "ieRatio",
   "ti",
   "flowRate",
   "trigger",
 ];
+
+const hasValue = (v) => v !== undefined && v !== null && v !== "";
+
+// محاسبه MVent فقط وقتی tidalVolume و RR هر دو موجودند (مودهای فشاری
+// tidalVolume ندارند و قبلاً NaN ذخیره می‌شد)
+const withMvent = (settings) => {
+  if (
+    !settings ||
+    !hasValue(settings.tidalVolume) ||
+    !hasValue(settings.respiratoryRate)
+  ) {
+    return settings;
+  }
+  const mvent = Number(
+    calculateMvent(settings.tidalVolume, settings.respiratoryRate),
+  );
+  return Number.isFinite(mvent) ? { ...settings, mvent } : settings;
+};
 
 function PediatricVentilator() {
   const [isOpen, setIsOpen] = useState(false);
@@ -177,92 +208,57 @@ function PediatricVentilator() {
   const ventModeParam = searchParams.get("ventMode");
   const initialModeKey = VENT_MODE_KEY_MAP[ventModeParam] || null;
 
-  // تنظیمات فعلی ونتیلاتور — اگر مودی از صفحه قبل انتخاب شده، همان مود
-  // با تنظیمات مخصوص نوع درگیری بارگذاری می‌شود؛ در غیر این صورت به
-  // تنظیمات پایه (getInitialSettings) برمی‌گردد
-  const [currentSettings, setCurrentSettings] = useState(() => {
-    const modeResult = getModeSettings(initialModeKey, lungInvolvement, weight);
-    if (modeResult) {
-      return modeResult.settings;
-    }
-    const initial = getInitialSettings(
-      weight,
-      age,
-      lungInvolvement,
-      normalLungCondition,
-      obstructiveDisease,
-      restrictiveDisease,
-    );
-    return {
-      ...initial,
-      mvent: Number(
-        calculateMvent(initial.tidalVolume, initial.respiratoryRate),
+  // ساخت تنظیمات برای یک مود — اگر مود شناخته‌شده باشد تنظیمات مخصوص همان مود
+  // و نوع درگیری، در غیر این صورت تنظیمات پایه (getInitialSettings).
+  // برای اولین بارگذاری، تغییر وزن/درگیری و دکمه بازنشانی از همین یک تابع استفاده می‌شود
+  const buildSettings = (modeId) => {
+    const modeResult = getModeSettings(modeId, lungInvolvement, weight);
+    if (modeResult) return withMvent(modeResult.settings);
+
+    return withMvent(
+      getInitialSettings(
+        weight,
+        age,
+        lungInvolvement,
+        normalLungCondition,
+        obstructiveDisease,
+        restrictiveDisease,
       ),
-    };
-  });
+    );
+  };
+
+  // تنظیمات فعلی ونتیلاتور — اگر مودی از صفحه قبل انتخاب شده، همان مود
+  const [currentSettings, setCurrentSettings] = useState(() =>
+    buildSettings(initialModeKey),
+  );
 
   // اثر برای به‌روزرسانی تنظیمات هنگام تغییر وزن یا نوع درگیری —
   // مود فعلی حفظ می‌شود و فقط اعداد بازمحاسبه می‌شوند
   useEffect(() => {
-    const modeResult = getModeSettings(
-      currentSettings.mode,
-      lungInvolvement,
-      weight,
-    );
-
-    if (modeResult) {
-      // eslint-disable-next-line react-hooks/set-state-in-effect
-      setCurrentSettings(modeResult.settings);
-      return;
-    }
-
-    const newSettings = getInitialSettings(
-      weight,
-      age,
-      lungInvolvement,
-      normalLungCondition,
-      obstructiveDisease,
-      restrictiveDisease,
-    );
-
     // eslint-disable-next-line react-hooks/set-state-in-effect
-    setCurrentSettings({
-      ...newSettings,
-      mvent: Number(
-        calculateMvent(newSettings.tidalVolume, newSettings.respiratoryRate),
-      ),
-    });
+    setCurrentSettings(buildSettings(currentSettings.mode));
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [weight, lungInvolvement]);
 
   // هندلر انتخاب مود
   const handleModeSelect = (newSettings) => {
-    setCurrentSettings({
-      ...newSettings,
-      mvent: Number(
-        calculateMvent(newSettings.tidalVolume, newSettings.respiratoryRate),
-      ),
-    });
+    setCurrentSettings(withMvent(newSettings));
   };
 
-  // هندلر ویرایش تنظیمات
+  // هندلر ویرایش تنظیمات — merge می‌شود تا کلیدهایی که مودال نمی‌شناسد
+  // (مثل PSabovePEEP و cycleOff) بعد از ذخیره حذف نشوند
   const handleEditSettings = (editedSettings) => {
-    setCurrentSettings({
-      ...editedSettings,
-      mvent: Number(
-        calculateMvent(
-          editedSettings.tidalVolume,
-          editedSettings.respiratoryRate,
-        ),
-      ),
-    });
+    setCurrentSettings((prev) => withMvent({ ...prev, ...editedSettings }));
     setIsEditModalOpen(false);
   };
 
+  // بازنشانی به مقادیر پیشنهادی مود فعلی
+  const handleReset = () => {
+    setCurrentSettings(buildSettings(currentSettings.mode));
+  };
+
   const formatValue = (value, defaultValue = "--") => {
-    return value !== undefined && value !== null && value !== ""
-      ? value
-      : defaultValue;
+    return hasValue(value) ? value : defaultValue;
   };
 
   const involvementName = getLungInvolvementName(lungInvolvement);
@@ -330,34 +326,7 @@ function PediatricVentilator() {
                 </span>
               </button>
               <button
-                onClick={() => {
-                  const modeResult = getModeSettings(
-                    currentSettings.mode,
-                    lungInvolvement,
-                    weight,
-                  );
-                  if (modeResult) {
-                    setCurrentSettings(modeResult.settings);
-                    return;
-                  }
-                  const initial = getInitialSettings(
-                    weight,
-                    age,
-                    lungInvolvement,
-                    normalLungCondition,
-                    obstructiveDisease,
-                    restrictiveDisease,
-                  );
-                  setCurrentSettings({
-                    ...initial,
-                    mvent: Number(
-                      calculateMvent(
-                        initial.tidalVolume,
-                        initial.respiratoryRate,
-                      ),
-                    ),
-                  });
-                }}
+                onClick={handleReset}
                 className="px-3 py-2 border border-gray-300 font-bold text-gray-700 rounded-xl hover:bg-gray-50 transition-all hover:shadow-md"
               >
                 بازنشانی تنظیمات
@@ -609,10 +578,11 @@ function PediatricVentilator() {
             ) : (
               <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 xl:grid-cols-6 gap-3.5">
                 {displayKeys.map((key) => {
-                  const item = allLabels[key];
-                  if (!item) return null;
+                  // اگر لیبلی تعریف نشده باشد، کارت حذف نمی‌شود و نام کلید
+                  // نمایش داده می‌شود تا مشکل قابل‌مشاهده باشد
+                  const item = allLabels[key] || { label: key, unit: "" };
                   const colorName = PARAM_COLOR[key] || "slate";
-                  const style = COLOR_STYLES[colorName];
+                  const style = COLOR_STYLES[colorName] || COLOR_STYLES.slate;
                   const rawValue = currentSettings[key];
                   const displayValue =
                     key === "mvent"

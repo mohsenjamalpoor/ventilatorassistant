@@ -21,6 +21,8 @@ export const modeParameterLabels = {
   amplitude: { label: "دامنه نوسان (ΔP)", unit: "cmH₂O" },
   frequency: { label: "فرکانس", unit: "Hz" },
   inspiratoryTimePercent: { label: "درصد زمان دمی (%Ti)", unit: "%" },
+  PSabovePEEP: { label: "PS above PEEP", unit: "cmH₂O" },
+  cycleOff: { label: "Insp. Cycle Off", unit: "% of peak flow" },
 };
 
 // --------------------------------------------------------------------------
@@ -453,15 +455,27 @@ export const pediatricVentilatorModes = {
     disadvantages: [
       "بدون حمایت فشاری برای هر تنفس؛ نامناسب برای بیمار با کار تنفسی بالا",
     ],
-    keyParameters: ["peep", "fio2"],
+    keyParameters: ["peep", "PSabovePEEP", "cycleOff", "fio2", "trigger"],
     settingsByInvolvement: {
-      normal: { peep: 5, note: "سطح استاندارد شروع." },
+      normal: {
+        peep: 5,
+        PSabovePEEP: 15,
+        cycleOff: 10,
+        trigger: 8,
+        note: "سطح استاندارد شروع.",
+      },
       obstructive: {
         peep: 6,
+        PSabovePEEP: 15,
+        cycleOff: 10,
+        trigger: 8,
         note: "سطح اندکی بالاتر برای غلبه بر مقاومت راه هوایی و PEEP خودبه‌خودی.",
       },
       restrictive: {
         peep: 8,
+        PSabovePEEP: 15,
+        cycleOff: 10,
+        trigger: 8,
         note: "سطح بالاتر برای بهبود اکسیژناسیون و کاهش آتلکتازی.",
       },
     },
@@ -535,10 +549,19 @@ export const getModeSettings = (modeId, lungInvolvement, weight) => {
 
   const raw = mode.settingsByInvolvement[involvementKey];
 
+  // وزن نامعتبر یا خالی نباید به مقدار غلط (مثل tidalVolume = 0.0) تبدیل شود
+  const w = Number(weight);
+  const hasWeight = Number.isFinite(w) && w > 0;
+
   const resolved = { mode: modeId, fio2: 100 };
   Object.entries(raw).forEach(([key, value]) => {
     if (key === "note") return;
-    resolved[key] = typeof value === "function" ? value(weight) : value;
+    if (typeof value === "function") {
+      // مقدارهای وابسته به وزن؛ بدون وزن معتبر تعریف نمی‌شوند و در مانیتور "--" می‌آید
+      if (hasWeight) resolved[key] = value(w);
+      return;
+    }
+    resolved[key] = value;
   });
 
   // محاسبه VTe و MVent فقط برای مودهای حجمی/PRVC/SIMV که tidalVolume دارند
