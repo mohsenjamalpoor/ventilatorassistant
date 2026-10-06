@@ -606,7 +606,7 @@ function PediatricVentilator() {
                       <button
                         type="button"
                         onClick={() => setSelectedParameter(key)}
-                        className="absolute top-2 left-2 z-10 px-2 py-1 rounded-lg
+                        className="absolute bottom-2 left-2 z-10 px-2 py-1 rounded-lg
                    bg-blue-50 text-blue-600 text-[10px] font-bold
                    border border-blue-100
                    hover:bg-blue-600 hover:text-white
