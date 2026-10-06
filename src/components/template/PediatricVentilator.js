@@ -32,6 +32,7 @@ import RespiratoryAcidosisModal from "../module/RespiratoryAcidosisModal";
 import EditVentilatorModal from "../module/EditVentilatorModal";
 import { IoMdAlert } from "react-icons/io";
 import ReferenceFooter from "../module/shared/ReferenceFooter";
+import ParameterInfoModal from "../module/ParameterInfoModal";
 
 // لیبل‌های جایگزین — اگر پارامتری در هیچ‌کدام از دو منبع اصلی تعریف نشده باشد
 // (منابع اصلی اولویت دارند)
@@ -196,6 +197,7 @@ function PediatricVentilator() {
   const [isRespiratoryAcidosis, setIsRespiratoryAcidosis] = useState(false);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [advance, setAdvance] = useState(false);
+  const [selectedParameter, setSelectedParameter] = useState(null);
 
   const searchParams = useSearchParams();
 
@@ -600,6 +602,19 @@ function PediatricVentilator() {
                     >
                       {/* نوار رنگی بالای کارت */}
                       <div className={`h-1 w-full ${style.bar}`} />
+                      {/* دکمه نکات */}
+                      <button
+                        type="button"
+                        onClick={() => setSelectedParameter(key)}
+                        className="absolute top-2 left-2 z-10 px-2 py-1 rounded-lg
+                   bg-blue-50 text-blue-600 text-[10px] font-bold
+                   border border-blue-100
+                   hover:bg-blue-600 hover:text-white
+                   transition-all"
+                        title={`نکات ${item.label}`}
+                      >
+                        نکات
+                      </button>
                       <div className="px-3.5 py-3 text-center">
                         <h3
                           className={`text-[11px] font-bold uppercase tracking-wider mb-1.5 ${style.label}`}
@@ -621,6 +636,10 @@ function PediatricVentilator() {
               </div>
             )}
           </div>
+          <ParameterInfoModal
+            paramKey={selectedParameter}
+            onClose={() => setSelectedParameter(null)}
+          />
         </div>
       </div>
     </div>
