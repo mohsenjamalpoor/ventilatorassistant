@@ -35,7 +35,7 @@ export const parameterInfo = {
     clinicalNote:
       "FiO2 طولانی‌مدت بالای ۶۰٪ با خطر آسیب اکسیژنی ریه همراه است؛ همیشه به‌دنبال کاهش آن به کمترین مقدار مؤثر باشید.",
   },
-  rr: {
+  respiratoryRate: {
     label: "RR",
     fullName: "Respiratory Rate",
     unit: "/min",
